@@ -54,6 +54,11 @@ vector_t get_window_center(void) {
     free(width);
     free(height);
     return vec_multiply(0.5, dimensions);
+    // return center;
+}
+
+void sdl_set_center(vector_t new_center) {
+    center = new_center;
 }
 
 /**
