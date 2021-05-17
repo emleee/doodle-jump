@@ -50,6 +50,18 @@ typedef void (*key_handler_t)(char key, key_event_type_t type, double held_time,
 void sdl_init(vector_t min, vector_t max);
 
 /**
+ * Computes and returns the coordinates of the center of the window
+ * @return a vector_t representing the coordinates of the window's center
+ */
+vector_t get_window_center(void);
+
+/**
+ * Sets the center of the window to the given center
+ * @param new_center the coordinates of the new center
+ */
+void sdl_set_center(vector_t new_center);
+
+/**
  * Processes all SDL events and returns whether the window has been closed.
  * This function must be called in order to handle keypresses.
  *
