@@ -11,20 +11,21 @@
 #include <stdio.h>
 #include "forces.h"
 #include "collision.h"
+#include "../doodle_jump/platforms.c"
 
-const double WIDTH = 1000;
-const double HEIGHT = 500;
+const double WIDTH = 720.0;
+const double HEIGHT = 960.0;
 
-const vector_t BOOST = {.x = 0, .y = 300};
+const double STARTING_PLATFORMS = 7; // get rid of this later?
 
+const vector_t START_VELOCITY = {.x = 0, .y = 300};
 const vector_t PLAYER_VELOCITY = {.x = 600, .y = 0};
-const rgb_color_t DOODLE_BODY_COLOR = {.r = 255/255.0, .g = 255/255.0, .b = 255/255.0};
-const double DOODLE_MASS = 10;
 
-const double G = -70;
+const rgb_color_t DOODLE_BODY_COLOR = {.r = 100/255.0, .g = 55/255.0, .b = 250/255.0}; // make transparent later
+const double DOODLE_MASS = 5.0;
+const double MAX_JUMP = 300.0; // not actually 300
 
-const double X_START = 54.5;
-const double Y_START = 465;
+const double G = -150.0;
 
 // modify based on theresa's stuff
 body_t *make_block(vector_t center, rgb_color_t color, char *info) {
@@ -58,11 +59,19 @@ scene_t *make_scene() {
     
     vector_t start = {.x = WIDTH/2, .y = 0};
     body_t *doodle = make_block(start, DOODLE_BODY_COLOR, doodle_info);
-    body_set_velocity(doodle, BOOST);
+    body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
 
-    
+    // generates evenly spaced starting platforms, will change later
+    vector_t scale = {.x = 0, .y = HEIGHT / STARTING_PLATFORMS};
+    for(int i = 0; i < STARTING_PLATFORMS; i++) {
+        vector_t center = vec_multiply(i, scale);
+        center.x = (double)rand()/RAND_MAX * (WIDTH - PLATFORM_WIDTH) + PLATFORM_WIDTH/2;
+        body_t *platform = make_platform(center, NORMAL_COLOR, "normal platform");
+        scene_add_body(scene, platform);
+    }
+
     return scene;
 }
 
@@ -74,6 +83,12 @@ bool in_screen(vector_t center, body_t *body) {
         }
     }
     return false;
+}
+
+void platform_maker(scene_t *scene, vector_t center) {
+    for (int i = 1; i < scene_bodies(scene); i++) {
+
+    }
 }
 
 // void on_key(char key, key_event_type_t type, double held_time, void *scene) {
@@ -110,9 +125,6 @@ int main() {
     scene_t *scene = make_scene();
     vector_t center = {.x = WIDTH/2, HEIGHT/2};
     
-    body_t *block = make_block(center, TEST_BODY_COLOR, "platform");
-    scene_add_body(scene, block);
-
     while (!sdl_is_done(scene)) {
         double dt = time_since_last_tick();
         body_t *doodle = scene_get_body(scene, 0);
@@ -128,7 +140,8 @@ int main() {
                 scene_remove_body(scene, i);
             }
         }
-
+        
+        // shfiting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center.y) {
             center.y = body_get_centroid(doodle).y;
             sdl_set_center(center);

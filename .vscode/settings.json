@@ -45,6 +45,8 @@
     "terminal.integrated.defaultProfile.windows": "Visual Studio Developer Prompt",
     "files.associations": {
         "sdl_wrapper.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "string.h": "c",
+        "polygon.h": "c"
     }
 }
