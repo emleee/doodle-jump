@@ -15,11 +15,13 @@
 const double WIDTH = 1000;
 const double HEIGHT = 500;
 
+const vector_t BOOST = {.x = 0, .y = 300};
+
 const vector_t PLAYER_VELOCITY = {.x = 600, .y = 0};
-const rgb_color_t DOODLE_BODY_COLOR = {.r = 0/255, .g = 25/255, .b = 25/255}; //transparent?
+const rgb_color_t DOODLE_BODY_COLOR = {.r = 255/255.0, .g = 255/255.0, .b = 255/255.0};
 const double DOODLE_MASS = 10;
 
-const double G = -10;
+const double G = -70;
 
 const double X_START = 54.5;
 const double Y_START = 465;
@@ -56,7 +58,6 @@ scene_t *make_scene() {
     
     vector_t start = {.x = WIDTH/2, .y = 0};
     body_t *doodle = make_block(start, DOODLE_BODY_COLOR, doodle_info);
-    const vector_t BOOST = {.x = 0, .y = 50};
     body_set_velocity(doodle, BOOST);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
@@ -108,12 +109,15 @@ int main() {
     // sdl_on_key(on_key);
     scene_t *scene = make_scene();
     vector_t center = {.x = WIDTH/2, HEIGHT/2};
+    
+    body_t *block = make_block(center, TEST_BODY_COLOR, "platform");
+    scene_add_body(scene, block);
 
     while (!sdl_is_done(scene)) {
         double dt = time_since_last_tick();
         body_t *doodle = scene_get_body(scene, 0);
 
-        if (body_get_info(doodle) != "doodle") {
+        if (!in_screen(center, doodle)) {
             // PLAYER LOSES, REPLACE BREAK WITH ACTUAL CODE
             break;
         }

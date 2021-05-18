@@ -4,7 +4,6 @@
 #include "scene.h"
 #include "vector.h"
 
-// const vector_t BOOST = {.x = 0, .y = 50};
 
 /**
  * A function called when a collision occurs.
