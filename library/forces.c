@@ -1,7 +1,6 @@
 #include "forces.h"
 #include "body.h"
 #include "scene.h"
-#include "vector.h"
 #include "force_aux.h"
 #include <math.h>
 #include <stdlib.h>
@@ -39,10 +38,19 @@ void create_newtonian_gravity(scene_t *scene, double G, body_t *body1, body_t *b
 void downward_gravity(void *a) {
     force_aux_t *aux = (force_aux_t *)a;
     double G = force_aux_get_constant(aux);
+    vector_t acceleration = {.x = 0, .y = G};
     list_t *bodies = force_aux_get_bodies(aux);
-    body_t body = list_get(bodies, 0);
+    body_t *body = list_get(bodies, 0);
     double mass = body_get_mass(body);
-    
+    body_add_force(body, vec_multiply(mass, acceleration));
+}
+
+void create_downward_gravity(scene_t *scene, double G, body_t *body) {
+    force_aux_t *aux = force_aux_init(G);
+    list_t *bodies = list_init(1, NULL);
+    list_add(bodies, body);
+    force_aux_set_bodies(aux, bodies);
+    scene_add_bodies_force_creator(scene, downward_gravity, aux, bodies, (free_func_t)force_aux_free);
 }
 
 // void spring(void *a) {

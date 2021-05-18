@@ -2,6 +2,9 @@
 #define __FORCES_H__
 
 #include "scene.h"
+#include "vector.h"
+
+const vector_t BOOST = {.x = 0, .y = 50};
 
 /**
  * A function called when a collision occurs.
@@ -30,6 +33,17 @@ typedef void (*collision_handler_t)
 void create_newtonian_gravity(scene_t *scene, double G, body_t *body1, body_t *body2);
 
 /**
+ * Adds a force creator to a scene that applies a gravitational force acting downward.
+ * The force creator will be called each tick
+ *
+ * @param scene the scene containing the bodies
+ * @param G the gravitational acceleration constant
+ * @param body1 the first body
+ * @param body2 the second body
+ */
+void create_downward_gravity(scene_t *scene, double G, body_t *body);
+
+/**
  * Adds a force creator to a scene that acts like a spring between two bodies.
  * The force creator will be called each tick
  * to compute the Hooke's-Law spring force between the bodies.
@@ -40,7 +54,7 @@ void create_newtonian_gravity(scene_t *scene, double G, body_t *body1, body_t *b
  * @param body1 the first body
  * @param body2 the second body
  */
-void create_spring(scene_t *scene, double k, body_t *body1, body_t *body2);
+// void create_spring(scene_t *scene, double k, body_t *body1, body_t *body2);
 
 /**
  * Adds a force creator to a scene that applies a drag force on a body.
@@ -53,7 +67,7 @@ void create_spring(scene_t *scene, double k, body_t *body1, body_t *body2);
  *   (higher gamma means more drag)
  * @param body the body to slow down
  */
-void create_drag(scene_t *scene, double gamma, body_t *body);
+// void create_drag(scene_t *scene, double gamma, body_t *body);
 
 /**
  * Adds a force creator to a scene that calls a given collision handler
