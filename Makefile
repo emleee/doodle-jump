@@ -1,7 +1,7 @@
 # List of demo programs
 DEMOS = doodlejump
 # List of C files in "libraries" that we provide
-STAFF_LIBS = sdl_wrapper
+STAFF_LIBS = test_util sdl_wrapper
 # List of C files in "libraries" that you will write.
 # This also defines the order in which the tests are run.
 STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision
@@ -31,7 +31,7 @@ LIBS = $(LIB_MATH) $(shell sdl2-config --libs) -lSDL2_gfx
 # and ".o" to the end of each value in STUDENT_LIBS.
 STUDENT_OBJS = $(addprefix out/,$(STUDENT_LIBS:=.o))
 # List of test suite executables, e.g. "bin/test_suite_vector"
-# TEST_BINS = $(addprefix bin/test_suite_,$(STUDENT_LIBS))
+TEST_BINS = $(addprefix bin/test_suite_,$(STUDENT_LIBS))
 # List of demo executables, i.e. "bin/bounce".
 DEMO_BINS = $(addprefix bin/,$(DEMOS))
 # All executables (the concatenation of TEST_BINS and DEMO_BINS)
@@ -181,7 +181,7 @@ LINKEROPTS += -NODEFAULTLIB:msvcrt.lib
 # and ".obj" to the end of each value in STUDENT_LIBS.
 STUDENT_OBJS = $(addprefix out/,$(STUDENT_LIBS:=.obj))
 # List of test suite executables, e.g. "bin/test_suite_vector.exe"
-# TEST_BINS = $(addsuffix .exe,$(addprefix bin/test_suite_,$(STUDENT_LIBS)))
+TEST_BINS = $(addsuffix .exe,$(addprefix bin/test_suite_,$(STUDENT_LIBS)))
 # List of demo executables, i.e. "bin/bounce.exe".
 DEMO_BINS = $(addsuffix .exe,$(addprefix bin/,$(DEMOS)))
 # All executables (the concatenation of TEST_BINS and DEMO_BINS)
@@ -241,7 +241,7 @@ bin/doodlejump.exe bin\doodlejump.exe: out/doodlejump.obj out/sdl_wrapper.obj $(
 # 	$(CC) $^ $(CFLAGS) -link $(LINKEROPTS) -out:"$@"
 
 # Empty recipes for cross-OS task compatibility.
-bin/doodlejump bin\doodlejump: bin/doodlejump.exe ;
+bin/bounce bin\bounce: bin/bounce.exe ;
 # bin/gravity bin\gravity: bin/gravity.exe ;
 # bin/pacman bin\pacman: bin/pacman.exe ;
 # bin/nbodies bin\nbodies: bin/nbodies.exe; 

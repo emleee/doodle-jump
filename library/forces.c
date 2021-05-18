@@ -53,46 +53,46 @@ void create_downward_gravity(scene_t *scene, double G, body_t *body) {
     scene_add_bodies_force_creator(scene, downward_gravity, aux, bodies, (free_func_t)force_aux_free);
 }
 
-// void spring(void *a) {
-//     force_aux_t *aux = (force_aux_t *)a;
-//     double k = force_aux_get_constant(aux);
-//     list_t *bodies = force_aux_get_bodies(aux);
-//     body_t *body1 = list_get(bodies, 0);
-//     body_t *body2 = list_get(bodies, 1);
-//     vector_t between = vec_subtract(body_get_centroid(body1), body_get_centroid(body2));
-//     body_add_force(body1, vec_multiply(k, vec_negate(between)));
-//     body_add_force(body2, vec_multiply(k, between));
-// }
+void spring(void *a) {
+    force_aux_t *aux = (force_aux_t *)a;
+    double k = force_aux_get_constant(aux);
+    list_t *bodies = force_aux_get_bodies(aux);
+    body_t *body1 = list_get(bodies, 0);
+    body_t *body2 = list_get(bodies, 1);
+    vector_t between = vec_subtract(body_get_centroid(body1), body_get_centroid(body2));
+    body_add_force(body1, vec_multiply(k, vec_negate(between)));
+    body_add_force(body2, vec_multiply(k, between));
+}
 
-// void create_spring(scene_t *scene, double k, body_t *body1, body_t *body2) {
-//     force_aux_t *aux = force_aux_init(k);
-//     list_t *bodies1 = list_init(2, NULL);
-//     list_t *bodies2 = list_init(2, NULL);
-//     list_add(bodies1, body1);
-//     list_add(bodies1, body2);
-//     list_add(bodies2, body1);
-//     list_add(bodies2, body2);
-//     force_aux_set_bodies(aux, bodies1);
-//     scene_add_bodies_force_creator(scene, spring, aux, bodies2, (free_func_t)force_aux_free);
-// }
+void create_spring(scene_t *scene, double k, body_t *body1, body_t *body2) {
+    force_aux_t *aux = force_aux_init(k);
+    list_t *bodies1 = list_init(2, NULL);
+    list_t *bodies2 = list_init(2, NULL);
+    list_add(bodies1, body1);
+    list_add(bodies1, body2);
+    list_add(bodies2, body1);
+    list_add(bodies2, body2);
+    force_aux_set_bodies(aux, bodies1);
+    scene_add_bodies_force_creator(scene, spring, aux, bodies2, (free_func_t)force_aux_free);
+}
 
-// void drag(void *a) {
-//     force_aux_t *aux = (force_aux_t *)a;
-//     double gamma = force_aux_get_constant(aux);
-//     list_t *bodies = force_aux_get_bodies(aux);
-//     body_t *body = list_get(bodies, 0);
-//     body_add_force(body, vec_multiply(gamma, vec_negate(body_get_velocity(body))));
-// }
+void drag(void *a) {
+    force_aux_t *aux = (force_aux_t *)a;
+    double gamma = force_aux_get_constant(aux);
+    list_t *bodies = force_aux_get_bodies(aux);
+    body_t *body = list_get(bodies, 0);
+    body_add_force(body, vec_multiply(gamma, vec_negate(body_get_velocity(body))));
+}
 
-// void create_drag(scene_t *scene, double gamma, body_t *body) {
-//     force_aux_t *aux = force_aux_init(gamma);
-//     list_t *bodies1 = list_init(1, NULL);
-//     list_t *bodies2 = list_init(1, NULL);
-//     list_add(bodies1, body);
-//     list_add(bodies2, body);
-//     force_aux_set_bodies(aux, bodies1);
-//     scene_add_bodies_force_creator(scene, drag, aux, bodies2, (free_func_t)force_aux_free);
-// }
+void create_drag(scene_t *scene, double gamma, body_t *body) {
+    force_aux_t *aux = force_aux_init(gamma);
+    list_t *bodies1 = list_init(1, NULL);
+    list_t *bodies2 = list_init(1, NULL);
+    list_add(bodies1, body);
+    list_add(bodies2, body);
+    force_aux_set_bodies(aux, bodies1);
+    scene_add_bodies_force_creator(scene, drag, aux, bodies2, (free_func_t)force_aux_free);
+}
 
 void free_collision_package(collision_package_t *package) {
     package->freer(package->aux);
