@@ -17,6 +17,7 @@ scene_t *scene_init(void) {
     assert(scene != NULL);
     scene->bodies = list_init(100, (free_func_t)body_free);
     scene->forces = list_init(100, (free_func_t)force_package_free);
+    scene->bodies = list_init(100, (free_func_t)free_text);
     return scene;
 }
 
