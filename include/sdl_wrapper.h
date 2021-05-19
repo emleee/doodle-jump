@@ -6,13 +6,14 @@
 #include "list.h"
 #include "scene.h"
 #include "vector.h"
+#include <SDL2/SDL_ttf.h>
 
 // Values passed to a key handler when the given arrow key is pressed
 typedef enum {
-    LEFT_ARROW = 1, 
-    UP_ARROW = 2, 
-    RIGHT_ARROW = 3, 
-    DOWN_ARROW = 4, 
+    LEFT_ARROW = 1,
+    UP_ARROW = 2,
+    RIGHT_ARROW = 3,
+    DOWN_ARROW = 4,
     SPACE = ' '
 } arrow_key_t;
 
@@ -132,5 +133,34 @@ void sdl_on_key(key_handler_t handler);
  * @return the number of seconds that have elapsed
  */
 double time_since_last_tick(void);
+
+
+/**
+ * A textbox to display.
+ * Includes an SDL_Surface, SDL_Texture, and SDL_Rect.
+ */
+typedef struct text text_t;
+
+/**
+ * Creates a textbox for the string based on given font, color, and positioning.
+ *
+ * @param string the string to display
+ * @param fontColor the color of text
+ * @param fontFile file containing font desired
+ * @param center center of textbox
+ * @param width width of textbox
+ * @param height height of textbox
+ *
+ * @return text struct containing surface, texture, textbox rectangle
+ */
+text_t *create_text(char *string, rgb_color_t fontColor, char *fontFile, vector_t *center, double width, double height);
+
+/**
+ * Removes and frees textbox.
+ *
+ * @param text the textbox
+ */
+void free_text(text_t *text);
+
 
 #endif // #ifndef __SDL_WRAPPER_H__

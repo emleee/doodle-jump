@@ -47,6 +47,7 @@
         "sdl_wrapper.h": "c",
         "time.h": "c",
         "string.h": "c",
-        "polygon.h": "c"
+        "polygon.h": "c",
+        "sdl_ttf.h": "c"
     }
 }
