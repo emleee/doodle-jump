@@ -7,6 +7,7 @@
 #include "scene.h"
 #include "vector.h"
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 // Values passed to a key handler when the given arrow key is pressed
 typedef enum {
@@ -40,6 +41,11 @@ typedef enum {
  * @param held_time if a press event, the time the key has been held in seconds
  */
 typedef void (*key_handler_t)(char key, key_event_type_t type, double held_time, void *scene);
+
+bool loadMedia();
+Mix_Chunk *get_jump();
+Mix_Chunk *get_shoot();
+void free_sounds();
 
 /**
  * Initializes the SDL window and renderer.
