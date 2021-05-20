@@ -49,3 +49,9 @@ SDL_Texture *sprite_get_texture(sprite_t *sprite) {
 SDL_Rect *sprite_get_box(sprite_t *sprite) {
     return sprite->box;
 }
+
+void sprite_free(sprite_t *sprite) {
+    SDL_DestroyTexture(sprite->texture);
+    free(sprite->box);
+    free(sprite);
+}

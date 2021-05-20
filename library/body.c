@@ -59,8 +59,16 @@ sprite_t *body_get_sprite(body_t *body) {
     return body->sprite;
 }
 
+void body_set_sprite(body_t *body, sprite_t *sprite) {
+    body->sprite = sprite;
+    // sprite_set_center(body->sprite, center);
+}
+
 void body_free(body_t *body) {
     list_free(body->shape);
+    if (body->sprite != NULL) {
+        sprite_free(body->sprite);
+    }
     free(body);
 }
 

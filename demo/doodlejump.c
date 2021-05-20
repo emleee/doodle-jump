@@ -12,7 +12,7 @@
 #include "collision.h"
 #include "platforms.h"
 #include "sdl_wrapper.h"
-#include "text.h"
+#include "game_sprites.h"
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
@@ -57,9 +57,18 @@ scene_t *make_scene() {
 
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
+    doodle_info[0] = '\0';
     strcpy(doodle_info, "doodle");
     vector_t start = {.x = WIDTH2/2, .y = 0};
+
     body_t *doodle = make_block(start, DOODLE_BODY_COLOR, doodle_info);
+    sprite_t *doodle_sprite = make_jump_right(vec_add(body_get_centroid(doodle), RIGHT_OFFSET));
+    body_set_sprite(doodle, doodle_sprite);
+
+    sprite_t *left_jump = make_jump_left(sprite_get_center(doodle_sprite));
+    scene_add_sprite(scene, doodle_sprite);
+    scene_add_sprite(scene, left_jump);
+
     body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
@@ -134,10 +143,13 @@ void more_platforms(scene_t *scene, vector_t center) {
 void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     body_t *player = scene_get_body((scene_t *)scene, 0);
     vector_t body_velocity = body_get_velocity(player);
-    double mass = body_get_mass(player);
+    // double mass = body_get_mass(player);
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
+                if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
+                    face_right(player, scene_get_sprite(scene, 0));
+                }
                 body_velocity.x = PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
                 if (loadMedia()) {
@@ -146,6 +158,9 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
                 }
                 break;
             case LEFT_ARROW:
+                if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
+                    face_left(player, scene_get_sprite(scene, 1));
+                }
                 body_velocity.x = -1 * PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
                 if (loadMedia()) {
@@ -180,19 +195,15 @@ int main() {
     vector_t start_max = {.x = WIDTH2, .y = HEIGHT2};
     sdl_init(start_min, start_max);
     srand(time(0));
+
     sdl_on_key(on_key);
     scene_t *scene = make_scene();
-    vector_t center = {.x = WIDTH2/2, .y = HEIGHT2/2};
+    body_t *doodle = scene_get_body(scene, 0);
 
-    rgb_color_t color = {.r = 0, .g = 0, .b = 255};
-    vector_t *point = malloc(sizeof(vector_t));
-    point->x = 100;
-    point->y = 100;
-    text_create(get_renderer(), "Doodle Jump: Fairy Tail", color, 20, point, 50, 50);
+    vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
 
     while (!sdl_is_done(scene)) {
         double dt = time_since_last_tick();
-        body_t *doodle = scene_get_body(scene, 0);
 
         if (!in_screen(center, doodle)) {
             // PLAYER LOSES, REPLACE BREAK WITH ACTUAL CODE
@@ -219,5 +230,4 @@ int main() {
         sdl_render_scene(scene);
     }
     scene_free(scene);
-    TTF_Quit();
 }

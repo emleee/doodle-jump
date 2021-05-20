@@ -6,11 +6,13 @@
 #include <assert.h>
 // #include "sdl_wrapper.h"
 #include "text.h"
+#include "sprite.h"
 
 typedef struct scene {
     list_t *bodies;
     list_t *forces;
     list_t *text;
+    list_t *sprites;
 } scene_t;
 
 scene_t *scene_init(void) {
@@ -19,6 +21,7 @@ scene_t *scene_init(void) {
     scene->bodies = list_init(100, (free_func_t)body_free);
     scene->forces = list_init(100, (free_func_t)force_package_free);
     scene->text = list_init(100, (free_func_t)text_free);
+    scene->sprites = list_init(4, (free_func_t)sprite_free);
     return scene;
 }
 
@@ -26,6 +29,15 @@ void scene_free(scene_t *scene) {
     list_free(scene->bodies);
     list_free(scene->text);
     free(scene);
+}
+
+void scene_add_sprite(scene_t *scene, sprite_t *sprite) {
+    list_add(scene->sprites, sprite);
+}
+
+sprite_t *scene_get_sprite(scene_t *scene, size_t index) {
+    assert(index < 4);
+    return list_get(scene->sprites, index);
 }
 
 size_t scene_bodies(scene_t *scene) {

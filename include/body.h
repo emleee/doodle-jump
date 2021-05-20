@@ -44,6 +44,8 @@ body_t *body_init_with_info(
 
 body_t *body_init_with_sprite(list_t *shape, double mass, rgb_color_t color, void *info, free_func_t info_freer, sprite_t *sprite);
 
+void body_set_sprite(body_t *body, sprite_t *sprite);
+
 sprite_t *body_get_sprite(body_t *body);
 
 /**

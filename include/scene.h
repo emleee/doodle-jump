@@ -29,6 +29,10 @@ typedef void (*force_creator_t)(void *aux);
  */
 scene_t *scene_init(void);
 
+
+sprite_t *scene_get_sprite(scene_t *scene, size_t index);
+void scene_add_sprite(scene_t *scene, sprite_t *sprite);
+
 /**
  * Releases memory allocated for a given scene
  * and all the bodies and force creators it contains.

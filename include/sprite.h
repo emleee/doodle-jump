@@ -23,4 +23,6 @@ SDL_Texture *sprite_get_texture(sprite_t *sprite);
 
 SDL_Rect *sprite_get_box(sprite_t *sprite);
 
+void sprite_free(sprite_t *sprite);
+
 #endif // #ifndef __SPRITE_H__
