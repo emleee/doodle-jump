@@ -208,7 +208,7 @@ int main() {
         vector_t *point = malloc(sizeof(vector_t));
         point->x = 250;
         point->y = 10;
-        text_t *text = text_create("Doodle Jump: Fairy Tail", color, 20, point, 200, 70);
+        text_t *text = text_create("Doodle Jump: Fairy Tail", color, 20, point, 200, 25);
         scene_add_text(scene, text);
 
     while (!sdl_is_done(scene)) {
