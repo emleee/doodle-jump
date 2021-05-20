@@ -21,6 +21,8 @@ const double STARTING_PLATFORMS = 7; // get rid of this later?
 const vector_t START_VELOCITY = {.x = 0, .y = 300};
 const double PLAYER_X_VELOCITY = 600;
 
+const double SCORE_FACTOR = 20;
+
 const rgb_color_t DOODLE_BODY_COLOR = {.r = 100/255.0, .g = 55/255.0, .b = 250/255.0}; // make transparent later
 const double DOODLE_MASS = 5.0;
 const double MAX_JUMP = 250.0; // calculate this
@@ -55,7 +57,6 @@ scene_t *make_scene() {
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
-    
     vector_t start = {.x = WIDTH/2, .y = 0};
     body_t *doodle = make_block(start, DOODLE_BODY_COLOR, doodle_info);
     body_set_velocity(doodle, START_VELOCITY);
@@ -151,6 +152,19 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     }
 }
 
+double calculate_score(scene_t *scene) {
+    // find doodle center height
+    double height = body_get_centroid(scene_get_body(scene, 0)).y;
+
+    // calculate score based on certain divisor or smth
+    double score = height / SCORE_FACTOR;
+
+    return score;
+
+    // probably need to account for just the Highest doodle reaches? so score doesn't fluctuate
+    // randomly as doodle falls, maybe do this somewhere else tho
+    // like per tick, check if score > current score, if so replace otherwise don't
+}
 
 int main() {
     vector_t start_min = {.x = 0, .y = 0};
@@ -160,7 +174,7 @@ int main() {
     sdl_on_key(on_key);
     scene_t *scene = make_scene();
     vector_t center = {.x = WIDTH/2, HEIGHT/2};
-    
+
     while (!sdl_is_done(scene)) {
         double dt = time_since_last_tick();
         body_t *doodle = scene_get_body(scene, 0);
@@ -176,7 +190,7 @@ int main() {
                 scene_remove_body(scene, i);
             }
         }
-        
+
         // shfiting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center.y) {
             // generates more platforms
