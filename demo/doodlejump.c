@@ -142,7 +142,7 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
                 if (loadMedia()) {
                     Mix_Chunk *jump = (Mix_Chunk *) get_jump();
                     Mix_PlayChannel( -1, jump, 0 );
-                }   
+                }
                 break;
             case LEFT_ARROW:
                 body_velocity.x = -1 * PLAYER_X_VELOCITY;
@@ -160,18 +160,14 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     }
 }
 
-double calculate_score(scene_t *scene) {
-    // find doodle center height
-    double height = body_get_centroid(scene_get_body(scene, 0)).y;
+double calculate_score(vector_t center) {
+    // find screen's center height
+    double height = center.y;
 
-    // calculate score based on certain divisor or smth
+    // calculate score based on certain divisor
     double score = height / SCORE_FACTOR;
 
     return score;
-
-    // probably need to account for just the Highest doodle reaches? so score doesn't fluctuate
-    // randomly as doodle falls, maybe do this somewhere else tho
-    // like per tick, check if score > current score, if so replace otherwise don't
 }
 
 int main() {
