@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <math.h>
+#include <sprite.h>
 
 typedef struct body {
     list_t *shape;
@@ -19,6 +20,7 @@ typedef struct body {
     void *info;
     free_func_t info_freer;
     bool remove;
+    sprite_t *sprite;
 } body_t;
 
 body_t *body_init(list_t *shape, double mass, rgb_color_t color) {
@@ -36,6 +38,7 @@ body_t *body_init(list_t *shape, double mass, rgb_color_t color) {
     body->info = NULL;
     body->info_freer = NULL;
     body->remove = false;
+    body->sprite = NULL;
     return body;
 }
 
@@ -44,6 +47,16 @@ body_t *body_init_with_info(list_t *shape, double mass, rgb_color_t color, void 
     body->info = info;
     body->info_freer = info_freer;
     return body;
+}
+
+body_t *body_init_with_sprite(list_t *shape, double mass, rgb_color_t color, void *info, free_func_t info_freer, sprite_t *sprite) {
+    body_t *body = body_init_with_info(shape, mass, color, info, info_freer);
+    body->sprite = sprite;
+    return body;
+}
+
+sprite_t *body_get_sprite(body_t *body) {
+    return body->sprite;
 }
 
 void body_free(body_t *body) {
@@ -85,6 +98,9 @@ double body_get_direction(body_t *body) {
 
 void body_set_centroid(body_t *body, vector_t x) {
     polygon_translate(body->shape, vec_subtract(x, body->centroid));
+    if (body->sprite != NULL) {
+        sprite_set_center(body->sprite, x);
+    }
     body->centroid = x;
 }
 

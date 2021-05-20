@@ -9,6 +9,8 @@
 #include "text.h"
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include "sprite.h"
+#include "body.h"
 
 // Values passed to a key handler when the given arrow key is pressed
 typedef enum {
@@ -69,6 +71,8 @@ vector_t get_window_center(void);
  */
 void sdl_set_center(vector_t new_center);
 
+sprite_t *create_sprite(char *file);
+
 /**
  * Processes all SDL events and returns whether the window has been closed.
  * This function must be called in order to handle keypresses.
@@ -94,7 +98,7 @@ void sdl_draw_polygon(list_t *points, rgb_color_t color);
  * Displays the rendered frame on the SDL window.
  * Must be called after drawing the polygons in order to show them.
  */
-void sdl_show(void);
+void sdl_show(scene_t *scene);
 
 /**
  * Draws all bodies in a scene.
