@@ -20,6 +20,7 @@ const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
 
 const double STARTING_PLATFORMS = 7; // get rid of this later?
+const double MAX_PLATFORMS = 20;
 const double PLATFORM_WIDTH2 = 60;
 
 const vector_t START_VELOCITY = {.x = 0, .y = 300};
@@ -92,7 +93,7 @@ scene_t *make_scene() {
             platform = normal_platform(center, info);
         }
         scene_add_body(scene, platform);
-        create_physics_collision(scene, 1, doodle, platform);
+        create_physics_collision(scene, 0, doodle, platform);
     }
 
     return scene;
@@ -121,10 +122,14 @@ body_t *wrap(body_t *doodle) {
 }
 
 void more_platforms(scene_t *scene, vector_t center) {
-    int num_bodies = scene_bodies(scene);
-    for (int i = 1; i < num_bodies; i++) {
+    int num_platforms = 0;
+    for (int i = 1; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);
+        if (strstr(info, "platform") == NULL) {
+            continue;
+        }
+        num_platforms++;
         if (strcmp("essential platform", info) == 0) {
             // essential platforms are generated one jump height apart
             double new_height = body_get_centroid(platform).y + MAX_JUMP;
@@ -136,8 +141,29 @@ void more_platforms(scene_t *scene, vector_t center) {
                 strcpy(new_info, "essential platform");
                 body_t *new_platform = normal_platform(platform_center, new_info);
                 scene_add_body(scene, new_platform);
-                create_physics_collision(scene, 1, scene_get_body(scene, 0), new_platform);
+                create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
             }
+        }
+    }
+    for (int i = num_platforms; i < MAX_PLATFORMS; i++) {
+        char *info = malloc(22*sizeof(char));
+        strcpy(info, "nonessential platform");
+        int random = rand() % 4;
+        vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * HEIGHT2 + center.y + HEIGHT2/2};
+        if (random < 2) {
+            body_t *new_platform = trick_platform(platform_center, info);
+            scene_add_body(scene, new_platform);
+            create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+        }
+        else if (random == 2) {
+            body_t *new_platform = sliding_platform(platform_center, info);
+            scene_add_body(scene, new_platform);
+            create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+        }
+        else {
+            body_t *new_platform = normal_platform(platform_center, info);
+            scene_add_body(scene, new_platform);
+            create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         }
     }
 }
