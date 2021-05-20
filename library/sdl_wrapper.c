@@ -46,6 +46,10 @@ uint32_t key_start_timestamp;
  */
 clock_t last_clock = 0;
 
+//The sound effects that will be used
+Mix_Chunk *jump = NULL;
+Mix_Chunk *shoot = NULL;
+
 /** Computes the center of the window in pixel coordinates */
 vector_t get_window_center(void) {
     int *width = malloc(sizeof(*width)),
@@ -108,6 +112,37 @@ char get_keycode(SDL_Keycode key) {
     }
 }
 
+bool loadMedia()
+{
+	//Loading success flag
+	bool success = true;
+	
+	//Load sound effects
+	jump = Mix_LoadWAV( "21_sound_effects_and_music/jump.wav" );
+	if( jump == NULL )
+	{
+		printf( "Failed to load jumping sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+	
+	shoot = Mix_LoadWAV( "21_sound_effects_and_music/shoot.wav" );
+	if( shoot == NULL )
+	{
+		printf( "Failed to load shooting sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	return success;
+}
+
+Mix_Chunk *get_jump() {
+    return jump;
+}
+
+Mix_Chunk *get_shoot() {
+    return shoot;
+}
+
 void sdl_init(vector_t min, vector_t max) {
     // Check parameters
     assert(min.x < max.x);
@@ -125,6 +160,11 @@ void sdl_init(vector_t min, vector_t max) {
         SDL_WINDOW_RESIZABLE
     );
     renderer = SDL_CreateRenderer(window, -1, 0);
+
+    // //Initialize SDL_mixer
+	if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) {
+		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+	}
 }
 
 bool sdl_is_done(void *scene) {
@@ -250,4 +290,17 @@ SDL_Renderer *get_renderer(void) {
     return renderer;
 }
 
+void free_text(text_t *text) {
+    SDL_FreeSurface(text->surface);
+    SDL_DestroyTexture(text->texture);
+    free(text);
+}
 
+void free_sounds() {
+    //Quit SDL subsystems
+    Mix_FreeChunk(jump);
+    Mix_FreeChunk(jump);
+    jump = NULL;
+    shoot = NULL;
+    Mix_Quit();
+}
