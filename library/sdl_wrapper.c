@@ -95,10 +95,10 @@ vector_t get_window_position(vector_t scene_pos, vector_t window_center) {
  */
 char get_keycode(SDL_Keycode key) {
     switch (key) {
-        case SDLK_LEFT:  return LEFT_ARROW;
-        case SDLK_UP:    return UP_ARROW;
-        case SDLK_RIGHT: return RIGHT_ARROW;
-        case SDLK_DOWN:  return DOWN_ARROW;
+        case SDLK_a:  return LEFT_ARROW;
+        // case SDLK_UP:    return UP_ARROW;
+        case SDLK_d: return RIGHT_ARROW;
+        // case SDLK_DOWN:  return DOWN_ARROW;
         default:
             // Only process 7-bit ASCII characters
             return key == (SDL_Keycode) (char) key ? key : '\0';
