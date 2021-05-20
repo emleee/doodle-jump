@@ -10,9 +10,9 @@ typedef struct text {
     SDL_Rect *textbox;
 } text_t;
 
-text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, char *fontFile, vector_t *center, double width, double height) {
+text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height) {
     TTF_Init();
-    TTF_Font *font = TTF_OpenFont(fontFile, 20);  // fontfile should be like "smth.ttf"
+    TTF_Font *font = TTF_OpenFont("components/DoodleJump.ttf", ptsize);
     SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
     SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);

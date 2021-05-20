@@ -119,7 +119,7 @@ bool loadMedia()
 {
 	//Loading success flag
 	bool success = true;
-	
+
 	//Load sound effects
 	jump = Mix_LoadWAV( "21_sound_effects_and_music/jump.wav" );
 	if( jump == NULL )
@@ -127,7 +127,7 @@ bool loadMedia()
 		printf( "Failed to load jumping sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
-	
+
 	shoot = Mix_LoadWAV( "21_sound_effects_and_music/shoot.wav" );
 	if( shoot == NULL )
 	{
