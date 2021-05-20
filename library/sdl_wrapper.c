@@ -6,8 +6,9 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include "sdl_wrapper.h"
 #include "list.h"
-#include <SDL2/SDL_ttf.h>
+// #include <SDL2/SDL_ttf.h>
 #include <string.h>
+#include "text.h"
 
 const char WINDOW_TITLE[] = "CS 3";
 const int WINDOW_WIDTH = 720;
@@ -224,7 +225,9 @@ void sdl_render_scene(scene_t *scene) {
     // go through and render all the text in the scene
     for (size_t i = 0; i < scene_textboxes; i++) {
         text_t *current = scene_get_text(scene, i);
-        SDL_RenderCopy(renderer, current->texture, NULL, current->textbox);
+        SDL_Texture *texture = text_get_texture(current);
+        SDL_Rect *textbox = text_get_textbox(current);
+        SDL_RenderCopy(renderer, texture, NULL, textbox);
     }
 
     sdl_show();
@@ -243,36 +246,8 @@ double time_since_last_tick(void) {
     return difference;
 }
 
-
-// TEXT RENDERING - MOVE TO OWN FILE?
-typedef struct text {
-    SDL_Surface *surface;
-    SDL_Texture *texture;
-    SDL_Rect *textbox;
-} text_t;
-
-text_t *create_text(char *string, rgb_color_t fontColor, char *fontFile, vector_t *center, double width, double height) {
-    TTF_Init();
-    TTF_Font *font = TTF_OpenFont(fontFile, 20);  // fontfile should be like "smth.ttf"
-    SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
-    SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect *textbox;
-    textbox->x = center->x;
-    textbox->y = center->y;
-    textbox->w = width;
-    textbox->h = height;
-
-    text_t *text = malloc(sizeof(text_t));
-    text->surface = surface;
-    text->texture = texture;
-    text->textbox = textbox;
-
-    return text;
+SDL_Renderer *get_renderer(void) {
+    return renderer;
 }
 
-void free_text(text_t *text) {
-    SDL_FreeSurface(text->surface);
-    SDL_DestroyTexture(text->texture);
-    free(text);
-}
+

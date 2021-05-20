@@ -48,6 +48,7 @@
         "time.h": "c",
         "string.h": "c",
         "polygon.h": "c",
-        "sdl_ttf.h": "c"
+        "sdl_ttf.h": "c",
+        "scene.h": "c"
     }
 }
