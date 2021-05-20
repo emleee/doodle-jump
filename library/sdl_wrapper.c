@@ -175,6 +175,7 @@ sprite_t *create_sprite(char *file) {
     SDL_Surface *image = IMG_Load(file);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
     sprite_t *sprite = sprite_init(texture);
+    SDL_FreeSurface(image);
     return sprite;
 }
 
