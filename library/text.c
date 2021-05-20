@@ -16,7 +16,7 @@ text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor,
     SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
     SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect *textbox;
+    SDL_Rect *textbox = NULL;
     textbox->x = center->x;
     textbox->y = center->y;
     textbox->w = width;

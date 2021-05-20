@@ -3,7 +3,7 @@
 
 #include "vector.h"
 #include "color.h"
-#include "SDL2\SDL.h"
+#include "SDL2/SDL.h"
 
 /**
  * A textbox to display.
@@ -51,6 +51,6 @@ SDL_Texture *text_get_texture(text_t *text);
  * @param text the text_t to retrieve from
  * @return the textbox
  */
-SDL_Rect *get_textbox(text_t *text);
+SDL_Rect *text_get_textbox(text_t *text);
 
 #endif // #ifndef __TEXT_H__
