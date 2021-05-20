@@ -206,9 +206,9 @@ int main() {
 
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         vector_t *point = malloc(sizeof(vector_t));
-        point->x = WIDTH2/2;
-        point->y = HEIGHT2/2;
-        text_t *text = text_create("Doodle Jump", color, 20, point, 200, 200);
+        point->x = 250;
+        point->y = 10;
+        text_t *text = text_create("Doodle Jump: Fairy Tail", color, 20, point, 200, 70);
         scene_add_text(scene, text);
 
     while (!sdl_is_done(scene)) {
