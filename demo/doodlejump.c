@@ -17,6 +17,7 @@ const double WIDTH = 720.0;
 const double HEIGHT = 960.0;
 
 const double STARTING_PLATFORMS = 7; // get rid of this later?
+const double PLATFORM_WIDTH = 60;
 
 const vector_t START_VELOCITY = {.x = 0, .y = 300};
 const double PLAYER_X_VELOCITY = 600;
@@ -72,12 +73,12 @@ scene_t *make_scene() {
         if (i % 2 == 1) {
             char *info = malloc(24*sizeof(char));
             strcpy(info, "essential platform");
-            platform = make_platform(center, NORMAL_COLOR, info);
+            platform = normal_platform(center, info);
         }
         else {
             char *info = malloc(22*sizeof(char));
             strcpy(info, "nonessential platform");
-            platform = make_platform(center, NORMAL_COLOR, info);
+            platform = normal_platform(center, info);
         }
         scene_add_body(scene, platform);
         create_physics_collision(scene, 1, doodle, platform);
@@ -122,7 +123,7 @@ void more_platforms(scene_t *scene, vector_t center) {
                 vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH - PLATFORM_WIDTH) + PLATFORM_WIDTH/2, .y = new_height};
                 char *new_info = malloc(24*sizeof(char));
                 strcpy(new_info, "essential platform");
-                body_t *new_platform = make_platform(platform_center, NORMAL_COLOR, new_info);
+                body_t *new_platform = normal_platform(platform_center, new_info);
                 scene_add_body(scene, new_platform);
                 create_physics_collision(scene, 1, scene_get_body(scene, 0), new_platform);
             }
@@ -139,18 +140,10 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
             case RIGHT_ARROW:
                 body_velocity.x = PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
-                if (loadMedia()) {
-                    Mix_Chunk *jump = (Mix_Chunk *) get_jump();
-                    Mix_PlayChannel( -1, jump, 0 );
-                }   
                 break;
             case LEFT_ARROW:
                 body_velocity.x = -1 * PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
-                if (loadMedia()) {
-                    Mix_Chunk *jump = (Mix_Chunk *) get_jump();
-                    Mix_PlayChannel( -1, jump, 0 );
-                }
                 break;
         }
     }
@@ -211,6 +204,5 @@ int main() {
         scene_tick(scene, dt);
         sdl_render_scene(scene);
     }
-    free_sounds();
     scene_free(scene);
 }

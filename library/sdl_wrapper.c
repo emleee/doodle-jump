@@ -6,7 +6,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include "sdl_wrapper.h"
 #include "list.h"
-// #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include <string.h>
 #include "text.h"
 
