@@ -182,7 +182,7 @@ int main() {
     srand(time(0));
     sdl_on_key(on_key);
     scene_t *scene = make_scene();
-    vector_t center = {.x = WIDTH/2, .y = HEIGHT/2};
+    vector_t center = {.x = WIDTH2/2, .y = HEIGHT2/2};
 
     rgb_color_t color = {.r = 0, .g = 0, .b = 255};
     vector_t *point = malloc(sizeof(vector_t));
