@@ -268,6 +268,7 @@ void sdl_render_scene(scene_t *scene) {
         SDL_Texture *texture = text_get_texture(current);
         SDL_Rect *textbox = text_get_textbox(current);
         SDL_RenderCopy(renderer, texture, NULL, textbox);
+        SDL_RenderPresent(renderer);
     }
 
     sdl_show();

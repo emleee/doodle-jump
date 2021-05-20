@@ -12,6 +12,7 @@
 #include "collision.h"
 #include "platforms.h"
 #include "sdl_wrapper.h"
+#include "text.h"
 
 const double WIDTH = 720.0;
 const double HEIGHT = 960.0;
@@ -174,7 +175,13 @@ int main() {
     srand(time(0));
     sdl_on_key(on_key);
     scene_t *scene = make_scene();
-    vector_t center = {.x = WIDTH/2, HEIGHT/2};
+    vector_t center = {.x = WIDTH/2, .y = HEIGHT/2};
+
+    rgb_color_t color = {.r = 0, .g = 0, .b = 255};
+    vector_t *point = malloc(sizeof(vector_t));
+    point->x = 100;
+    point->y = 100;
+    text_create(get_renderer(), "Doodle Jump: Fairy Tail", color, 20, point, 50, 50);
 
     while (!sdl_is_done(scene)) {
         double dt = time_since_last_tick();
@@ -205,4 +212,5 @@ int main() {
         sdl_render_scene(scene);
     }
     scene_free(scene);
+    TTF_Quit();
 }
