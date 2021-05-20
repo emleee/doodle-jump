@@ -263,7 +263,7 @@ void sdl_render_scene(scene_t *scene) {
     }
 
     // go through and render all the text in the scene
-    for (size_t i = 0; i < scene_textboxes; i++) {
+    for (size_t i = 0; i < scene_textboxes(scene); i++) {
         text_t *current = scene_get_text(scene, i);
         SDL_Texture *texture = text_get_texture(current);
         SDL_Rect *textbox = text_get_textbox(current);
@@ -291,8 +291,8 @@ SDL_Renderer *get_renderer(void) {
 }
 
 void free_text(text_t *text) {
-    SDL_FreeSurface(text->surface);
-    SDL_DestroyTexture(text->texture);
+    SDL_FreeSurface(text_get_surface(text));
+    SDL_DestroyTexture(text_get_texture(text));
     free(text);
 }
 

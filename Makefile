@@ -4,7 +4,7 @@ DEMOS = doodlejump
 STAFF_LIBS = test_util sdl_wrapper
 # List of C files in "libraries" that you will write.
 # This also defines the order in which the tests are run.
-STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision text
+STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision text platforms
 
 # If we're not on Windows...
 ifneq ($(OS), Windows_NT)
@@ -24,7 +24,7 @@ LIB_MATH = -lm
 # Compiler flags that link the program with the math and SDL libraries.
 # Note that $(...) substitutes a variable's value, so this line is equivalent to
 # LIBS = -lm -lSDL2 -lSDL2_gfx
-LIBS = $(LIB_MATH) $(shell sdl2-config --libs) -lSDL2_gfx
+LIBS = $(LIB_MATH) $(shell sdl2-config --libs) -lSDL2_gfx -lSDL2_ttf -lSDL2_mixer -lSDL2_image
 
 # List of compiled .o files corresponding to STUDENT_LIBS, e.g. "out/vector.o".
 # Don't worry about the syntax; it's just adding "out/" to the start

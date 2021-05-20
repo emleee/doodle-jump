@@ -18,3 +18,5 @@ body_t *sliding_platform(vector_t center);
 body_t *disappearing_platform(vector_t center);
 
 body_t *trick_platform(vector_t center);
+
+body_t *normal_platform(vector_t center, char *info);
