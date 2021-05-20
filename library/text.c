@@ -10,27 +10,35 @@ typedef struct text {
     SDL_Rect *textbox;
 } text_t;
 
-text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height) {
-    TTF_Init();
-    TTF_Font *font = TTF_OpenFont("DoodleJump.ttf", ptsize);
-    SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
-    SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
-    // SDL_Texture *texture = malloc(sizeof(SDL_Texture));
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect *textbox = NULL;
-    textbox->x = center->x;
-    textbox->y = center->y;
-    textbox->w = width;
-    textbox->h = height;
-
+text_t *text_init(SDL_Surface *surface, SDL_Texture *texture, SDL_Rect *textbox) {
     text_t *text = malloc(sizeof(text_t));
     text->surface = surface;
     text->texture = texture;
     text->textbox = textbox;
-
-    TTF_CloseFont(font);
     return text;
 }
+
+// text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height) {
+//     TTF_Init();
+//     TTF_Font *font = TTF_OpenFont("fonts/DoodleJump.ttf", ptsize);
+//     SDL_Color color = {255, 255, 255};//{fontColor.r, fontColor.g, fontColor.b};
+//     SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
+//     // SDL_Texture *texture = malloc(sizeof(SDL_Texture));
+//     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+//     SDL_Rect *textbox = malloc(sizeof(SDL_Rect));
+//     textbox->x = center->x;
+//     textbox->y = center->y;
+//     textbox->w = width;
+//     textbox->h = height;
+
+//     text_t *text = malloc(sizeof(text_t));
+//     text->surface = surface;
+//     text->texture = texture;
+//     text->textbox = textbox;
+
+//     TTF_CloseFont(font);
+//     return text;
+// }
 
 void text_free(text_t *text) {
     SDL_FreeSurface(text->surface);

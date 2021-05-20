@@ -11,19 +11,23 @@
  */
 typedef struct text text_t;
 
-/**
- * Creates a textbox for the string based on given font, color, and positioning.
- *
- * @param string the string to display
- * @param fontColor the color of text
- * @param fontFile file containing font desired
- * @param center center of textbox
- * @param width width of textbox
- * @param height height of textbox
- *
- * @return text struct containing surface, texture, textbox rectangle
- */
-text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height);
+
+text_t *text_init(SDL_Surface *surface, SDL_Texture *texture, SDL_Rect *textbox);
+
+
+// /**
+//  * Creates a textbox for the string based on given font, color, and positioning.
+//  *
+//  * @param string the string to display
+//  * @param fontColor the color of text
+//  * @param fontFile file containing font desired
+//  * @param center center of textbox
+//  * @param width width of textbox
+//  * @param height height of textbox
+//  *
+//  * @return text struct containing surface, texture, textbox rectangle
+//  */
+// text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height);
 
 /**
  * Removes and frees textbox.

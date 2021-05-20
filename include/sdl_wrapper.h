@@ -152,5 +152,19 @@ double time_since_last_tick(void);
  */
 SDL_Renderer *get_renderer(void);
 
+/**
+ * Creates a textbox for the string based on given font, color, and positioning.
+ *
+ * @param string the string to display
+ * @param fontColor the color of text
+ * @param fontFile file containing font desired
+ * @param center center of textbox
+ * @param width width of textbox
+ * @param height height of textbox
+ *
+ * @return text struct containing surface, texture, textbox rectangle
+ */
+text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height);
+
 
 #endif // #ifndef __SDL_WRAPPER_H__
