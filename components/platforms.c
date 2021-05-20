@@ -11,8 +11,7 @@
 #include "forces.h"
 #include "collision.h"
 
-const double WIDTH = 720.0;
-const double HEIGHT = 960.0;
+const double WINDOW_WIDTH = 720.0;
 
 const double PLATFORM_WIDTH = 60;
 const double PLATFORM_HEIGHT = 20;
@@ -75,8 +74,8 @@ void sliding_bounce(body_t *sliding_platform) {
         adjust.x = -worst_pt->x;
         velocity.x *= -1;
     }
-    else if (worst_pt->x > WIDTH) {
-        adjust.x = WIDTH - worst_pt->x;
+    else if (worst_pt->x > WINDOW_WIDTH) {
+        adjust.x = WINDOW_WIDTH - worst_pt->x;
         velocity.x *= -1;
     }
 

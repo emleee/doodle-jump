@@ -140,10 +140,18 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
             case RIGHT_ARROW:
                 body_velocity.x = PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
+                if (loadMedia()) {
+                    Mix_Chunk *jump = (Mix_Chunk *) get_jump();
+                    Mix_PlayChannel( -1, jump, 0 );
+                }
                 break;
             case LEFT_ARROW:
                 body_velocity.x = -1 * PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
+                if (loadMedia()) {
+                    Mix_Chunk *jump = (Mix_Chunk *) get_jump();
+                    Mix_PlayChannel( -1, jump, 0 );
+                }
                 break;
         }
     }
