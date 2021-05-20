@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "forces.h"
 #include "collision.h"
-#include "../doodle_jump/platforms.c"
+#include "platforms.h"
 
 const double WIDTH = 720.0;
 const double HEIGHT = 960.0;
