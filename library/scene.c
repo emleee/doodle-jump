@@ -4,10 +4,12 @@
 #include "force_package.h"
 #include <stdlib.h>
 #include <assert.h>
+#include "sdl_wrapper.h"
 
 typedef struct scene {
     list_t *bodies;
     list_t *forces;
+    list_t *text;
 } scene_t;
 
 scene_t *scene_init(void) {
@@ -15,11 +17,13 @@ scene_t *scene_init(void) {
     assert(scene != NULL);
     scene->bodies = list_init(100, (free_func_t)body_free);
     scene->forces = list_init(100, (free_func_t)force_package_free);
+    scene->bodies = list_init(100, (free_func_t)free_text);
     return scene;
 }
 
 void scene_free(scene_t *scene) {
     list_free(scene->bodies);
+    list_free(scene->text);
     free(scene);
 }
 
@@ -54,13 +58,39 @@ void scene_add_bodies_force_creator(scene_t *scene, force_creator_t forcer, void
     list_add(scene->forces, force);
 }
 
+void scene_add_text(scene_t *scene, text_t *text) {
+    list_add(scene->text, text);
+}
+
+void scene_remove_text(scene_t *scene, text_t *text) {
+    size_t index = -1;
+    for (size_t i = 0; i < list_size(scene->text); i++) {
+        if (list_get(scene->text, i) == text) {
+            index = i;
+            break;
+        }
+    }
+    if (index != -1) {
+        text_t *removed = list_remove(scene->text, index);
+        free_text(removed);
+    }
+}
+
+text_t *scene_get_text(scene_t *scene, size_t index) {
+    return list_get(scene->text, index);
+}
+
+text_t *scene_textboxes(scene_t *scene) {
+    return list_size(scene->text);
+}
+
 void scene_tick(scene_t *scene, double dt) {
     for (size_t i = 0; i < list_size(scene->forces); i++) {
         force_package_t *force = list_get(scene->forces, i);
         force_aux_t *aux = get_aux(force);
         get_force_creator(force)(aux);
     }
-    
+
     for (size_t i = 0; i < scene_bodies(scene); i++) {
         body_tick(scene_get_body(scene, i), dt);
     }
@@ -80,10 +110,12 @@ void scene_tick(scene_t *scene, double dt) {
             i--;
         }
     }
+
+    // add a thing about displaying the text
 }
 
 
 
-    
-    
-    
+
+
+

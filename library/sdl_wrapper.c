@@ -6,6 +6,8 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include "sdl_wrapper.h"
 #include "list.h"
+#include <SDL2/SDL_ttf.h>
+#include <string.h>
 
 const char WINDOW_TITLE[] = "CS 3";
 const int WINDOW_WIDTH = 720;
@@ -95,10 +97,10 @@ vector_t get_window_position(vector_t scene_pos, vector_t window_center) {
  */
 char get_keycode(SDL_Keycode key) {
     switch (key) {
-        case SDLK_LEFT:  return LEFT_ARROW;
-        case SDLK_UP:    return UP_ARROW;
-        case SDLK_RIGHT: return RIGHT_ARROW;
-        case SDLK_DOWN:  return DOWN_ARROW;
+        case SDLK_a:  return LEFT_ARROW;
+        // case SDLK_UP:    return UP_ARROW;
+        case SDLK_d: return RIGHT_ARROW;
+        // case SDLK_DOWN:  return DOWN_ARROW;
         default:
             // Only process 7-bit ASCII characters
             return key == (SDL_Keycode) (char) key ? key : '\0';
@@ -218,6 +220,13 @@ void sdl_render_scene(scene_t *scene) {
         body_t *body = scene_get_body(scene, i);
         sdl_draw_polygon(body_get_shape(body), body_get_color(body));
     }
+
+    // go through and render all the text in the scene
+    for (size_t i = 0; i < scene_textboxes; i++) {
+        text_t *current = scene_get_text(scene, i);
+        SDL_RenderCopy(renderer, current->texture, NULL, current->textbox);
+    }
+
     sdl_show();
 }
 
@@ -232,4 +241,38 @@ double time_since_last_tick(void) {
         : 0.0; // return 0 the first time this is called
     last_clock = now;
     return difference;
+}
+
+
+// TEXT RENDERING - MOVE TO OWN FILE?
+typedef struct text {
+    SDL_Surface *surface;
+    SDL_Texture *texture;
+    SDL_Rect *textbox;
+} text_t;
+
+text_t *create_text(char *string, rgb_color_t fontColor, char *fontFile, vector_t *center, double width, double height) {
+    TTF_Init();
+    TTF_Font *font = TTF_OpenFont(fontFile, 20);  // fontfile should be like "smth.ttf"
+    SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
+    SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Rect *textbox;
+    textbox->x = center->x;
+    textbox->y = center->y;
+    textbox->w = width;
+    textbox->h = height;
+
+    text_t *text = malloc(sizeof(text_t));
+    text->surface = surface;
+    text->texture = texture;
+    text->textbox = textbox;
+
+    return text;
+}
+
+void free_text(text_t *text) {
+    SDL_FreeSurface(text->surface);
+    SDL_DestroyTexture(text->texture);
+    free(text);
 }

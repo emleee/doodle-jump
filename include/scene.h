@@ -109,6 +109,40 @@ void scene_add_bodies_force_creator(
 );
 
 /**
+ * Adds a textbox to a scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init()
+ * @param text the textbox to add
+ */
+void scene_add_text(scene_t *scene, text_t *text);
+
+/**
+ * Removes a textbox from a scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init()
+ * @param text the textbox to remove
+ */
+void scene_remove_text(scene_t *scene, text_t *text);
+
+/**
+ * Gets the textbox at a certain index from the scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init()
+ * @param index the index of the textbox to get
+ * @return a textbox from the scene
+ */
+text_t *scene_get_text(scene_t *scene, size_t index);
+
+/**
+ * Gets the number of textboxes in a given scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init()
+ * @return the number of textboxes
+ */
+text_t *scene_textboxes(scene_t *scene);
+
+
+/**
  * Executes a tick of a given scene over a small time interval.
  * This requires executing all the force creators
  * and then ticking each body (see body_tick()).
