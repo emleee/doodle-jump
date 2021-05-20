@@ -13,6 +13,8 @@
 #include "platforms.h"
 #include "sdl_wrapper.h"
 #include "game_sprites.h"
+#include "SDL2/SDL_mixer.h"
+#include "text.h"
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;

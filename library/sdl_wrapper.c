@@ -7,6 +7,7 @@
 #include "sdl_wrapper.h"
 #include "list.h"
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include <string.h>
 #include "text.h"
 #include <SDL2/SDL_image.h>
@@ -121,14 +122,14 @@ bool loadMedia()
 	bool success = true;
 
 	//Load sound effects
-	jump = Mix_LoadWAV( "21_sound_effects_and_music/jump.wav" );
+	jump = Mix_LoadWAV( "sound_effects/jump.wav" );
 	if( jump == NULL )
 	{
 		printf( "Failed to load jumping sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
 
-	shoot = Mix_LoadWAV( "21_sound_effects_and_music/shoot.wav" );
+	shoot = Mix_LoadWAV( "sound_effects/shoot.wav" );
 	if( shoot == NULL )
 	{
 		printf( "Failed to load shooting sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
