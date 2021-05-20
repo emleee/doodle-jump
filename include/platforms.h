@@ -13,10 +13,10 @@
 
 body_t *make_platform(vector_t center, rgb_color_t color, char *info);
 
-body_t *sliding_platform(vector_t center);
-
-body_t *disappearing_platform(vector_t center);
-
-body_t *trick_platform(vector_t center);
-
 body_t *normal_platform(vector_t center, char *info);
+
+body_t *sliding_platform(vector_t center, char *info);
+
+body_t *disappearing_platform(vector_t center, char *info);
+
+body_t *trick_platform(vector_t center, char *info);
