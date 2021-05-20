@@ -274,11 +274,13 @@ void sdl_show(scene_t *scene) {
 
 void sdl_render_scene(scene_t *scene) {
     sdl_clear();
-    // size_t body_count = scene_bodies(scene);
-    // for (size_t i = 0; i < body_count; i++) {
-    //     body_t *body = scene_get_body(scene, i);
-    //     sdl_draw_polygon(body_get_shape(body), body_get_color(body));
-    // }
+    size_t body_count = scene_bodies(scene);
+    for (size_t i = 0; i < body_count; i++) {
+        body_t *body = scene_get_body(scene, i);
+        if (body_get_sprite(body) == NULL) {
+            sdl_draw_polygon(body_get_shape(body), body_get_color(body));
+        }
+    }
 
     // go through and render all the text in the scene
     for (size_t i = 0; i < scene_textboxes(scene); i++) {
