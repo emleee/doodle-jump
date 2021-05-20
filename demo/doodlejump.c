@@ -12,9 +12,11 @@
 #include "collision.h"
 #include "platforms.h"
 #include "sdl_wrapper.h"
+#include "SDL2/SDL_mixer.h"
+#include "text.h"
 
-const double WIDTH = 720.0;
-const double HEIGHT = 960.0;
+const double WIDTH2 = 720.0;
+const double HEIGHT2 = 960.0;
 
 const double STARTING_PLATFORMS = 7; // get rid of this later?
 const double PLATFORM_WIDTH2 = 60;
@@ -51,24 +53,23 @@ body_t *make_block(vector_t center, rgb_color_t color, char *info) {
     return block;
 }
 
-
 scene_t *make_scene() {
     scene_t *scene = scene_init();
 
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
-    vector_t start = {.x = WIDTH/2, .y = 0};
+    vector_t start = {.x = WIDTH2/2, .y = 0};
     body_t *doodle = make_block(start, DOODLE_BODY_COLOR, doodle_info);
     body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
 
     // generates evenly spaced starting platforms, will change later
-    vector_t scale = {.x = 0, .y = HEIGHT / STARTING_PLATFORMS};
+    vector_t scale = {.x = 0, .y = HEIGHT2 / STARTING_PLATFORMS};
     for(int i = 0; i < STARTING_PLATFORMS; i++) {
         vector_t center = vec_multiply(i+1, scale); //change once collisions are implemented
-        center.x = (double)rand()/RAND_MAX * (WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2;
+        center.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2;
         body_t *platform;
         if (i % 2 == 1) {
             char *info = malloc(24*sizeof(char));
@@ -90,7 +91,7 @@ scene_t *make_scene() {
 bool in_screen(vector_t center, body_t *body) {
     list_t *points = body_get_shape(body);
     for (int i = 0; i < list_size(points); i++) {
-        if (((vector_t *)list_get(points, i))->y > center.y - HEIGHT/2) {
+        if (((vector_t *)list_get(points, i))->y > center.y - HEIGHT2/2) {
             return true;
         }
     }
@@ -98,12 +99,12 @@ bool in_screen(vector_t center, body_t *body) {
 }
 
 body_t *wrap(body_t *doodle) {
-    if (body_get_centroid(doodle).x >= WIDTH) { // >= width plus width of doodle /2
+    if (body_get_centroid(doodle).x >= WIDTH2) { // >= width plus width of doodle /2
         vector_t shift = {.x = 0, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
     else if (body_get_centroid(doodle).x <= 0) { // <= 0 minus width of doodle /2
-        vector_t shift = {.x = WIDTH, .y = body_get_centroid(doodle).y};
+        vector_t shift = {.x = WIDTH2, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
     return doodle;
@@ -118,9 +119,9 @@ void more_platforms(scene_t *scene, vector_t center) {
             // essential platforms are generated one jump height apart
             double new_height = body_get_centroid(platform).y + MAX_JUMP;
             // only want to generate platforms that will be within one screen height above the current window
-            if ((new_height > center.y + HEIGHT/2) && (new_height < center.y + HEIGHT/2 + HEIGHT)) {
+            if ((new_height > center.y + HEIGHT2/2) && (new_height < center.y + HEIGHT2/2 + HEIGHT2)) {
                 strcat(info, " done");
-                vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
+                vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
                 char *new_info = malloc(24*sizeof(char));
                 strcpy(new_info, "essential platform");
                 body_t *new_platform = normal_platform(platform_center, new_info);
@@ -177,12 +178,18 @@ double calculate_score(scene_t *scene) {
 
 int main() {
     vector_t start_min = {.x = 0, .y = 0};
-    vector_t start_max = {.x = WIDTH, .y = HEIGHT};
+    vector_t start_max = {.x = WIDTH2, .y = HEIGHT2};
     sdl_init(start_min, start_max);
     srand(time(0));
     sdl_on_key(on_key);
     scene_t *scene = make_scene();
-    vector_t center = {.x = WIDTH/2, HEIGHT/2};
+    vector_t center = {.x = WIDTH2/2, .y = HEIGHT2/2};
+
+    rgb_color_t color = {.r = 0, .g = 0, .b = 255};
+    vector_t *point = malloc(sizeof(vector_t));
+    point->x = 100;
+    point->y = 100;
+    text_create(get_renderer(), "Doodle Jump: Fairy Tail", color, 20, point, 50, 50);
 
     while (!sdl_is_done(scene)) {
         double dt = time_since_last_tick();
@@ -213,4 +220,5 @@ int main() {
         sdl_render_scene(scene);
     }
     scene_free(scene);
+    TTF_Quit();
 }

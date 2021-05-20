@@ -4,7 +4,7 @@ DEMOS = doodlejump
 STAFF_LIBS = test_util sdl_wrapper
 # List of C files in "libraries" that you will write.
 # This also defines the order in which the tests are run.
-STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision text platforms
+STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision text platforms sprite
 
 # If we're not on Windows...
 ifneq ($(OS), Windows_NT)
@@ -164,7 +164,7 @@ C_FLAGS += -FC
 # Note that a lot of the base Windows ones are missing - the
 # libraries I've distributed are _dynamically linked_, because otherwise,
 # we'd need to manually link a lot of crap.
-LIBS = SDL2main.lib SDL2.lib SDL2_gfx.lib shell32.lib SDL2_ttf.lib SDL2_mixer.lib
+LIBS = SDL2main.lib SDL2.lib SDL2_gfx.lib shell32.lib SDL2_ttf.lib SDL2_mixer.lib SDL2_image.lib
 
 # Tell cl to look for lib files in this folder
 LINKEROPTS = -LIBPATH:"C:/Users/$(USERNAME)/msvc/lib"

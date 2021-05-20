@@ -12,9 +12,10 @@ typedef struct text {
 
 text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height) {
     TTF_Init();
-    TTF_Font *font = TTF_OpenFont("components/DoodleJump.ttf", ptsize);
+    TTF_Font *font = TTF_OpenFont("DoodleJump.ttf", ptsize);
     SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
     SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
+    // SDL_Texture *texture = malloc(sizeof(SDL_Texture));
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_Rect *textbox = NULL;
     textbox->x = center->x;
@@ -27,6 +28,7 @@ text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor,
     text->texture = texture;
     text->textbox = textbox;
 
+    TTF_CloseFont(font);
     return text;
 }
 
