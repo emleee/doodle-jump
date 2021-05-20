@@ -23,7 +23,7 @@ typedef struct text text_t;
  *
  * @return text struct containing surface, texture, textbox rectangle
  */
-text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, char *fontFile, vector_t *center, double width, double height);
+text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height);
 
 /**
  * Removes and frees textbox.

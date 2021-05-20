@@ -116,7 +116,7 @@ bool loadMedia()
 {
 	//Loading success flag
 	bool success = true;
-	
+
 	//Load sound effects
 	jump = Mix_LoadWAV( "21_sound_effects_and_music/jump.wav" );
 	if( jump == NULL )
@@ -124,7 +124,7 @@ bool loadMedia()
 		printf( "Failed to load jumping sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
-	
+
 	shoot = Mix_LoadWAV( "21_sound_effects_and_music/shoot.wav" );
 	if( shoot == NULL )
 	{
@@ -291,8 +291,8 @@ SDL_Renderer *get_renderer(void) {
 }
 
 void free_text(text_t *text) {
-    SDL_FreeSurface(text->surface);
-    SDL_DestroyTexture(text->texture);
+    SDL_FreeSurface(text_get_surface(text));
+    SDL_DestroyTexture(text_get_texture(text));
     free(text);
 }
 
