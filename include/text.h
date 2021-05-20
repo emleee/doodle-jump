@@ -3,7 +3,7 @@
 
 #include "vector.h"
 #include "color.h"
-#include "SDL2\SDL.h"
+#include "SDL2/SDL.h"
 
 /**
  * A textbox to display.
@@ -23,7 +23,7 @@ typedef struct text text_t;
  *
  * @return text struct containing surface, texture, textbox rectangle
  */
-text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, char *fontFile, vector_t *center, double width, double height);
+text_t *text_create(SDL_Renderer *renderer, char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height);
 
 /**
  * Removes and frees textbox.
@@ -51,6 +51,6 @@ SDL_Texture *text_get_texture(text_t *text);
  * @param text the text_t to retrieve from
  * @return the textbox
  */
-SDL_Rect *get_textbox(text_t *text);
+SDL_Rect *text_get_textbox(text_t *text);
 
 #endif // #ifndef __TEXT_H__
