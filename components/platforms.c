@@ -44,40 +44,23 @@ body_t *make_platform(vector_t center, rgb_color_t color, char *info) {
     return platform;
 }
 
-body_t *normal_platform(vector_t center) {
-    char *info = malloc(7*sizeof(char));
-    info[0] = '\0';
-    strcat(info, "normal");
-
-    body_t *sliding_platform = make_platform(center, NORMAL_COLOR, info);
-    body_set_velocity(sliding_platform, PLATFORM_VELOCITY);
-    return sliding_platform;
+body_t *normal_platform(vector_t center, char *info) {
+    body_t *platform = make_platform(center, NORMAL_COLOR, info);
+    return platform;
 }
 
-body_t *sliding_platform(vector_t center) {
-    char *info = malloc(8*sizeof(char));
-    info[0] = '\0';
-    strcat(info, "sliding");
-
+body_t *sliding_platform(vector_t center, char *info) {
     body_t *sliding_platform = make_platform(center, SLIDING_COLOR, info);
     body_set_velocity(sliding_platform, PLATFORM_VELOCITY);
     return sliding_platform;
 }
 
-body_t *disappearing_platform(vector_t center) {
-    char *info = malloc(13*sizeof(char));
-    info[0] = '\0';
-    strcat(info, "disappearing");
-
+body_t *disappearing_platform(vector_t center, char *info) {
     body_t *disappearing_platform = make_platform(center, DISAPPEARING_COLOR, info);
     return disappearing_platform;
 }
 
-body_t *trick_platform(vector_t center) {
-    char *info = malloc(6*sizeof(char));
-    info[0] = '\0';
-    strcat(info, "trick");
-
+body_t *trick_platform(vector_t center, char *info) {
     body_t *trick_platform = make_platform(center, DISAPPEARING_COLOR, info);
     return trick_platform;
 }
