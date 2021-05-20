@@ -3,6 +3,8 @@
 
 #include "body.h"
 #include "list.h"
+#include "text.h"
+// #include "sdl_wrapper.h"
 
 /**
  * A collection of bodies and force creators.
@@ -139,7 +141,7 @@ text_t *scene_get_text(scene_t *scene, size_t index);
  * @param scene a pointer to a scene returned from scene_init()
  * @return the number of textboxes
  */
-text_t *scene_textboxes(scene_t *scene);
+size_t scene_textboxes(scene_t *scene);
 
 
 /**

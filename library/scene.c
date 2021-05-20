@@ -4,7 +4,8 @@
 #include "force_package.h"
 #include <stdlib.h>
 #include <assert.h>
-#include "sdl_wrapper.h"
+// #include "sdl_wrapper.h"
+#include "text.h"
 
 typedef struct scene {
     list_t *bodies;
@@ -17,7 +18,7 @@ scene_t *scene_init(void) {
     assert(scene != NULL);
     scene->bodies = list_init(100, (free_func_t)body_free);
     scene->forces = list_init(100, (free_func_t)force_package_free);
-    scene->bodies = list_init(100, (free_func_t)free_text);
+    scene->bodies = list_init(100, (free_func_t)text_free);
     return scene;
 }
 
@@ -72,7 +73,7 @@ void scene_remove_text(scene_t *scene, text_t *text) {
     }
     if (index != -1) {
         text_t *removed = list_remove(scene->text, index);
-        free_text(removed);
+        text_free(removed);
     }
 }
 
@@ -80,7 +81,7 @@ text_t *scene_get_text(scene_t *scene, size_t index) {
     return list_get(scene->text, index);
 }
 
-text_t *scene_textboxes(scene_t *scene) {
+size_t scene_textboxes(scene_t *scene) {
     return list_size(scene->text);
 }
 
@@ -113,9 +114,3 @@ void scene_tick(scene_t *scene, double dt) {
 
     // add a thing about displaying the text
 }
-
-
-
-
-
-

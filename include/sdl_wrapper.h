@@ -8,6 +8,7 @@
 #include "vector.h"
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include "text.h"
 
 // Values passed to a key handler when the given arrow key is pressed
 typedef enum {
@@ -140,33 +141,12 @@ void sdl_on_key(key_handler_t handler);
  */
 double time_since_last_tick(void);
 
-
 /**
- * A textbox to display.
- * Includes an SDL_Surface, SDL_Texture, and SDL_Rect.
- */
-typedef struct text text_t;
-
-/**
- * Creates a textbox for the string based on given font, color, and positioning.
+ * Returns the renderer to use with text implementation.
  *
- * @param string the string to display
- * @param fontColor the color of text
- * @param fontFile file containing font desired
- * @param center center of textbox
- * @param width width of textbox
- * @param height height of textbox
- *
- * @return text struct containing surface, texture, textbox rectangle
+ * @return the renderer
  */
-text_t *create_text(char *string, rgb_color_t fontColor, char *fontFile, vector_t *center, double width, double height);
-
-/**
- * Removes and frees textbox.
- *
- * @param text the textbox
- */
-void free_text(text_t *text);
+SDL_Renderer *get_renderer(void);
 
 
 #endif // #ifndef __SDL_WRAPPER_H__

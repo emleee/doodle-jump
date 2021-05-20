@@ -4,7 +4,7 @@ DEMOS = doodlejump
 STAFF_LIBS = test_util sdl_wrapper
 # List of C files in "libraries" that you will write.
 # This also defines the order in which the tests are run.
-STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision
+STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision text
 
 # If we're not on Windows...
 ifneq ($(OS), Windows_NT)
@@ -244,8 +244,8 @@ bin/doodlejump.exe bin\doodlejump.exe: out/doodlejump.obj out/sdl_wrapper.obj $(
 bin/bounce bin\bounce: bin/bounce.exe ;
 # bin/gravity bin\gravity: bin/gravity.exe ;
 # bin/pacman bin\pacman: bin/pacman.exe ;
-# bin/nbodies bin\nbodies: bin/nbodies.exe; 
-# bin/damping bin\damping: bin/damping.exe; 
+# bin/nbodies bin\nbodies: bin/nbodies.exe;
+# bin/damping bin\damping: bin/damping.exe;
 # bin/spaceinvaders bin\spaceinvaders: bin/spaceinvaders.exe
 # bin/pegs bin\pegs: bin/pegs.exe
 # bin/breakout bin\breakout: bin/breakout.exe
