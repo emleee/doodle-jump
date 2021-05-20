@@ -6,7 +6,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include "sdl_wrapper.h"
 #include "list.h"
-// #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include <string.h>
 #include "text.h"
 
@@ -299,7 +299,7 @@ void free_text(text_t *text) {
 void free_sounds() {
     //Quit SDL subsystems
     Mix_FreeChunk(jump);
-    Mix_FreeChunk(jump);
+    Mix_FreeChunk(shoot);
     jump = NULL;
     shoot = NULL;
     Mix_Quit();
