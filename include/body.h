@@ -5,6 +5,7 @@
 #include "color.h"
 #include "list.h"
 #include "vector.h"
+#include "sprite.h"
 
 /**
  * A rigid body constrained to the plane.
@@ -40,6 +41,10 @@ body_t *body_init_with_info(
     void *info,
     free_func_t info_freer
 );
+
+body_t *body_init_with_sprite(list_t *shape, double mass, rgb_color_t color, void *info, free_func_t info_freer, sprite_t *sprite);
+
+sprite_t *body_get_sprite(body_t *body);
 
 /**
  * Releases the memory allocated for a body.

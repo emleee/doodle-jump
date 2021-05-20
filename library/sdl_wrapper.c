@@ -9,6 +9,9 @@
 #include <SDL2/SDL_ttf.h>
 #include <string.h>
 #include "text.h"
+#include <SDL2/SDL_image.h>
+#include "sprite.h"
+#include "body.h"
 
 const char WINDOW_TITLE[] = "CS 3";
 const int WINDOW_WIDTH = 720;
@@ -151,6 +154,7 @@ void sdl_init(vector_t min, vector_t max) {
     center = vec_multiply(0.5, vec_add(min, max));
     max_diff = vec_subtract(max, center);
     SDL_Init(SDL_INIT_EVERYTHING);
+    IMG_Init(IMG_INIT_PNG);
     window = SDL_CreateWindow(
         WINDOW_TITLE,
         SDL_WINDOWPOS_CENTERED,
@@ -165,6 +169,13 @@ void sdl_init(vector_t min, vector_t max) {
 	if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) {
 		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
 	}
+}
+
+sprite_t *create_sprite(char *file) {
+    SDL_Surface *image = IMG_Load(file);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
+    sprite_t *sprite = sprite_init(texture);
+    return sprite;
 }
 
 bool sdl_is_done(void *scene) {
@@ -235,7 +246,7 @@ void sdl_draw_polygon(list_t *points, rgb_color_t color) {
     free(y_points);
 }
 
-void sdl_show(void) {
+void sdl_show(scene_t *scene) {
     // Draw boundary lines
     vector_t window_center = get_window_center();
     vector_t max = vec_add(center, max_diff),
@@ -251,16 +262,23 @@ void sdl_show(void) {
     SDL_RenderDrawRect(renderer, boundary);
     free(boundary);
 
+    for(int i = 0; i < scene_bodies(scene); i++) {
+        sprite_t *sprite = body_get_sprite(scene_get_body(scene, i));
+        if (sprite!=NULL) {
+            SDL_RenderCopy(renderer, sprite_get_texture(sprite), NULL, sprite_get_box(sprite));
+        }
+    }
+
     SDL_RenderPresent(renderer);
 }
 
 void sdl_render_scene(scene_t *scene) {
     sdl_clear();
-    size_t body_count = scene_bodies(scene);
-    for (size_t i = 0; i < body_count; i++) {
-        body_t *body = scene_get_body(scene, i);
-        sdl_draw_polygon(body_get_shape(body), body_get_color(body));
-    }
+    // size_t body_count = scene_bodies(scene);
+    // for (size_t i = 0; i < body_count; i++) {
+    //     body_t *body = scene_get_body(scene, i);
+    //     sdl_draw_polygon(body_get_shape(body), body_get_color(body));
+    // }
 
     // go through and render all the text in the scene
     for (size_t i = 0; i < scene_textboxes(scene); i++) {
@@ -270,7 +288,7 @@ void sdl_render_scene(scene_t *scene) {
         SDL_RenderCopy(renderer, texture, NULL, textbox);
     }
 
-    sdl_show();
+    sdl_show(scene);
 }
 
 void sdl_on_key(key_handler_t handler) {
