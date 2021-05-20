@@ -299,7 +299,7 @@ void free_text(text_t *text) {
 void free_sounds() {
     //Quit SDL subsystems
     Mix_FreeChunk(jump);
-    Mix_FreeChunk(jump);
+    Mix_FreeChunk(shoot);
     jump = NULL;
     shoot = NULL;
     Mix_Quit();
