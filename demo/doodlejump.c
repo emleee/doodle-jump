@@ -273,6 +273,7 @@ int main() {
     scoring->y = 10;
 
     char *score = malloc(100*sizeof(char));
+    char *buffer = malloc(100*sizeof(char));
 
     // char score[100];
 
@@ -296,9 +297,9 @@ int main() {
         double curr = calculate_score(center);
 
         // strcat(sprintf(score, "%f", curr), '\n');
-        sprintf(score, "%.1", curr);
+        sprintf(buffer, "%.1f", curr);
         // printf("\n%s\n", score);
-        // strcat(score, '\n');
+        strcat(score, buffer);
         text_t *scorebox = text_create(score, color, 20, scoring, 100, 20);
         scene_add_text(scene, scorebox);
 
@@ -332,5 +333,6 @@ int main() {
     fprintf(file, score);
     fclose(file);
     free(score);
+    free(buffer);
     scene_free(scene);
 }
