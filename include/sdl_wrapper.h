@@ -152,6 +152,8 @@ double time_since_last_tick(void);
  */
 SDL_Renderer *get_renderer(void);
 
+vector_t get_window_position(vector_t scene_pos, vector_t window_center);
+
 /**
  * Creates a textbox for the string based on given font, color, and positioning.
  *

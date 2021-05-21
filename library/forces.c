@@ -147,7 +147,7 @@ void create_destructive_collision(scene_t *scene, body_t *body1, body_t *body2) 
 }
 
 void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    if (axis.x != 0 || axis.y != -1) {
+    if (round(axis.x) != 0 || round(axis.y) != -1) {
         return;
     }
     force_aux_t *a = (force_aux_t *)aux;

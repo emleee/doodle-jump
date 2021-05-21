@@ -285,8 +285,23 @@ void sdl_show(scene_t *scene) {
 
     for(int i = 0; i < scene_bodies(scene); i++) {
         sprite_t *sprite = body_get_sprite(scene_get_body(scene, i));
-        if (sprite!=NULL) {
+        if (sprite!=NULL && strcmp(body_get_info(scene_get_body(scene, i)), "background") == 0) {
             SDL_RenderCopy(renderer, sprite_get_texture(sprite), NULL, sprite_get_box(sprite));
+        }
+    }
+
+    for(int i = 0; i < scene_bodies(scene); i++) {
+        sprite_t *sprite = body_get_sprite(scene_get_body(scene, i));
+        if (sprite!=NULL && strcmp(body_get_info(scene_get_body(scene, i)), "background") != 0) {
+            SDL_RenderCopy(renderer, sprite_get_texture(sprite), NULL, sprite_get_box(sprite));
+        }
+    }
+
+    size_t body_count = scene_bodies(scene);
+    for (size_t i = 0; i < body_count; i++) {
+        body_t *body = scene_get_body(scene, i);
+        if (body_get_sprite(body) == NULL) {
+            sdl_draw_polygon(body_get_shape(body), body_get_color(body));
         }
     }
 
@@ -295,22 +310,15 @@ void sdl_show(scene_t *scene) {
 
 void sdl_render_scene(scene_t *scene) {
     sdl_clear();
-    size_t body_count = scene_bodies(scene);
-    for (size_t i = 0; i < body_count; i++) {
-        body_t *body = scene_get_body(scene, i);
-        // if (body_get_sprite(body) == NULL) {
-            sdl_draw_polygon(body_get_shape(body), body_get_color(body));
-        // }
-    }
 
     // go through and render all the text in the scene
-    for (size_t i = 0; i < scene_textboxes(scene); i++) {
-        text_t *current = scene_get_text(scene, i);
-        SDL_Texture *texture = text_get_texture(current);
-        SDL_Rect *textbox = text_get_textbox(current);
-        SDL_RenderCopy(renderer, texture, NULL, textbox);
-        SDL_RenderPresent(renderer);
-    }
+    // for (size_t i = 0; i < scene_textboxes(scene); i++) {
+    //     text_t *current = scene_get_text(scene, i);
+    //     SDL_Texture *texture = text_get_texture(current);
+    //     SDL_Rect *textbox = text_get_textbox(current);
+    //     SDL_RenderCopy(renderer, texture, NULL, textbox);
+    //     SDL_RenderPresent(renderer);
+    // }
 
     sdl_show(scene);
 }
