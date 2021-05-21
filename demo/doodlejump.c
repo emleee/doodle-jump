@@ -152,7 +152,7 @@ body_t *wrap(body_t *doodle) {
 
 void more_platforms(scene_t *scene, vector_t center) {
     int num_platforms = 0;
-    for (int i = 1; i < scene_bodies(scene); i++) {
+    for (int i = 3; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);
         if (strstr(info, "platform") == NULL) {
