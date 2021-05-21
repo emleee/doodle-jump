@@ -152,7 +152,7 @@ body_t *wrap(body_t *doodle) {
 
 void more_platforms(scene_t *scene, vector_t center) {
     int num_platforms = 0;
-    for (int i = 1; i < scene_bodies(scene); i++) {
+    for (int i = 3; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);
         if (strstr(info, "platform") == NULL) {
@@ -235,9 +235,9 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     }
 }
 
-double calculate_score(scene_t *scene) {
+double calculate_score(vector_t center) {
     // find doodle center height
-    double height = body_get_centroid(scene_get_body(scene, 0)).y;
+    double height = center.y;
 
     // calculate score based on certain divisor or smth
     double score = height / SCORE_FACTOR;
@@ -262,14 +262,45 @@ int main() {
     vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
 
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-        vector_t *point = malloc(sizeof(vector_t));
-        point->x = 250;
-        point->y = 10;
-        text_t *text = text_create("Doodle Jump: Fairy Tail", color, 20, point, 200, 25);
-        scene_add_text(scene, text);
+    vector_t *point = malloc(sizeof(vector_t));
+    point->x = 250; // remove magic numbers
+    point->y = 10;
+    text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point, 200, 25);
+    scene_add_text(scene, text);
+
+    vector_t *scoring = malloc(sizeof(vector_t));
+    scoring->x = 10;
+    scoring->y = 10;
+
+    char *score = malloc(100*sizeof(char));
+
+    // char score[100];
+
+    // score = "High Score: ";
+    // strcat(score, snprintf(score, 50, "%d", calculate_score(scene)));
+    // FILE *file = fopen("highscores.txt", "w");
+    // fprintf(file, score);
+
+
+    // score = calculate_score(scene);
+    // text_t *score = text_create(score, color, 20, scoring, 20, 20);
 
     while (!sdl_is_done(scene)) {
+        // calculate and display score
+        if (scene_textboxes(scene) > 1) {
+            scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
+        }
+        // printf("\n%i\n", scene_textboxes(scene));
+        strcpy(score, "High Score: ");
+        // printf("\n%f\n", calculate_score(center));
+        double curr = calculate_score(center);
 
+        // strcat(sprintf(score, "%f", curr), '\n');
+        sprintf(score, "%.1", curr);
+        // printf("\n%s\n", score);
+        // strcat(score, '\n');
+        text_t *scorebox = text_create(score, color, 20, scoring, 100, 20);
+        scene_add_text(scene, scorebox);
 
         double dt = time_since_last_tick();
 
@@ -298,5 +329,9 @@ int main() {
         scene_tick(scene, dt);
         sdl_render_scene(scene);
     }
+    FILE *file = fopen("highscores.txt", "w");
+    fprintf(file, score);
+    fclose(file);
+    free(score);
     scene_free(scene);
 }
