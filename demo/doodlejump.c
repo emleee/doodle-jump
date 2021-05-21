@@ -329,7 +329,7 @@ int main() {
         scene_tick(scene, dt);
         sdl_render_scene(scene);
     }
-    FILE *file = fopen("highscores.txt", "w");
+    FILE *file = fopen("highscores.txt", "a");
     fprintf(file, score);
     fclose(file);
     free(score);
