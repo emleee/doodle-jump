@@ -93,7 +93,7 @@ scene_t *make_scene() {
             platform = normal_platform(center, info);
         }
         scene_add_body(scene, platform);
-        create_physics_collision(scene, 0, doodle, platform);
+        create_platform_collision(scene, 0, doodle, platform);
     }
 
     return scene;
@@ -141,7 +141,7 @@ void more_platforms(scene_t *scene, vector_t center) {
                 strcpy(new_info, "essential platform");
                 body_t *new_platform = normal_platform(platform_center, new_info);
                 scene_add_body(scene, new_platform);
-                create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+                create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
             }
         }
     }
@@ -153,17 +153,17 @@ void more_platforms(scene_t *scene, vector_t center) {
         if (random < 2) {
             body_t *new_platform = trick_platform(platform_center, info);
             scene_add_body(scene, new_platform);
-            create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         }
         else if (random == 2) {
             body_t *new_platform = sliding_platform(platform_center, info);
             scene_add_body(scene, new_platform);
-            create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         }
         else {
             body_t *new_platform = normal_platform(platform_center, info);
             scene_add_body(scene, new_platform);
-            create_physics_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         }
     }
 }

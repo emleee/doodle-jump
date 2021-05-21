@@ -146,31 +146,20 @@ void create_destructive_collision(scene_t *scene, body_t *body1, body_t *body2) 
     create_collision(scene, body1, body2, (collision_handler_t)destructive_collision, aux, (free_func_t)force_aux_free);
 }
 
-void physics_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
+void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
     force_aux_t *a = (force_aux_t *)aux;
-    double c = force_aux_get_constant(a);
     double mass1 = body_get_mass(body1);
-    double mass2 = body_get_mass(body2);
     vector_t v1 = body_get_velocity(body1);
-    vector_t v2 = body_get_velocity(body2);
-    double impulse;
-    if (mass1 == INFINITY) {
-        // impulse = 50;
-        impulse = mass2 * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
+    if (v1.y > 0) {
+        return;
     }
-    else if (mass2 == INFINITY) {
-        // impulse = 50;
-        impulse = mass1 * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
-    }
-    else {
-        // impulse = 50;
-        impulse = mass1 * mass2 / (mass1+mass2) * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
-    }
+    v1.y = 0;
+    body_set_velocity(body1, v1);
+    double impulse = mass1 * -300;
     body_add_impulse(body1, vec_multiply(impulse, axis));
-    body_add_impulse(body2, vec_multiply(-impulse, axis));
 }
 
-void create_physics_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
+void create_platform_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
     force_aux_t *aux = force_aux_init(elasticity);
     list_t *bodies1 = list_init(2, NULL);
     list_t *bodies2 = list_init(2, NULL);
@@ -179,5 +168,5 @@ void create_physics_collision(scene_t *scene, double elasticity, body_t *body1, 
     list_add(bodies2, body1);
     list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
-    create_collision(scene, body1, body2, (collision_handler_t)physics_collision, aux, (free_func_t)force_aux_free);
+    create_collision(scene, body1, body2, (collision_handler_t)platform_collision, aux, (free_func_t)force_aux_free);
 }
