@@ -100,8 +100,8 @@ scene_t *make_scene() {
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
 
-    body_t *background1 = make_background_body((vector_t){.x = 0, .y = 960});
-    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 1920});
+    body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 
@@ -309,8 +309,7 @@ int main() {
             break;
         }
 
-        // freeing platforms, etc that are out of the screen
-        for(int i = 1; i < scene_bodies(scene); i++) {
+        for(int i = 3; i < scene_bodies(scene); i++) {
             if (!in_screen(center, scene_get_body(scene, i))) {
                 scene_remove_body(scene, i);
             }
@@ -322,6 +321,14 @@ int main() {
             more_platforms(scene, center);
             center.y = body_get_centroid(doodle).y;
             sdl_set_center(center);
+            for (int i = 1; i < 3; i++) {
+                body_t *background = scene_get_body(scene, i);
+                vector_t centroid = body_get_centroid(background);
+                if (centroid.y <= center.y - HEIGHT2/2) {
+                    centroid.y = center.y + HEIGHT2/2 + HEIGHT2;
+                    body_set_centroid(background, centroid);
+                }
+            }
         }
 
         wrap(doodle);
