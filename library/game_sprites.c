@@ -3,8 +3,8 @@
 #include "vector.h"
 #include "sdl_wrapper.h"
 
-const vector_t RIGHT_OFFSET = {.x = 12.5, .y = -33.5};
-const vector_t LEFT_OFFSET = {.x = -12.5, .y = -33.5};
+const vector_t RIGHT_OFFSET = {.x = 12.5, .y = 33.5};
+const vector_t LEFT_OFFSET = {.x = -12.5, .y = 33.5};
 
 const vector_t FACE_RIGHT = {.x = -25, .y = 0};
 const vector_t FACE_LEFT = {.x = 25, .y = 0};

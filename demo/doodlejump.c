@@ -100,8 +100,8 @@ scene_t *make_scene() {
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
 
-    body_t *background1 = make_background_body(VEC_ZERO);
-    body_t *background2 = make_background_body((vector_t){.x = 0, .y = -960});
+    body_t *background1 = make_background_body((vector_t){.x = 0, .y = 960});
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 1920});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 
@@ -294,6 +294,7 @@ int main() {
         }
 
         wrap(doodle);
+        // printf("body.x %f\nbody.y %f\nsprite.x %f\nsprite.y %f\n", body_get_centroid(scene_get_body(scene, 0)).x, body_get_centroid(scene_get_body(scene, 0)).y, sprite_get_center(body_get_sprite(scene_get_body(scene, 0))).x, sprite_get_center(body_get_sprite(scene_get_body(scene, 0))).y);
         scene_tick(scene, dt);
         sdl_render_scene(scene);
     }

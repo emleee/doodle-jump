@@ -33,7 +33,7 @@ void sprite_translate(sprite_t *sprite, vector_t displacement) {
 
 void sprite_set_center(sprite_t *sprite, vector_t center) {
     sprite->center.x = center.x;
-    sprite->center.y = 960-center.y;
+    sprite->center.y = center.y;
     sprite->box->x = sprite->center.x - (sprite->box->w)/2;
     sprite->box->y = sprite->center.y - (sprite->box->h)/2;
 }
