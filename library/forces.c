@@ -155,15 +155,17 @@ void physics_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
     vector_t v2 = body_get_velocity(body2);
     double impulse;
     if (mass1 == INFINITY) {
-        // impulse = 50;
+        // body_set_velocity(body2, VEC_ZERO);
+        // impulse = -50*mass2;
         impulse = mass2 * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
     }
     else if (mass2 == INFINITY) {
-        // impulse = 50;
+        // body_set_velocity(body1, VEC_ZERO);
+        // impulse = -50*mass1;
         impulse = mass1 * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
     }
     else {
-        // impulse = 50;
+        // impulse = -50*mass1;
         impulse = mass1 * mass2 / (mass1+mass2) * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
     }
     body_add_impulse(body1, vec_multiply(impulse, axis));

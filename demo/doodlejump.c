@@ -27,31 +27,57 @@ const double PLAYER_X_VELOCITY = 600;
 
 const double SCORE_FACTOR = 20;
 
-const rgb_color_t DOODLE_BODY_COLOR = {.r = 100/255.0, .g = 55/255.0, .b = 250/255.0}; // make transparent later
+const rgb_color_t DOODLE_BODY_COLOR = {.r = 0.5, .g = 0.5, .b = 0.5};
 const double DOODLE_MASS = 5.0;
 const double MAX_JUMP = 250.0; // calculate this
 
 const double G = -150.0;
 
 // modify based on theresa's stuff
-body_t *make_block(vector_t center, rgb_color_t color, char *info) {
+body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     list_t *shape = list_init(4, free);
     vector_t *v = malloc(sizeof(*v));
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {30, 0};
+    *v = (vector_t) {109, 0};   // magic numbers
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {30, 89};
+    *v = (vector_t) {109, 170};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 89};
+    *v = (vector_t) {0, 170};
     list_add(shape, v);
 
-    body_t *block = body_init_with_info(shape, 10, color, info, free);
-    body_set_centroid(block, center);
-    return block;
+    sprite_t *doodle_sprite = make_jump_right();
+    body_t *doodle = body_init_with_sprite(shape, 10, color, info, free, doodle_sprite);
+    body_set_centroid(doodle, center);
+
+    return doodle;
+}
+
+body_t *make_background_body(vector_t center) {
+    char *info = malloc(11*sizeof(char));
+    strcpy(info, "background");
+
+    list_t *shape = list_init(4, free);
+    vector_t *v = malloc(sizeof(*v));
+    *v = (vector_t) {-1, 1};
+    list_add(shape, v);
+    v = malloc(sizeof(*v));
+    *v = (vector_t) {1, 1};   // magic numbers
+    list_add(shape, v);
+    v = malloc(sizeof(*v));
+    *v = (vector_t) {1, -1};
+    list_add(shape, v);
+    v = malloc(sizeof(*v));
+    *v = (vector_t) {-1, -1};
+    list_add(shape, v);
+
+    sprite_t *sprite = make_background();
+    body_t *background = body_init_with_sprite(shape, 1, DOODLE_BODY_COLOR, info, free, sprite);
+    body_set_centroid(background, center);
+    return background;
 }
 
 scene_t *make_scene() {
@@ -59,21 +85,24 @@ scene_t *make_scene() {
 
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
-    doodle_info[0] = '\0';
     strcpy(doodle_info, "doodle");
     vector_t start = {.x = WIDTH2/2, .y = 0};
 
-    body_t *doodle = make_block(start, DOODLE_BODY_COLOR, doodle_info);
-    sprite_t *doodle_sprite = make_jump_right(vec_add(body_get_centroid(doodle), RIGHT_OFFSET));
-    body_set_sprite(doodle, doodle_sprite);
+    body_t *doodle = make_doodle(start, DOODLE_BODY_COLOR, doodle_info);
 
-    sprite_t *left_jump = make_jump_left(sprite_get_center(doodle_sprite));
-    scene_add_sprite(scene, doodle_sprite);
+    sprite_t *right_jump = body_get_sprite(doodle);
+    sprite_t *left_jump = make_jump_left();
+    scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
     body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
+
+    body_t *background1 = make_background_body(VEC_ZERO);
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = -960});
+    scene_add_body(scene, background1);
+    scene_add_body(scene, background2);
 
     // generates evenly spaced starting platforms, will change later
     vector_t scale = {.x = 0, .y = HEIGHT2 / STARTING_PLATFORMS};
@@ -149,6 +178,7 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
+                body_set_rotation(player, 0);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
                     face_right(player, scene_get_sprite(scene, 0));
                 }
@@ -160,6 +190,7 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
                 }
                 break;
             case LEFT_ARROW:
+                body_set_rotation(player, M_PI);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
                     face_left(player, scene_get_sprite(scene, 1));
                 }

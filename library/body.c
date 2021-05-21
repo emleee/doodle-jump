@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <sprite.h>
+#include "game_sprites.h"
 
 typedef struct body {
     list_t *shape;
@@ -107,7 +108,15 @@ double body_get_direction(body_t *body) {
 void body_set_centroid(body_t *body, vector_t x) {
     polygon_translate(body->shape, vec_subtract(x, body->centroid));
     if (body->sprite != NULL) {
-        sprite_set_center(body->sprite, x);
+        if (body->direction == 0 && strcmp(body->info, "doodle") == 0) {
+            sprite_set_center(body->sprite, vec_add(x, RIGHT_OFFSET));
+        }
+        else if (body->direction == M_PI && strcmp(body->info, "doodle") == 0){
+            sprite_set_center(body->sprite, vec_add(x, LEFT_OFFSET));
+        }
+        else if (strcmp(body->info, "background") == 0) {
+            sprite_set_center(body->sprite, vec_add(x, (vector_t){.x = 360, .y = 480}));
+        }
     }
     body->centroid = x;
 }
