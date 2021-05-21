@@ -41,13 +41,13 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {109, 0};   // magic numbers
+    *v = (vector_t) {96, 0};   // magic numbers
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {109, 170};
+    *v = (vector_t) {96, 148};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 170};
+    *v = (vector_t) {0, 148};
     list_add(shape, v);
 
     sprite_t *doodle_sprite = make_jump_right();
