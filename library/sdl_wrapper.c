@@ -44,6 +44,9 @@ key_handler_t key_handler = NULL;
  * Used to mesasure how long a key has been held.
  */
 uint32_t key_start_timestamp;
+
+mouse_handler_t mouse_handler = NULL;
+
 /**
  * The value of clock() when time_since_last_tick() was last called.
  * Initially 0.
@@ -201,6 +204,8 @@ text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *c
 
 bool sdl_is_done(void *scene) {
     SDL_Event *event = malloc(sizeof(*event));
+    int *x;
+    int *y;
     assert(event != NULL);
     while (SDL_PollEvent(event)) {
         switch (event->type) {
@@ -223,6 +228,14 @@ bool sdl_is_done(void *scene) {
                     event->type == SDL_KEYDOWN ? KEY_PRESSED : KEY_RELEASED;
                 double held_time = (timestamp - key_start_timestamp) / MS_PER_S;
                 key_handler(key, type, held_time, scene);
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                x = malloc(sizeof(int));
+                y = malloc(sizeof(int));
+                SDL_GetMouseState(x, y);
+                mouse_handler(event->button.button, *x, *y, scene);
+                free(x);
+                free(y);
                 break;
         }
     }
@@ -325,6 +338,10 @@ void sdl_render_scene(scene_t *scene) {
 
 void sdl_on_key(key_handler_t handler) {
     key_handler = handler;
+}
+
+void sdl_mouse(mouse_handler_t handler) {
+    mouse_handler = handler;
 }
 
 double time_since_last_tick(void) {
