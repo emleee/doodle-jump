@@ -192,4 +192,5 @@ void body_set_mass(body_t *body, double mass);
  */
 bool body_is_removed(body_t *body);
 
+
 #endif // #ifndef __BODY_H__

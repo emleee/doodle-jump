@@ -15,6 +15,7 @@
 #include "game_sprites.h"
 #include "SDL2/SDL_mixer.h"
 #include "text.h"
+#include "test_util.h"
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
@@ -30,7 +31,7 @@ const double PLAYER_X_VELOCITY = 600;
 
 const double SCORE_FACTOR = 20;
 
-const rgb_color_t DOODLE_BODY_COLOR = {.r = 0.5, .g = 0.5, .b = 0.5};
+const rgb_color_t DOODLE_BODY_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
 const double DOODLE_MASS = 5.0;
 const double MAX_JUMP = 290.0;
 
@@ -149,6 +150,11 @@ scene_t *make_scene() {
     sprite_t *left_jump = make_jump_left();
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
+    
+    sprite_t *right_crouch = make_crouch_right();
+    sprite_t *left_crouch = make_crouch_left();
+    scene_add_sprite(scene, right_crouch);
+    scene_add_sprite(scene, left_crouch);
 
     body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
@@ -241,15 +247,14 @@ body_t *make_pellet (vector_t center) {
     }
     char *info = malloc(7*sizeof(char));
     strcpy(info, "pellet");
-    rgb_color_t color = {.r = 0.5, .g = 0.5, .b = 0.5};
     polygon_translate(points, center);
-    body_t *pellet = body_init_with_info(points, 5, color, info, free);
+    body_t *pellet = body_init_with_info(points, 5, DOODLE_BODY_COLOR, info, free);
     return pellet;
 }
 
 void mouse_click(int key, int x, int y, void *scene) {
     body_t *player = scene_get_body((scene_t *)scene, 0);
-    vector_t mouth = body_get_centroid(player);
+    vector_t mouth = find_mouth(player);
     vector_t mouth_window = get_window_position(mouth, get_window_center());
     body_t *pellet;
     switch(key) {
@@ -284,6 +289,8 @@ int main() {
     sdl_init(start_min, start_max);
     srand(time(0));
 
+    int timer = 0;
+
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
     scene_t *scene = make_scene();
@@ -304,6 +311,7 @@ int main() {
 
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
+
 
     // char score[100];
 
@@ -346,7 +354,7 @@ int main() {
             }
         }
 
-        // shfiting the viewing window if the doodle goes higher than the center
+        // shifting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center.y) {
             // generates more platforms
             more_platforms(scene, center, false);
@@ -361,10 +369,32 @@ int main() {
                 }
             }
         }
-
+        
+        if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
+            timer++;
+        }
+        
         wrap(doodle);
-        // printf("body.x %f\nbody.y %f\nsprite.x %f\nsprite.y %f\n", body_get_centroid(scene_get_body(scene, 0)).x, body_get_centroid(scene_get_body(scene, 0)).y, sprite_get_center(body_get_sprite(scene_get_body(scene, 0))).x, sprite_get_center(body_get_sprite(scene_get_body(scene, 0))).y);
         scene_tick(scene, dt);
+
+        if (within(1, body_get_velocity(doodle).y, 299.1)) {
+            if (body_get_direction(doodle) == 0) {
+                sprite_crouch(doodle, scene_get_sprite(scene, 2));
+            }
+            else {
+                sprite_crouch(doodle, scene_get_sprite(scene, 3));
+            }
+        }
+        else if (timer == 25) {
+            if (body_get_direction(doodle) == 0) {
+                sprite_jump(doodle, scene_get_sprite(scene, 0));
+            }
+            else {
+                sprite_jump(doodle, scene_get_sprite(scene, 1));
+            }
+            timer = 0;
+        }
+        
         sdl_render_scene(scene);
     }
 
