@@ -8,9 +8,11 @@
 const vector_t RIGHT_OFFSET;
 const vector_t LEFT_OFFSET;
 
-sprite_t *make_jump_left(vector_t center);
+sprite_t *make_jump_left();
 
-sprite_t *make_jump_right(vector_t center);
+sprite_t *make_jump_right();
+
+sprite_t *make_background();
 
 void face_right(body_t *body, sprite_t *sprite);
 

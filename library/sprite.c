@@ -26,15 +26,15 @@ void sprite_set_parameters(sprite_t *sprite, vector_t center, double width, doub
 
 void sprite_translate(sprite_t *sprite, vector_t displacement) {
     sprite->box->x += displacement.x;
-    sprite->box->y += displacement.y;
+    sprite->box->y -= displacement.y;
     sprite->center.x += displacement.x;
-    sprite->center.y += displacement.y;
+    sprite->center.y -= displacement.y;
 }
 
 void sprite_set_center(sprite_t *sprite, vector_t center) {
     sprite->center.x = center.x;
     sprite->center.y = 960-center.y;
-    sprite->box->x = center.x - (sprite->box->w)/2;
+    sprite->box->x = sprite->center.x - (sprite->box->w)/2;
     sprite->box->y = sprite->center.y - (sprite->box->h)/2;
 }
 
