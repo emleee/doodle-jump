@@ -41,13 +41,13 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {109, 0};   // magic numbers
+    *v = (vector_t) {96, 0};   // magic numbers
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {109, 170};
+    *v = (vector_t) {96, 148};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 170};
+    *v = (vector_t) {0, 148};
     list_add(shape, v);
 
     sprite_t *doodle_sprite = make_jump_right();
@@ -262,6 +262,7 @@ int main() {
     scoring->y = 10;
 
     char *score = malloc(100*sizeof(char));
+    char *buffer = malloc(100*sizeof(char));
 
     // char score[100];
 
@@ -285,9 +286,9 @@ int main() {
         double curr = calculate_score(center);
 
         // strcat(sprintf(score, "%f", curr), '\n');
-        sprintf(score, "%.1", curr);
+        sprintf(buffer, "%.1f", curr);
         // printf("\n%s\n", score);
-        // strcat(score, '\n');
+        strcat(score, buffer);
         text_t *scorebox = text_create(score, color, 20, scoring, 100, 20);
         scene_add_text(scene, scorebox);
 
@@ -325,9 +326,13 @@ int main() {
         scene_tick(scene, dt);
         sdl_render_scene(scene);
     }
-    FILE *file = fopen("highscores.txt", "w");
+
+    FILE *file = fopen("highscores.txt", "a+");
+    fputs("\n", file);
     fprintf(file, score);
+
     fclose(file);
     free(score);
+    free(buffer);
     scene_free(scene);
 }
