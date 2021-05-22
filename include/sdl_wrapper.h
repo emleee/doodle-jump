@@ -45,6 +45,8 @@ typedef enum {
  */
 typedef void (*key_handler_t)(char key, key_event_type_t type, double held_time, void *scene);
 
+typedef void (*mouse_handler_t)(int key, int x, int y, void *scene);
+
 bool loadMedia();
 Mix_Chunk *get_jump();
 Mix_Chunk *get_shoot();
@@ -136,6 +138,8 @@ void sdl_render_scene(scene_t *scene);
  * @param handler the function to call with each key press
  */
 void sdl_on_key(key_handler_t handler);
+
+void sdl_mouse(mouse_handler_t handler);
 
 /**
  * Gets the amount of time that has passed since the last time

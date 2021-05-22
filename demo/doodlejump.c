@@ -235,6 +235,35 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     }
 }
 
+body_t *make_pellet (vector_t center) {
+    list_t *points = list_init(20, free); // 13/16 + 1
+    for (int i = 0; i < 20; i++) {
+        vector_t *pt = malloc(sizeof(vector_t));
+        pt->x = 7 * cos(2 * M_PI * i / 20 + M_PI / 2);
+        pt->y = 7 * sin(2 * M_PI * i / 20 + M_PI / 2);
+        list_add(points, pt);
+    }
+    char *info = malloc(7*sizeof(char));
+    strcpy(info, "pellet");
+    rgb_color_t color = {.r = 0.5, .g = 0.5, .b = 0.5};
+    polygon_translate(points, center);
+    body_t *pellet = body_init_with_info(points, 5, color, info, free);
+    return pellet;
+}
+
+void mouse_click(int key, int x, int y, void *scene) {
+    body_t *player = scene_get_body((scene_t *)scene, 0);
+    vector_t mouth = body_get_centroid(player);
+    vector_t mouth_window = get_window_position(mouth, get_window_center());
+    body_t *pellet;
+    switch(key) {
+        case SDL_BUTTON_LEFT:
+            pellet = make_pellet(mouth);
+            body_set_velocity(pellet, (vector_t){.x = x-mouth_window.x, .y = -y+mouth_window.y});
+            scene_add_body(scene, pellet);
+    }
+}
+
 double calculate_score(vector_t center) {
     // find doodle center height
     double height = center.y;
@@ -256,6 +285,7 @@ int main() {
     srand(time(0));
 
     sdl_on_key(on_key);
+    sdl_mouse(mouse_click);
     scene_t *scene = make_scene();
     body_t *doodle = scene_get_body(scene, 0);
 
