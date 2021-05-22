@@ -7,6 +7,10 @@
 #include "collision.h"
 #include "force_package.h"
 
+const double BOOST = -300;
+const double DOODLE_HEIGHT2 = 148.0;
+const double ERROR = 5;
+
 void gravity(void *a) {
     force_aux_t *aux = (force_aux_t *)a;
     double G = force_aux_get_constant(aux);
@@ -99,7 +103,7 @@ void free_collision_package(collision_package_t *package) {
     free(package);
 }
 
-void create_collision(scene_t *scene, body_t *body1, body_t *body2, collision_handler_t handler, void *aux, free_func_t freer) {
+void create_collision(scene_t *scene, body_t *body1, body_t *body2, collision_handler_t handler, void *aux, free_func_t freer, force_creator_t collided) {
     list_t *bodies = list_init(2, NULL);
     list_add(bodies, body1);
     list_add(bodies, body2);
@@ -130,6 +134,48 @@ void collided(void *a) {
     }
 }
 
+void platform_collided(void *a) {
+    force_aux_t *aux = ((collision_package_t *)a)->aux;
+    list_t *bodies = force_aux_get_bodies(aux);
+    body_t *body1 = list_get(bodies, 0);
+    body_t *body2 = list_get(bodies, 1);
+    if (find_collision(body_get_shape(body1), body_get_shape(body2)).collided) {
+        list_t *points1 = body_get_shape(body1);
+        double min = body_get_centroid(body1).y;
+        for (int i = 0; i < list_size(points1); i++) {
+            double val = ((vector_t *)list_get(points1, i))->y;
+            if (val < min) {
+                min = val;
+            }
+        }
+        list_t *points2 = body_get_shape(body2);
+        double max = body_get_centroid(body2).y;
+        for (int i = 0; i < list_size(points2); i++) {
+            double val = ((vector_t *)list_get(points2, i))->y;
+            if (val > max) {
+                max = val;
+            }
+        }
+        vector_t axis = find_collision(body_get_shape(body1), body_get_shape(body2)).axis;
+        if (max > min + ERROR || body_get_velocity(body1).y > 0 || round(axis.x) != 0 || round(axis.y) != -1) {
+            // printf("%f %f %f\n", max, min, body_get_velocity(body1).y);
+            ((collision_package_t *)a)->collided = false;
+            return;
+        }
+        if (((collision_package_t *)a)->collided) {
+            return;
+        }
+        ((collision_package_t *)a)->collided = true;
+        vector_t centroid = body_get_centroid(body1);
+        centroid.y = max + DOODLE_HEIGHT2/2;
+        body_set_centroid(body1, centroid);
+        ((collision_package_t *)a)->handler(body1, body2, axis, aux);
+    }
+    else {
+        ((collision_package_t *)a)->collided = false;
+    }
+}
+
 void destructive_collision(body_t *body1, body_t *body2, vector_t *axis, void *aux) {
     if (find_collision(body_get_shape(body1), body_get_shape(body2)).collided) {
         body_remove(body1);
@@ -143,19 +189,16 @@ void create_destructive_collision(scene_t *scene, body_t *body1, body_t *body2) 
     list_add(bodies, body1);
     list_add(bodies, body2);
     force_aux_set_bodies(aux, bodies);
-    create_collision(scene, body1, body2, (collision_handler_t)destructive_collision, aux, (free_func_t)force_aux_free);
+    create_collision(scene, body1, body2, (collision_handler_t)destructive_collision, aux, (free_func_t)force_aux_free, collided);
 }
 
 void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    if (round(axis.x) != 0 || round(axis.y) != -1) {
-        return;
-    }
     force_aux_t *a = (force_aux_t *)aux;
     double mass1 = body_get_mass(body1);
     vector_t v1 = body_get_velocity(body1);
     v1.y = 0;
     body_set_velocity(body1, v1);
-    double impulse = mass1 * -300;
+    double impulse = mass1 * BOOST;
     body_add_impulse(body1, vec_multiply(impulse, axis));
 }
 
@@ -168,5 +211,5 @@ void create_platform_collision(scene_t *scene, double elasticity, body_t *body1,
     list_add(bodies2, body1);
     list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
-    create_collision(scene, body1, body2, (collision_handler_t)platform_collision, aux, (free_func_t)force_aux_free);
+    create_collision(scene, body1, body2, (collision_handler_t)platform_collision, aux, (free_func_t)force_aux_free, platform_collided);
 }

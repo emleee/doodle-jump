@@ -18,10 +18,12 @@
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
+const double DOODLE_WIDTH = 96.0;
+const double DOODLE_HEIGHT = 148.0;
 
-const double STARTING_PLATFORMS = 7; // get rid of this later?
-const double MAX_PLATFORMS = 20;
+const double MAX_PLATFORMS = 18;
 const double PLATFORM_WIDTH2 = 60;
+const double PLATFORM_HEIGHT2 = 20;
 
 const vector_t START_VELOCITY = {.x = 0, .y = 300};
 const double PLAYER_X_VELOCITY = 600;
@@ -30,7 +32,7 @@ const double SCORE_FACTOR = 20;
 
 const rgb_color_t DOODLE_BODY_COLOR = {.r = 0.5, .g = 0.5, .b = 0.5};
 const double DOODLE_MASS = 5.0;
-const double MAX_JUMP = 250.0; // calculate this
+const double MAX_JUMP = 290.0;
 
 const double G = -150.0;
 
@@ -41,13 +43,13 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {96, 0};   // magic numbers
+    *v = (vector_t) {DOODLE_WIDTH, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {96, 148};
+    *v = (vector_t) {DOODLE_WIDTH, DOODLE_HEIGHT};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 148};
+    *v = (vector_t) {0, DOODLE_HEIGHT};
     list_add(shape, v);
 
     sprite_t *doodle_sprite = make_jump_right();
@@ -81,7 +83,7 @@ body_t *make_background_body(vector_t center) {
     return background;
 }
 
-void more_platforms(scene_t *scene, vector_t center) {
+void more_platforms(scene_t *scene, vector_t center, bool first) {
     int num_platforms = 0;
     for (int i = 3; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
@@ -105,27 +107,32 @@ void more_platforms(scene_t *scene, vector_t center) {
             }
         }
     }
-    // for (int i = num_platforms; i < MAX_PLATFORMS; i++) {
-    //     char *info = malloc(22*sizeof(char));
-    //     strcpy(info, "nonessential platform");
-    //     int random = rand() % 4;
-    //     vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * HEIGHT2 + center.y + HEIGHT2/2};
-    //     if (random < 2) {
-    //         body_t *new_platform = trick_platform(platform_center, info);
-    //         scene_add_body(scene, new_platform);
-    //         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-    //     }
-    //     else if (random == 2) {
-    //         body_t *new_platform = sliding_platform(platform_center, info);
-    //         scene_add_body(scene, new_platform);
-    //         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-    //     }
-    //     else {
-    //         body_t *new_platform = normal_platform(platform_center, info);
-    //         scene_add_body(scene, new_platform);
-    //         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-    //     }
-    // }
+    int i = num_platforms;
+    if (first) {
+        i = MAX_PLATFORMS/2;
+    }
+    while (i < MAX_PLATFORMS) {
+        char *info = malloc(22*sizeof(char));
+        strcpy(info, "nonessential platform");
+        int random = rand() % 4;
+        vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * HEIGHT2 + center.y + HEIGHT2/2};
+        if (random < 2) {
+            body_t *new_platform = trick_platform(platform_center, info);
+            scene_add_body(scene, new_platform);
+            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+        }
+        else if (random == 2) {
+            body_t *new_platform = sliding_platform(platform_center, info);
+            scene_add_body(scene, new_platform);
+            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+        }
+        else {
+            body_t *new_platform = normal_platform(platform_center, info);
+            scene_add_body(scene, new_platform);
+            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+        }
+        i++;
+    }
 }
 
 scene_t *make_scene() {
@@ -152,14 +159,14 @@ scene_t *make_scene() {
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 
-    vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2), .y = MAX_JUMP};
+    vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2), .y = MAX_JUMP - DOODLE_HEIGHT/2 - PLATFORM_HEIGHT2/2};
     char *info = malloc(24*sizeof(char));
     strcpy(info, "essential platform");
     body_t *platform = normal_platform(platform_center, info);
     scene_add_body(scene, platform);
     create_platform_collision(scene, 0, doodle, platform);
     vector_t center = {.x = WIDTH2/2, .y = -1 * HEIGHT2/2};
-    more_platforms(scene, center);
+    more_platforms(scene, center, true);
 
     return scene;
 }
@@ -175,11 +182,11 @@ bool in_screen(vector_t center, body_t *body) {
 }
 
 body_t *wrap(body_t *doodle) {
-    if (body_get_centroid(doodle).x >= WIDTH2) { // >= width plus width of doodle /2
+    if (body_get_centroid(doodle).x >= WIDTH2) {
         vector_t shift = {.x = 0, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
-    else if (body_get_centroid(doodle).x <= 0) { // <= 0 minus width of doodle /2
+    else if (body_get_centroid(doodle).x <= 0) {
         vector_t shift = {.x = WIDTH2, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
@@ -308,7 +315,7 @@ int main() {
         // shfiting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center.y) {
             // generates more platforms
-            more_platforms(scene, center);
+            more_platforms(scene, center, false);
             center.y = body_get_centroid(doodle).y;
             sdl_set_center(center);
             for (int i = 1; i < 3; i++) {

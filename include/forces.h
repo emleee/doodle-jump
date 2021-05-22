@@ -89,7 +89,8 @@ void create_collision(
     body_t *body2,
     collision_handler_t handler,
     void *aux,
-    free_func_t freer
+    free_func_t freer,
+    force_creator_t collided
 );
 
 /**
@@ -129,6 +130,8 @@ void create_platform_collision(
 );
 
 void collided(void *a);
+
+void platform_collided(void *a);
 
 typedef struct collision_package {
    void *aux;
