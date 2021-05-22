@@ -147,12 +147,12 @@ void create_destructive_collision(scene_t *scene, body_t *body1, body_t *body2) 
 }
 
 void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
+    if (round(axis.x) != 0 || round(axis.y) != -1) {
+        return;
+    }
     force_aux_t *a = (force_aux_t *)aux;
     double mass1 = body_get_mass(body1);
     vector_t v1 = body_get_velocity(body1);
-    if (v1.y > 0) {
-        return;
-    }
     v1.y = 0;
     body_set_velocity(body1, v1);
     double impulse = mass1 * -300;

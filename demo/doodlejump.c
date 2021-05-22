@@ -41,13 +41,13 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {109, 0};   // magic numbers
+    *v = (vector_t) {96, 0};   // magic numbers
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {109, 170};
+    *v = (vector_t) {96, 148};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 170};
+    *v = (vector_t) {0, 148};
     list_add(shape, v);
 
     sprite_t *doodle_sprite = make_jump_right();
@@ -81,6 +81,53 @@ body_t *make_background_body(vector_t center) {
     return background;
 }
 
+void more_platforms(scene_t *scene, vector_t center) {
+    int num_platforms = 0;
+    for (int i = 3; i < scene_bodies(scene); i++) {
+        body_t *platform = scene_get_body(scene, i);
+        char *info = body_get_info(platform);
+        if (strstr(info, "platform") == NULL) {
+            continue;
+        }
+        num_platforms++;
+        if (strcmp("essential platform", info) == 0) {
+            // essential platforms are generated one jump height apart
+            double new_height = body_get_centroid(platform).y + MAX_JUMP;
+            // only want to generate platforms that will be within one window height above the current window
+            if ((new_height > center.y + HEIGHT2/2) && (new_height < center.y + HEIGHT2/2 + HEIGHT2)) {
+                strcat(info, " done");
+                vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
+                char *new_info = malloc(24*sizeof(char));
+                strcpy(new_info, "essential platform");
+                body_t *new_platform = normal_platform(platform_center, new_info);
+                scene_add_body(scene, new_platform);
+                create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+            }
+        }
+    }
+    // for (int i = num_platforms; i < MAX_PLATFORMS; i++) {
+    //     char *info = malloc(22*sizeof(char));
+    //     strcpy(info, "nonessential platform");
+    //     int random = rand() % 4;
+    //     vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * HEIGHT2 + center.y + HEIGHT2/2};
+    //     if (random < 2) {
+    //         body_t *new_platform = trick_platform(platform_center, info);
+    //         scene_add_body(scene, new_platform);
+    //         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+    //     }
+    //     else if (random == 2) {
+    //         body_t *new_platform = sliding_platform(platform_center, info);
+    //         scene_add_body(scene, new_platform);
+    //         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+    //     }
+    //     else {
+    //         body_t *new_platform = normal_platform(platform_center, info);
+    //         scene_add_body(scene, new_platform);
+    //         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+    //     }
+    // }
+}
+
 scene_t *make_scene() {
     scene_t *scene = scene_init();
 
@@ -100,30 +147,19 @@ scene_t *make_scene() {
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
 
-    body_t *background1 = make_background_body(VEC_ZERO);
-    body_t *background2 = make_background_body((vector_t){.x = 0, .y = -960});
+    body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 
-    // generates evenly spaced starting platforms, will change later
-    vector_t scale = {.x = 0, .y = HEIGHT2 / STARTING_PLATFORMS};
-    for(int i = 0; i < STARTING_PLATFORMS; i++) {
-        vector_t center = vec_multiply(i+1, scale); //change once collisions are implemented
-        center.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2;
-        body_t *platform;
-        if (i % 2 == 1) {
-            char *info = malloc(24*sizeof(char));
-            strcpy(info, "essential platform");
-            platform = normal_platform(center, info);
-        }
-        else {
-            char *info = malloc(22*sizeof(char));
-            strcpy(info, "nonessential platform");
-            platform = normal_platform(center, info);
-        }
-        scene_add_body(scene, platform);
-        create_platform_collision(scene, 0, doodle, platform);
-    }
+    vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2), .y = MAX_JUMP};
+    char *info = malloc(24*sizeof(char));
+    strcpy(info, "essential platform");
+    body_t *platform = normal_platform(platform_center, info);
+    scene_add_body(scene, platform);
+    create_platform_collision(scene, 0, doodle, platform);
+    vector_t center = {.x = WIDTH2/2, .y = -1 * HEIGHT2/2};
+    more_platforms(scene, center);
 
     return scene;
 }
@@ -148,53 +184,6 @@ body_t *wrap(body_t *doodle) {
         body_set_centroid(doodle, shift);
     }
     return doodle;
-}
-
-void more_platforms(scene_t *scene, vector_t center) {
-    int num_platforms = 0;
-    for (int i = 1; i < scene_bodies(scene); i++) {
-        body_t *platform = scene_get_body(scene, i);
-        char *info = body_get_info(platform);
-        if (strstr(info, "platform") == NULL) {
-            continue;
-        }
-        num_platforms++;
-        if (strcmp("essential platform", info) == 0) {
-            // essential platforms are generated one jump height apart
-            double new_height = body_get_centroid(platform).y + MAX_JUMP;
-            // only want to generate platforms that will be within one screen height above the current window
-            if ((new_height > center.y + HEIGHT2/2) && (new_height < center.y + HEIGHT2/2 + HEIGHT2)) {
-                strcat(info, " done");
-                vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
-                char *new_info = malloc(24*sizeof(char));
-                strcpy(new_info, "essential platform");
-                body_t *new_platform = normal_platform(platform_center, new_info);
-                scene_add_body(scene, new_platform);
-                create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-            }
-        }
-    }
-    for (int i = num_platforms; i < MAX_PLATFORMS; i++) {
-        char *info = malloc(22*sizeof(char));
-        strcpy(info, "nonessential platform");
-        int random = rand() % 4;
-        vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * HEIGHT2 + center.y + HEIGHT2/2};
-        if (random < 2) {
-            body_t *new_platform = trick_platform(platform_center, info);
-            scene_add_body(scene, new_platform);
-            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-        }
-        else if (random == 2) {
-            body_t *new_platform = sliding_platform(platform_center, info);
-            scene_add_body(scene, new_platform);
-            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-        }
-        else {
-            body_t *new_platform = normal_platform(platform_center, info);
-            scene_add_body(scene, new_platform);
-            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-        }
-    }
 }
 
 void on_key(char key, key_event_type_t type, double held_time, void *scene) {
@@ -235,9 +224,9 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     }
 }
 
-double calculate_score(scene_t *scene) {
+double calculate_score(vector_t center) {
     // find doodle center height
-    double height = body_get_centroid(scene_get_body(scene, 0)).y;
+    double height = center.y;
 
     // calculate score based on certain divisor or smth
     double score = height / SCORE_FACTOR;
@@ -262,14 +251,46 @@ int main() {
     vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
 
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-        vector_t *point = malloc(sizeof(vector_t));
-        point->x = 250;
-        point->y = 10;
-        text_t *text = text_create("Doodle Jump: Fairy Tail", color, 20, point, 200, 25);
-        scene_add_text(scene, text);
+    vector_t *point = malloc(sizeof(vector_t));
+    point->x = 250; // remove magic numbers
+    point->y = 10;
+    text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point, 200, 25);
+    scene_add_text(scene, text);
+
+    vector_t *scoring = malloc(sizeof(vector_t));
+    scoring->x = 10;
+    scoring->y = 10;
+
+    char *score = malloc(100*sizeof(char));
+    char *buffer = malloc(100*sizeof(char));
+
+    // char score[100];
+
+    // score = "High Score: ";
+    // strcat(score, snprintf(score, 50, "%d", calculate_score(scene)));
+    // FILE *file = fopen("highscores.txt", "w");
+    // fprintf(file, score);
+
+
+    // score = calculate_score(scene);
+    // text_t *score = text_create(score, color, 20, scoring, 20, 20);
 
     while (!sdl_is_done(scene)) {
+        // calculate and display score
+        if (scene_textboxes(scene) > 1) {
+            scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
+        }
+        // printf("\n%i\n", scene_textboxes(scene));
+        strcpy(score, "High Score: ");
+        // printf("\n%f\n", calculate_score(center));
+        double curr = calculate_score(center);
 
+        // strcat(sprintf(score, "%f", curr), '\n');
+        sprintf(buffer, "%.1f", curr);
+        // printf("\n%s\n", score);
+        strcat(score, buffer);
+        text_t *scorebox = text_create(score, color, 20, scoring, 100, 20);
+        scene_add_text(scene, scorebox);
 
         double dt = time_since_last_tick();
 
@@ -278,8 +299,7 @@ int main() {
             break;
         }
 
-        // freeing platforms, etc that are out of the screen
-        for(int i = 1; i < scene_bodies(scene); i++) {
+        for(int i = 3; i < scene_bodies(scene); i++) {
             if (!in_screen(center, scene_get_body(scene, i))) {
                 scene_remove_body(scene, i);
             }
@@ -291,11 +311,28 @@ int main() {
             more_platforms(scene, center);
             center.y = body_get_centroid(doodle).y;
             sdl_set_center(center);
+            for (int i = 1; i < 3; i++) {
+                body_t *background = scene_get_body(scene, i);
+                vector_t centroid = body_get_centroid(background);
+                if (centroid.y <= center.y - HEIGHT2/2) {
+                    centroid.y = center.y + HEIGHT2/2 + HEIGHT2;
+                    body_set_centroid(background, centroid);
+                }
+            }
         }
 
         wrap(doodle);
+        // printf("body.x %f\nbody.y %f\nsprite.x %f\nsprite.y %f\n", body_get_centroid(scene_get_body(scene, 0)).x, body_get_centroid(scene_get_body(scene, 0)).y, sprite_get_center(body_get_sprite(scene_get_body(scene, 0))).x, sprite_get_center(body_get_sprite(scene_get_body(scene, 0))).y);
         scene_tick(scene, dt);
         sdl_render_scene(scene);
     }
+
+    FILE *file = fopen("highscores.txt", "a+");
+    fputs("\n", file);
+    fprintf(file, score);
+
+    fclose(file);
+    free(score);
+    free(buffer);
     scene_free(scene);
 }
