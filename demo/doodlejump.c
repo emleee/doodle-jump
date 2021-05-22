@@ -182,11 +182,11 @@ bool in_screen(vector_t center, body_t *body) {
 }
 
 body_t *wrap(body_t *doodle) {
-    if (body_get_centroid(doodle).x >= WIDTH2) {
+    if (body_get_centroid(doodle).x >= WIDTH2 + DOODLE_WIDTH/2) {
         vector_t shift = {.x = 0, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
-    else if (body_get_centroid(doodle).x <= 0) {
+    else if (body_get_centroid(doodle).x <= 0 - DOODLE_WIDTH/2) {
         vector_t shift = {.x = WIDTH2, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
