@@ -77,3 +77,4 @@ High Score: 58.4
 High Score: 29.4
 High Score: 38.2
 High Score: 29.4
+High Score: 42.0
