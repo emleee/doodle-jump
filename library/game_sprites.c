@@ -34,46 +34,29 @@ sprite_t *make_crouch_right() {
     return sprite;
 }
 
+sprite_t *make_grass_platform() {
+    sprite_t *sprite = create_sprite("PNGs/Grass_Platform.png");
+    sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
+    return sprite;
+}
+
 sprite_t *make_background() {
     sprite_t *sprite = create_sprite("PNGs/Background.png");
     sprite_set_parameters(sprite, VEC_ZERO, 720, 960);
     return sprite;
 }
 
-void face_left(body_t *body, sprite_t *sprite) {
-    // sprite_set_center(sprite, vec_add(body_get_centroid(body), RIGHT_OFFSET));
+void change_direction(body_t *body, sprite_t *sprite) {
     body_set_sprite(body, sprite);
-    body_set_centroid(body, vec_add(body_get_centroid(body), FACE_LEFT));
+    if (body_get_direction(body) == 0) {
+        body_set_centroid(body, vec_add(body_get_centroid(body), FACE_LEFT));
+    }
+    else {
+        body_set_centroid(body, vec_add(body_get_centroid(body), FACE_RIGHT));
+    }
 }
 
-void face_right(body_t *body, sprite_t *sprite) {
-    // sprite_set_center(sprite, vec_add(body_get_centroid(body), LEFT_OFFSET));
-    body_set_sprite(body, sprite);
-    body_set_centroid(body, vec_add(body_get_centroid(body), FACE_RIGHT));
-}
-
-void sprite_crouch(body_t *body, sprite_t *sprite) {
-    // vector_t sprite_center = sprite_get_center(body_get_sprite(body));
-    // if (body_get_direction(body) == M_PI) {
-    //     sprite_center = vec_add(sprite_center, (vector_t){.x = 10.5, .y = -25.5});
-    // }
-    // else {
-    //     sprite_center = vec_add(sprite_center, (vector_t){.x = -10.5, .y = -25.5});
-    // }
-    // sprite_set_center(sprite, sprite_center);
-    body_set_sprite(body, sprite);
-    body_set_centroid(body, body_get_centroid(body));
-}
-
-void sprite_jump(body_t *body, sprite_t *sprite) {
-    // vector_t sprite_center = sprite_get_center(body_get_sprite(body));
-    // if (body_get_direction(body) == M_PI) {
-    //     sprite_center = vec_add(sprite_center, (vector_t){.x = -10.5, .y = 25.5});
-    // }
-    // else {
-    //     sprite_center = vec_add(sprite_center, (vector_t){.x = 10.5, .y = 25.5});
-    // }
-    // sprite_set_center(sprite, sprite_center);
+void change_motion(body_t *body, sprite_t *sprite) {
     body_set_sprite(body, sprite);
     body_set_centroid(body, body_get_centroid(body));
 }

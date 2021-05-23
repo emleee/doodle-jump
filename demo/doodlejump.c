@@ -206,10 +206,10 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
-                body_set_rotation(player, 0);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
-                    face_right(player, scene_get_sprite(scene, 0));
+                    change_direction(player, scene_get_sprite(scene, 0));
                 }
+                body_set_rotation(player, 0);
                 body_velocity.x = PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
                 if (loadMedia()) {
@@ -218,10 +218,10 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
                 }
                 break;
             case LEFT_ARROW:
-                body_set_rotation(player, M_PI);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
-                    face_left(player, scene_get_sprite(scene, 1));
+                    change_direction(player, scene_get_sprite(scene, 1));
                 }
+                body_set_rotation(player, M_PI);
                 body_velocity.x = -1 * PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
                 if (loadMedia()) {
@@ -373,28 +373,26 @@ int main() {
         if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
             timer++;
         }
-        
-        wrap(doodle);
-        scene_tick(scene, dt);
-
-        if (within(1, body_get_velocity(doodle).y, 299.1)) {
+        if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
             if (body_get_direction(doodle) == 0) {
-                sprite_crouch(doodle, scene_get_sprite(scene, 2));
+                change_motion(doodle, scene_get_sprite(scene, 2));
             }
             else {
-                sprite_crouch(doodle, scene_get_sprite(scene, 3));
+                change_motion(doodle, scene_get_sprite(scene, 3));
             }
         }
         else if (timer == 25) {
             if (body_get_direction(doodle) == 0) {
-                sprite_jump(doodle, scene_get_sprite(scene, 0));
+                change_motion(doodle, scene_get_sprite(scene, 0));
             }
             else {
-                sprite_jump(doodle, scene_get_sprite(scene, 1));
+                change_motion(doodle, scene_get_sprite(scene, 1));
             }
             timer = 0;
         }
         
+        wrap(doodle);
+        scene_tick(scene, dt);
         sdl_render_scene(scene);
     }
 

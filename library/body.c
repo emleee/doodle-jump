@@ -63,7 +63,7 @@ sprite_t *body_get_sprite(body_t *body) {
 
 void body_set_sprite(body_t *body, sprite_t *sprite) {
     body->sprite = sprite;
-    // sprite_set_center(body->sprite, center);
+    // sprite_set_center(body->sprite, body_get_centroid(body));
 }
 
 void body_free(body_t *body) {
@@ -120,6 +120,9 @@ void body_set_centroid(body_t *body, vector_t x) {
         else if (strcmp(body->info, "background") == 0) {
             vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), (vector_t){.x = 360, .y = 480});
             sprite_set_center(body->sprite, sprite_pos);
+        }
+        else {
+            sprite_set_center(body->sprite, get_window_position(x, get_window_center()));
         }
     }
     body->centroid = x;
