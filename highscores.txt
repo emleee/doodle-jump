@@ -67,6 +67,7 @@ High Score: 46.4
 High Score: 32.7
 High Score: 97.6
 High Score: 40.6
+<<<<<<< HEAD
 High Score: 69.9
 High Score: 40.9
 High Score: 24.0
@@ -82,3 +83,16 @@ High Score: 25.0
 High Score: 36.1
 High Score: 98.8
 High Score: 73.4
+=======
+High Score: 25.4
+High Score: 40.5
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 29.4
+High Score: 58.4
+High Score: 29.4
+High Score: 38.2
+High Score: 29.4
+High Score: 42.0
+>>>>>>> 9ef8f2ab698a235d7fe57fbb4bce5365f64a2435
