@@ -128,7 +128,7 @@ void more_platforms(scene_t *scene, vector_t center) {
     // }
 }
 
-scene_t *make_scene() {
+scene_t *make_game_scene() {
     scene_t *scene = scene_init();
 
     // doodle
@@ -161,6 +161,16 @@ scene_t *make_scene() {
     vector_t center = {.x = WIDTH2/2, .y = -1 * HEIGHT2/2};
     more_platforms(scene, center);
 
+    return scene;
+}
+
+scene_t *make_start_scene() {
+    scene_t *scene = scene_init();
+    char *doodle_info = malloc(7*sizeof(char));
+    strcpy(doodle_info, "doodle");
+    vector_t start = {.x = WIDTH2/2, .y = 0};
+
+    body_t *doodle = make_doodle(start, DOODLE_BODY_COLOR, doodle_info);
     return scene;
 }
 
@@ -279,7 +289,7 @@ int main() {
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
-    scene_t *scene = make_scene();
+    scene_t *scene = make_game_scene();
     body_t *doodle = scene_get_body(scene, 0);
 
     vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
