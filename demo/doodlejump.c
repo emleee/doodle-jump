@@ -150,7 +150,7 @@ scene_t *make_scene() {
     sprite_t *left_jump = make_jump_left();
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
-    
+
     sprite_t *right_crouch = make_crouch_right();
     sprite_t *left_crouch = make_crouch_left();
     scene_add_sprite(scene, right_crouch);
@@ -329,16 +329,12 @@ int main() {
         if (scene_textboxes(scene) > 1) {
             scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
         }
-        // printf("\n%i\n", scene_textboxes(scene));
         strcpy(score, "High Score: ");
-        // printf("\n%f\n", calculate_score(center));
         double curr = calculate_score(center);
 
-        // strcat(sprintf(score, "%f", curr), '\n');
         sprintf(buffer, "%.1f", curr);
-        // printf("\n%s\n", score);
         strcat(score, buffer);
-        text_t *scorebox = text_create(score, color, 20, scoring, 100, 20);
+        text_t *scorebox = text_create(score, color, 40, scoring, 200, 40);
         scene_add_text(scene, scorebox);
 
         double dt = time_since_last_tick();
@@ -369,11 +365,11 @@ int main() {
                 }
             }
         }
-        
+
         if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
             timer++;
         }
-        
+
         wrap(doodle);
         scene_tick(scene, dt);
 
@@ -394,7 +390,7 @@ int main() {
             }
             timer = 0;
         }
-        
+
         sdl_render_scene(scene);
     }
 
