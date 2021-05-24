@@ -67,6 +67,23 @@ High Score: 46.4
 High Score: 32.7
 High Score: 97.6
 High Score: 40.6
+<<<<<<< HEAD
+High Score: 69.9
+High Score: 40.9
+High Score: 24.0
+High Score: 28.4
+High Score: 73.0
+High Score: 30.8
+High Score: 58.9
+High Score: 24.0
+High Score: 28.1
+High Score: 48.6
+High Score: 24.0
+High Score: 25.0
+High Score: 36.1
+High Score: 98.8
+High Score: 73.4
+=======
 High Score: 25.4
 High Score: 40.5
 High Score: 24.0
@@ -77,4 +94,38 @@ High Score: 58.4
 High Score: 29.4
 High Score: 38.2
 High Score: 29.4
-High Score: 42.0
+
+High Score: 247.2
+High Score: 44.3
+High Score: 189.1
+High Score: 29.8
+High Score: 24.0
+High Score: 29.8
+High Score: 44.3
+High Score: 102.3
+¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾
+High Score: 232.8
+High Score: 102.3
+High Score: 29.8
+High Score: 102.3
+High Score: 116.0
+High Score: 26.7
+High Score: 24.0
+High Score: 158.3
+¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 24.0
+High Score: 58.7
+High Score: 44.3
+High Score: 131.2
+High Score: 24.0
+High Score: 86.3
+High Score: 90.0

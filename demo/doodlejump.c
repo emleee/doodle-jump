@@ -21,6 +21,9 @@ const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
 const double DOODLE_WIDTH = 96.0;
 const double DOODLE_HEIGHT = 148.0;
+const int NUM_POINTS = 50;
+const double BUTTON_X_RADIUS = 125;
+const double BUTTON_Y_RADIUS = 75;
 
 const double MAX_PLATFORMS = 18;
 const double PLATFORM_WIDTH2 = 60;
@@ -32,7 +35,9 @@ const double PLAYER_X_VELOCITY = 600;
 const double SCORE_FACTOR = 20;
 
 const rgb_color_t DOODLE_BODY_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
+const rgb_color_t BUTTON_COLOR = {.r = 255.0/255, .g = 255.0/255, .b = 255.0/255};
 const double DOODLE_MASS = 5.0;
+const double BUTTON_MASS = INFINITY;
 const double MAX_JUMP = 290.0;
 
 const double G = -150.0;
@@ -89,6 +94,26 @@ body_t *make_background_body(vector_t center) {
 //     return (fabs(centroid1.x - centroid2.x) <= PLATFORM_WIDTH2 || fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2);
 // }
 
+body_t *make_button(vector_t center) {
+    // body shape
+    list_t *points = list_init(NUM_POINTS, free);
+    for (int i = 0; i < (NUM_POINTS); i++) {
+        vector_t *pt = malloc(sizeof(vector_t));
+        pt->x = BUTTON_X_RADIUS * cos(2 * M_PI * i / NUM_POINTS + M_PI / 2);
+        pt->y = BUTTON_Y_RADIUS * sin(2 * M_PI * i / NUM_POINTS + M_PI / 2);
+        list_add(points, pt);
+    }
+    polygon_translate(points, center);
+
+    // body info
+    char *info = malloc(7*sizeof(char));
+    info[0] = '\0';
+    strcat(info, "button");
+
+    body_t *button = body_init_with_info(points, BUTTON_MASS, BUTTON_COLOR, info, free);
+    return button;
+}
+
 void more_platforms(scene_t *scene, vector_t center, bool first) {
     int num_platforms = 0;
     for (int i = 3; i < scene_bodies(scene); i++) {
@@ -142,9 +167,10 @@ void more_platforms(scene_t *scene, vector_t center, bool first) {
     }
 }
 
-scene_t *make_scene() {
-    scene_t *scene = scene_init();
-
+scene_t *make_game_scene() {
+    char *game_info = malloc(5*sizeof(char));
+    strcpy(game_info, "game");
+    scene_t *scene = scene_init_with_info(game_info, free);
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
@@ -183,6 +209,56 @@ scene_t *make_scene() {
     return scene;
 }
 
+scene_t *make_start_scene() {
+    char *scene_info = malloc(6*sizeof(char));
+    strcpy(scene_info, "start");
+    scene_t *scene = scene_init_with_info(scene_info, free);
+
+    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    vector_t *point2 = malloc(sizeof(vector_t));
+    point2->x = 250; // remove magic numbers
+    point2->y = 200;
+    text_t *text2 = text_create("Start", color, 22, point2, 200, 30);
+    scene_add_text(scene, text2);
+
+    // body_t *start_button = make_button(*point2);
+    // scene_add_body(scene, start_button);
+
+    body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
+    scene_add_body(scene, background1);
+    scene_add_body(scene, background2);
+    return scene;
+}
+
+scene_t *make_restart_scene() {
+    char *scene_info = malloc(8*sizeof(char));
+    strcpy(scene_info, "restart");
+    scene_t *scene = scene_init_with_info(scene_info, free);
+
+    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    vector_t *point = malloc(sizeof(vector_t));
+    point->x = 250; // remove magic numbers
+    point->y = 200;
+    text_t *text = text_create("Restart", color, 22, point, 200, 30);
+    scene_add_text(scene, text);
+
+    vector_t *point2 = malloc(sizeof(vector_t));
+    point2->x = 250; // remove magic numbers
+    point2->y = 500;
+    text_t *text2 = text_create("Home", color, 22, point2, 200, 30);
+    scene_add_text(scene, text2);
+
+    // body_t *start_button = make_button(*point2);
+    // scene_add_body(scene, start_button);
+
+    body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
+    scene_add_body(scene, background1);
+    scene_add_body(scene, background2);
+    return scene;
+}
+
 bool in_screen(vector_t center, body_t *body) {
     list_t *points = body_get_shape(body);
     for (int i = 0; i < list_size(points); i++) {
@@ -212,28 +288,28 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
-                body_set_rotation(player, 0);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
-                    face_right(player, scene_get_sprite(scene, 0));
+                    change_direction(player, scene_get_sprite(scene, 0));
                 }
+                body_set_rotation(player, 0);
                 body_velocity.x = PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
-                if (loadMedia()) {
-                    Mix_Chunk *jump = (Mix_Chunk *) get_jump();
-                    Mix_PlayChannel( -1, jump, 0 );
-                }
+                // if (loadMedia()) {
+                //     Mix_Chunk *jump = (Mix_Chunk *) get_jump();
+                //     Mix_PlayChannel( -1, jump, 0 );
+                // }
                 break;
             case LEFT_ARROW:
-                body_set_rotation(player, M_PI);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
-                    face_left(player, scene_get_sprite(scene, 1));
+                    change_direction(player, scene_get_sprite(scene, 1));
                 }
+                body_set_rotation(player, M_PI);
                 body_velocity.x = -1 * PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
-                if (loadMedia()) {
-                    Mix_Chunk *jump = (Mix_Chunk *) get_jump();
-                    Mix_PlayChannel( -1, jump, 0 );
-                }
+                // if (loadMedia()) {
+                //     Mix_Chunk *jump = (Mix_Chunk *) get_jump();
+                //     Mix_PlayChannel( -1, jump, 0 );
+                // }
                 break;
         }
     }
@@ -259,18 +335,43 @@ body_t *make_pellet (vector_t center) {
 }
 
 void mouse_click(int key, int x, int y, void *scene) {
-    body_t *player = scene_get_body((scene_t *)scene, 0);
-    vector_t mouth = find_mouth(player);
-    vector_t mouth_window = get_window_position(mouth, get_window_center());
-    body_t *pellet;
     switch(key) {
         case SDL_BUTTON_LEFT:
-            pellet = make_pellet(mouth);
-            body_set_velocity(pellet, (vector_t){.x = x-mouth_window.x, .y = -y+mouth_window.y});
-            scene_add_body(scene, pellet);
-            if (loadMedia()) {
-                Mix_Chunk *shoot = (Mix_Chunk *) get_shoot();
-                Mix_PlayChannel( -1, shoot, 0 );
+            if (strcmp(scene_get_info(scene), "game") == 0) {
+                body_t *player = scene_get_body((scene_t *)scene, 0);
+                vector_t mouth = find_mouth(player);
+                vector_t mouth_window = get_window_position(mouth, get_window_center());
+                body_t *pellet;
+                pellet = make_pellet(mouth);
+                body_set_velocity(pellet, (vector_t){.x = x-mouth_window.x, .y = -y+mouth_window.y});
+                scene_add_body(scene, pellet);
+                if (loadMedia()) {
+                    Mix_Chunk *shoot = (Mix_Chunk *) get_shoot();
+                    Mix_PlayChannel( -1, shoot, 0 );
+                }
+            }
+            else if (strcmp(scene_get_info(scene), "start") == 0) {
+                if (x < (250 + BUTTON_X_RADIUS) && x > (250 - BUTTON_X_RADIUS)) {
+                    if (y < (200 + BUTTON_Y_RADIUS) && y > (200 - BUTTON_Y_RADIUS)) {
+                        char *game_info = malloc(5*sizeof(char));
+                        strcpy(game_info, "game");
+                        scene_set_next_info(scene, game_info);
+                    }
+                }
+            }
+            else if (strcmp(scene_get_info(scene), "restart") == 0) {
+                if (x < (250 + BUTTON_X_RADIUS) && x > (250 - BUTTON_X_RADIUS)) {
+                    if (y < (200 + BUTTON_Y_RADIUS) && y > (200 - BUTTON_Y_RADIUS)) {
+                        char *game_info = malloc(5*sizeof(char));
+                        strcpy(game_info, "game");
+                        scene_set_next_info(scene, game_info);
+                    }
+                    else if (y < (500 + BUTTON_Y_RADIUS) && y > (500 - BUTTON_Y_RADIUS)) {
+                        char *start_info = malloc(6*sizeof(char));
+                        strcpy(start_info, "start");
+                        scene_set_next_info(scene, start_info);
+                    }
+                }
             }
     }
 }
@@ -299,17 +400,11 @@ int main() {
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
-    scene_t *scene = make_scene();
-    body_t *doodle = scene_get_body(scene, 0);
-
+    scene_t *scene = make_start_scene();
+    
+    
     vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
-
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    vector_t *point = malloc(sizeof(vector_t));
-    point->x = 250; // remove magic numbers
-    point->y = 10;
-    text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point, 200, 25);
-    scene_add_text(scene, text);
 
     vector_t *scoring = malloc(sizeof(vector_t));
     scoring->x = 10;
@@ -318,6 +413,7 @@ int main() {
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
 
+    body_t *doodle;            
 
     // char score[100];
 
@@ -331,72 +427,98 @@ int main() {
     // text_t *score = text_create(score, color, 20, scoring, 20, 20);
 
     while (!sdl_is_done(scene)) {
-        // calculate and display score
-        if (scene_textboxes(scene) > 1) {
-            scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
-        }
-        strcpy(score, "High Score: ");
-        double curr = calculate_score(center);
+        if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) { 
+            if (strcmp(scene_get_next_info(scene), "game") == 0) {
+                scene_free(scene);
+                scene = make_game_scene();
+                doodle = scene_get_body(scene, 0);
 
-        sprintf(buffer, "%.1f", curr);
-        strcat(score, buffer);
-        text_t *scorebox = text_create(score, color, 40, scoring, 200, 40);
-        scene_add_text(scene, scorebox);
-
-        double dt = time_since_last_tick();
-
-        if (!in_screen(center, doodle)) {
-            // PLAYER LOSES, REPLACE BREAK WITH ACTUAL CODE
-            break;
-        }
-
-        for(int i = 3; i < scene_bodies(scene); i++) {
-            if (!in_screen(center, scene_get_body(scene, i))) {
-                scene_remove_body(scene, i);
+                
+                vector_t *point = malloc(sizeof(vector_t));
+                point->x = 250; // remove magic numbers
+                point->y = 10;
+                text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point, 200, 25);
+                scene_add_text(scene, text);
+            }
+            else if (strcmp(scene_get_next_info(scene), "start") == 0) {
+                scene_free(scene);
+                scene = make_start_scene();
+            }
+            else if (strcmp(scene_get_next_info(scene), "restart") == 0) {
+                scene_free(scene);
+                scene = make_restart_scene();
             }
         }
+        if (strcmp(scene_get_info(scene), "game") == 0) {
+            // calculate and display score
+            if (scene_textboxes(scene) > 1) {
+                scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
+            }
+            strcpy(score, "High Score: ");
+            double curr = calculate_score(center);
 
-        // shifting the viewing window if the doodle goes higher than the center
-        if (body_get_centroid(doodle).y > center.y) {
-            more_platforms(scene, center, false);
-            center.y = body_get_centroid(doodle).y;
-            sdl_set_center(center);
-            for (int i = 1; i < 3; i++) {
-                body_t *background = scene_get_body(scene, i);
-                vector_t centroid = body_get_centroid(background);
-                if (centroid.y <= center.y - HEIGHT2/2) {
-                    centroid.y = HEIGHT2*2 + centroid.y;
-                    body_set_centroid(background, centroid);
+            sprintf(buffer, "%.1f", curr);
+            strcat(score, buffer);
+            text_t *scorebox = text_create(score, color, 40, scoring, 200, 40);
+            scene_add_text(scene, scorebox);
+
+            double dt = time_since_last_tick();
+
+            if (!in_screen(center, doodle)) {
+                // PLAYER LOSES, REPLACE BREAK WITH ACTUAL CODE
+                // break;
+                char *restart_info = malloc(8*sizeof(char));
+                strcpy(restart_info, "restart");
+                scene_set_next_info(scene, restart_info);
+            }
+
+            // shifting the viewing window if the doodle goes higher than the center
+            if (body_get_centroid(doodle).y > center.y) {
+                // generates more platforms
+                more_platforms(scene, center, false);
+                center.y = body_get_centroid(doodle).y;
+                sdl_set_center(center);
+                for (int i = 1; i < 3; i++) {
+                    body_t *background = scene_get_body(scene, i);
+                    vector_t centroid = body_get_centroid(background);
+                    if (centroid.y <= center.y - HEIGHT2/2) {
+                        centroid.y = center.y + HEIGHT2/2 + HEIGHT2;
+                        body_set_centroid(background, centroid);
+                    }
                 }
             }
-        }
 
-        if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
-            timer++;
+            if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
+                timer++;
+            }
+            if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
+                if (body_get_direction(doodle) == 0) {
+                    change_motion(doodle, scene_get_sprite(scene, 2));
+                }
+                else {
+                    change_motion(doodle, scene_get_sprite(scene, 3));
+                }
+            }
+            else if (timer == 25) {
+                if (body_get_direction(doodle) == 0) {
+                    change_motion(doodle, scene_get_sprite(scene, 0));
+                }
+                else {
+                    change_motion(doodle, scene_get_sprite(scene, 1));
+                }
+                timer = 0;
+            }
+            
+            wrap(doodle);
+            scene_tick(scene, dt);
+            sdl_render_scene(scene);
         }
-
-        wrap(doodle);
-        scene_tick(scene, dt);
-
-        if (within(1, body_get_velocity(doodle).y, 299.1)) {
-            if (body_get_direction(doodle) == 0) {
-                sprite_crouch(doodle, scene_get_sprite(scene, 2));
-            }
-            else {
-                sprite_crouch(doodle, scene_get_sprite(scene, 3));
-            }
+        else if (strcmp(scene_get_info(scene), "start") == 0) {
+            sdl_render_scene(scene);
         }
-        else if (timer == 25) {
-            if (body_get_direction(doodle) == 0) {
-                sprite_jump(doodle, scene_get_sprite(scene, 0));
-            }
-            else {
-                sprite_jump(doodle, scene_get_sprite(scene, 1));
-            }
-            timer = 0;
+        else if (strcmp(scene_get_info(scene), "restart") == 0) {
+            sdl_render_scene(scene);
         }
-
-        sdl_render_scene(scene);
     }
 
     FILE *file = fopen("highscores.txt", "a+");

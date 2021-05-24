@@ -49,6 +49,7 @@
         "string.h": "c",
         "polygon.h": "c",
         "sdl_ttf.h": "c",
-        "scene.h": "c"
+        "scene.h": "c",
+        "sdl_mouse.h": "c"
     }
 }

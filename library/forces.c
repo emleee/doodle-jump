@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include "collision.h"
 #include "force_package.h"
+#include "SDL2/SDL_mixer.h"
+#include "sdl_wrapper.h"
 
 const double BOOST = -300;
 const double DOODLE_HEIGHT2 = 148.0;
@@ -170,6 +172,10 @@ void platform_collided(void *a) {
         centroid.y = max + DOODLE_HEIGHT2/2;
         body_set_centroid(body1, centroid);
         ((collision_package_t *)a)->handler(body1, body2, axis, aux);
+        if (loadMedia()) {
+            Mix_Chunk *jump = (Mix_Chunk *) get_jump();
+            Mix_PlayChannel( -1, jump, 0 );
+        }
     }
     else {
         ((collision_package_t *)a)->collided = false;

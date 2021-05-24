@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "forces.h"
 #include "collision.h"
+#include "game_sprites.h"
 
 const double WINDOW_LENGTH = 720.0;
 
@@ -24,33 +25,35 @@ const rgb_color_t TRICK_COLOR = {.r = 102.0/255.0, .g = 51.0/255.0, .b = 0.0/255
 
 const vector_t PLATFORM_VELOCITY = {.x = 200, .y = 0};
 
-body_t *make_platform(vector_t center, rgb_color_t color, char *info) {
+body_t *make_platform(vector_t center, rgb_color_t color, char *info, int width, int height, sprite_t *sprite) {
     list_t *shape = list_init(4, free);
     vector_t *v = malloc(sizeof(*v));
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {PLATFORM_WIDTH, 0};
+    *v = (vector_t) {width, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {PLATFORM_WIDTH, PLATFORM_HEIGHT};
+    *v = (vector_t) {width, height};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, PLATFORM_HEIGHT};
+    *v = (vector_t) {0, height};
     list_add(shape, v);
 
     body_t *platform = body_init_with_info(shape, PLATFORM_MASS, color, info, free);
+    body_set_sprite(platform, sprite);
     body_set_centroid(platform, center);
     return platform;
 }
 
 body_t *normal_platform(vector_t center, char *info) {
-    body_t *platform = make_platform(center, NORMAL_COLOR, info);
+    sprite_t *sprite = make_grass_platform();
+    body_t *platform = make_platform(center, NORMAL_COLOR, info, 146, 35, sprite);
     return platform;
 }
 
 body_t *sliding_platform(vector_t center, char *info) {
-    body_t *sliding_platform = make_platform(center, SLIDING_COLOR, info);
+    body_t *sliding_platform = make_platform(center, SLIDING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, NULL);
     body_set_velocity(sliding_platform, PLATFORM_VELOCITY);
     return sliding_platform;
 }
@@ -84,11 +87,11 @@ void sliding_bounce(body_t *sliding_platform) {
 }
 
 body_t *disappearing_platform(vector_t center, char *info) {
-    body_t *disappearing_platform = make_platform(center, DISAPPEARING_COLOR, info);
+    body_t *disappearing_platform = make_platform(center, DISAPPEARING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, NULL);
     return disappearing_platform;
 }
 
 body_t *trick_platform(vector_t center, char *info) {
-    body_t *trick_platform = make_platform(center, DISAPPEARING_COLOR, info);
+    body_t *trick_platform = make_platform(center, DISAPPEARING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, NULL);
     return trick_platform;
 }

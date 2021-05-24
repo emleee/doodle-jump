@@ -16,14 +16,13 @@ sprite_t *make_crouch_left();
 
 sprite_t *make_crouch_right();
 
+sprite_t *make_grass_platform();
+
 sprite_t *make_background();
 
-void face_right(body_t *body, sprite_t *sprite);
+void change_direction(body_t *body, sprite_t *sprite);
 
-void face_left(body_t *body, sprite_t *sprite);
-
-void sprite_crouch(body_t *body, sprite_t *sprite);
-void sprite_jump(body_t *body, sprite_t *sprite);
+void change_motion(body_t *body, sprite_t *sprite);
 
 vector_t find_mouth(body_t *body);
 

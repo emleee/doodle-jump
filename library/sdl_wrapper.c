@@ -11,6 +11,7 @@
 #include <string.h>
 #include "text.h"
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mouse.h>
 #include "sprite.h"
 #include "body.h"
 
