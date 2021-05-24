@@ -26,8 +26,8 @@ const double BUTTON_X_RADIUS = 125;
 const double BUTTON_Y_RADIUS = 75;
 
 const double MAX_PLATFORMS = 18;
-const double PLATFORM_WIDTH2 = 60;
-const double PLATFORM_HEIGHT2 = 20;
+const double PLATFORM_WIDTH2 = 146;
+const double PLATFORM_HEIGHT2 = 35;
 
 const vector_t START_VELOCITY = {.x = 0, .y = 300};
 const double PLAYER_X_VELOCITY = 600;
@@ -38,7 +38,7 @@ const rgb_color_t DOODLE_BODY_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.
 const rgb_color_t BUTTON_COLOR = {.r = 255.0/255, .g = 255.0/255, .b = 255.0/255};
 const double DOODLE_MASS = 5.0;
 const double BUTTON_MASS = INFINITY;
-const double MAX_JUMP = 290.0;
+const double MAX_JUMP = 295.0;
 
 const double G = -150.0;
 
@@ -203,6 +203,13 @@ scene_t *make_game_scene() {
     body_t *platform = normal_platform(platform_center, info);
     scene_add_body(scene, platform);
     create_platform_collision(scene, 0, doodle, platform);
+    vector_t safety_platform_center = {.x = WIDTH2/2, .y = MAX_JUMP/2};
+    char *other_info = malloc(22*sizeof(char));
+    strcpy(other_info, "nonessential platform");
+    body_t *safety_platform = normal_platform(safety_platform_center, other_info);
+    scene_add_body(scene, safety_platform);
+    create_platform_collision(scene, 0, doodle, safety_platform);
+
     vector_t center = {.x = WIDTH2/2, .y = -1 * HEIGHT2/2};
     more_platforms(scene, center, true);
 

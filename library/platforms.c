@@ -14,8 +14,8 @@
 
 const double WINDOW_LENGTH = 720.0;
 
-const double PLATFORM_WIDTH = 60;
-const double PLATFORM_HEIGHT = 20;
+const double PLATFORM_WIDTH = 146;
+const double PLATFORM_HEIGHT = 35;
 const double PLATFORM_MASS = INFINITY;
 
 const rgb_color_t NORMAL_COLOR = {.r = 0.0/255.0, .g = 204.0/255.0, .b = 0.0/255.0};
@@ -48,7 +48,7 @@ body_t *make_platform(vector_t center, rgb_color_t color, char *info, int width,
 
 body_t *normal_platform(vector_t center, char *info) {
     sprite_t *sprite = make_grass_platform();
-    body_t *platform = make_platform(center, NORMAL_COLOR, info, 146, 35, sprite);
+    body_t *platform = make_platform(center, NORMAL_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, sprite);
     return platform;
 }
 
