@@ -472,6 +472,12 @@ int main() {
                 scene_set_next_info(scene, restart_info);
             }
 
+            for(int i = 3; i < scene_bodies(scene); i++) {
+                if (!in_screen(center, scene_get_body(scene, i))) {
+                    scene_remove_body(scene, i);
+                }
+            }
+
             // shifting the viewing window if the doodle goes higher than the center
             if (body_get_centroid(doodle).y > center.y) {
                 // generates more platforms
@@ -482,7 +488,7 @@ int main() {
                     body_t *background = scene_get_body(scene, i);
                     vector_t centroid = body_get_centroid(background);
                     if (centroid.y <= center.y - HEIGHT2/2) {
-                        centroid.y = center.y + HEIGHT2/2 + HEIGHT2;
+                        centroid.y += HEIGHT2*2;
                         body_set_centroid(background, centroid);
                     }
                 }
