@@ -21,6 +21,9 @@ const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
 const double DOODLE_WIDTH = 96.0;
 const double DOODLE_HEIGHT = 148.0;
+const int NUM_POINTS = 50;
+const double BUTTON_X_RADIUS = 125;
+const double BUTTON_Y_RADIUS = 75;
 
 const double MAX_PLATFORMS = 18;
 const double PLATFORM_WIDTH2 = 60;
@@ -32,7 +35,9 @@ const double PLAYER_X_VELOCITY = 600;
 const double SCORE_FACTOR = 20;
 
 const rgb_color_t DOODLE_BODY_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
+const rgb_color_t BUTTON_COLOR = {.r = 255.0/255, .g = 255.0/255, .b = 255.0/255};
 const double DOODLE_MASS = 5.0;
+const double BUTTON_MASS = INFINITY;
 const double MAX_JUMP = 290.0;
 
 const double G = -150.0;
@@ -82,6 +87,26 @@ body_t *make_background_body(vector_t center) {
     body_t *background = body_init_with_sprite(shape, 1, DOODLE_BODY_COLOR, info, free, sprite);
     body_set_centroid(background, center);
     return background;
+}
+
+body_t *make_button(vector_t center) {
+    // body shape
+    list_t *points = list_init(NUM_POINTS, free);
+    for (int i = 0; i < (NUM_POINTS); i++) {
+        vector_t *pt = malloc(sizeof(vector_t));
+        pt->x = BUTTON_X_RADIUS * cos(2 * M_PI * i / NUM_POINTS + M_PI / 2);
+        pt->y = BUTTON_Y_RADIUS * sin(2 * M_PI * i / NUM_POINTS + M_PI / 2);
+        list_add(points, pt);
+    }
+    polygon_translate(points, center);
+
+    // body info
+    char *info = malloc(7*sizeof(char));
+    info[0] = '\0';
+    strcat(info, "button");
+
+    body_t *button = body_init_with_info(points, BUTTON_MASS, BUTTON_COLOR, info, free);
+    return button;
 }
 
 void more_platforms(scene_t *scene, vector_t center, bool first) {
@@ -182,19 +207,22 @@ scene_t *make_start_scene() {
     char *scene_info = malloc(6*sizeof(char));
     strcpy(scene_info, "start");
     scene_t *scene = scene_init_with_info(scene_info, free);
-    char *doodle_info2 = malloc(7*sizeof(char));
-    strcpy(doodle_info2, "doodle");
-    vector_t start = {.x = WIDTH2/2, .y = 0};
 
-    body_t *doodle2 = make_doodle(start, DOODLE_BODY_COLOR, doodle_info2);
-    scene_add_body(scene, doodle2);
+    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    vector_t *point2 = malloc(sizeof(vector_t));
+    point2->x = 250; // remove magic numbers
+    point2->y = 200;
+    text_t *text2 = text_create("Start", color, 22, point2, 200, 30);
+    scene_add_text(scene, text2);
 
-    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    // vector_t *point2 = malloc(sizeof(vector_t));
-    // point2->x = 250; // remove magic numbers
-    // point2->y = 10;
-    // text_t *text2 = text_create("Doodle Jump: Fairy Tail", color, 22, point2, 200, 25);
-    // scene_add_text(scene, text2);
+    // body_t *start_button = make_button(*point2);
+    // scene_add_body(scene, start_button);
+
+    body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
+    scene_add_body(scene, background1);
+    scene_add_body(scene, background2);
+    return scene;
 }
 
 bool in_screen(vector_t center, body_t *body) {
@@ -289,8 +317,8 @@ void mouse_click(int key, int x, int y, void *scene) {
                 }
             }
             else if (strcmp(scene_get_info(scene), "start") == 0) {
-                if (x < (WIDTH2/2 + DOODLE_WIDTH/2) && x > (WIDTH2/2 - DOODLE_WIDTH/2)) {
-                    if (y < (HEIGHT2/2 + DOODLE_WIDTH/2) && y > (HEIGHT2/2 - DOODLE_WIDTH/2)) {
+                if (x < (250 + BUTTON_X_RADIUS) && x > (250 - BUTTON_X_RADIUS)) {
+                    if (y < (200 + BUTTON_Y_RADIUS) && y > (200 - BUTTON_Y_RADIUS)) {
                         char *game_info = malloc(5*sizeof(char));
                         strcpy(game_info, "game");
                         scene_set_next_info(scene, game_info);
@@ -430,6 +458,9 @@ int main() {
             
             wrap(doodle);
             scene_tick(scene, dt);
+            sdl_render_scene(scene);
+        }
+        else if (strcmp(scene_get_info(scene), "start") == 0) {
             sdl_render_scene(scene);
         }
     }
