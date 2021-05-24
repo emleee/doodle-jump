@@ -29,6 +29,7 @@ typedef void (*force_creator_t)(void *aux);
  */
 scene_t *scene_init(void);
 
+scene_t *scene_init_with_info(void *info, free_func_t info_freer);
 
 sprite_t *scene_get_sprite(scene_t *scene, size_t index);
 void scene_add_sprite(scene_t *scene, sprite_t *sprite);
@@ -66,6 +67,14 @@ body_t *scene_get_body(scene_t *scene, size_t index);
  * @param body a pointer to the body to add to the scene
  */
 void scene_add_body(scene_t *scene, body_t *body);
+
+void *scene_get_info(scene_t *scene);
+
+void *scene_get_next_info(scene_t *scene);
+
+void scene_set_info(scene_t *scene);
+
+void scene_set_next_info(scene_t *scene, void *next_info);
 
 /**
  * @deprecated Use body_remove() instead

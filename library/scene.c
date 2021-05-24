@@ -13,6 +13,9 @@ typedef struct scene {
     list_t *forces;
     list_t *text;
     list_t *sprites;
+    void *info;
+    void *next_info;
+    free_func_t info_freer;
 } scene_t;
 
 scene_t *scene_init(void) {
@@ -22,6 +25,22 @@ scene_t *scene_init(void) {
     scene->forces = list_init(100, (free_func_t)force_package_free);
     scene->text = list_init(200, (free_func_t)text_free);
     scene->sprites = list_init(4, (free_func_t)sprite_free);
+    scene->info = NULL;
+    scene->next_info = NULL;
+    scene->info_freer = NULL;
+    return scene;
+}
+
+scene_t *scene_init_with_info(void *info, free_func_t info_freer) {
+    scene_t *scene = malloc(sizeof(scene_t));
+    assert(scene != NULL);
+    scene->bodies = list_init(100, (free_func_t)body_free);
+    scene->forces = list_init(100, (free_func_t)force_package_free);
+    scene->text = list_init(200, (free_func_t)text_free);
+    scene->sprites = list_init(4, (free_func_t)sprite_free);
+    scene->info = info;
+    scene->next_info = info;
+    scene->info_freer = info_freer;
     return scene;
 }
 
@@ -45,8 +64,24 @@ size_t scene_bodies(scene_t *scene) {
 }
 
 body_t *scene_get_body(scene_t *scene, size_t index) {
-    assert(index < scene_bodies(scene));
+    // assert(index < scene_bodies(scene));
     return list_get(scene->bodies, index);
+}
+
+void *scene_get_info(scene_t *scene) {
+    return scene->info;
+}
+
+void *scene_get_next_info(scene_t *scene) {
+    return scene->next_info;
+}
+
+void scene_set_info(scene_t *scene, void *info) { // might need to free old strings?
+    scene->info = info;
+}
+
+void scene_set_next_info(scene_t *scene, void *next_info) {
+    scene->next_info = next_info;
 }
 
 void scene_add_body(scene_t *scene, body_t *body) {

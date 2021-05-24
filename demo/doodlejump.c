@@ -137,8 +137,9 @@ void more_platforms(scene_t *scene, vector_t center, bool first) {
 }
 
 scene_t *make_game_scene() {
-    scene_t *scene = scene_init();
-
+    char *game_info = malloc(5*sizeof(char));
+    strcpy(game_info, "game");
+    scene_t *scene = scene_init_with_info(game_info, free);
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
@@ -178,11 +179,12 @@ scene_t *make_game_scene() {
 }
 
 scene_t *make_start_scene() {
-    scene_t *scene = scene_init();
+    char *scene_info = malloc(6*sizeof(char));
+    strcpy(scene_info, "start");
+    scene_t *scene = scene_init_with_info(scene_info, free);
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
     vector_t start = {.x = WIDTH2/2, .y = 0};
-
     body_t *doodle = make_doodle(start, DOODLE_BODY_COLOR, doodle_info);
     return scene;
 }
@@ -216,10 +218,10 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
-                body_set_rotation(player, 0);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
-                    face_right(player, scene_get_sprite(scene, 0));
+                    change_direction(player, scene_get_sprite(scene, 0));
                 }
+                body_set_rotation(player, 0);
                 body_velocity.x = PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
                 if (loadMedia()) {
@@ -228,10 +230,10 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
                 }
                 break;
             case LEFT_ARROW:
-                body_set_rotation(player, M_PI);
                 if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
-                    face_left(player, scene_get_sprite(scene, 1));
+                    change_direction(player, scene_get_sprite(scene, 1));
                 }
+                body_set_rotation(player, M_PI);
                 body_velocity.x = -1 * PLAYER_X_VELOCITY;
                 body_set_velocity(player, body_velocity);
                 if (loadMedia()) {
@@ -263,19 +265,32 @@ body_t *make_pellet (vector_t center) {
 }
 
 void mouse_click(int key, int x, int y, void *scene) {
-    body_t *player = scene_get_body((scene_t *)scene, 0);
-    vector_t mouth = find_mouth(player);
-    vector_t mouth_window = get_window_position(mouth, get_window_center());
-    body_t *pellet;
     switch(key) {
         case SDL_BUTTON_LEFT:
-            pellet = make_pellet(mouth);
-            body_set_velocity(pellet, (vector_t){.x = x-mouth_window.x, .y = -y+mouth_window.y});
-            scene_add_body(scene, pellet);
-            if (loadMedia()) {
-                Mix_Chunk *shoot = (Mix_Chunk *) get_shoot();
-                Mix_PlayChannel( -1, shoot, 0 );
+            if (strcmp(scene_get_info(scene), "game") == 0) {
+                body_t *player = scene_get_body((scene_t *)scene, 0);
+                vector_t mouth = find_mouth(player);
+                vector_t mouth_window = get_window_position(mouth, get_window_center());
+                body_t *pellet;
+                pellet = make_pellet(mouth);
+                body_set_velocity(pellet, (vector_t){.x = x-mouth_window.x, .y = -y+mouth_window.y});
+                scene_add_body(scene, pellet);
+                if (loadMedia()) {
+                    Mix_Chunk *shoot = (Mix_Chunk *) get_shoot();
+                    Mix_PlayChannel( -1, shoot, 0 );
+                }
             }
+            else if (strcmp(scene_get_info(scene), "start") == 0) {
+                if (x < WIDTH2 && x > 0) {
+                    if (y < HEIGHT2 && y > 0) {
+                        char *game_info = malloc(5*sizeof(char));
+                        strcpy(game_info, "game");
+                        scene_set_next_info(scene, game_info);
+                    }
+                }
+            }
+            
+            
     }
 }
 
@@ -303,17 +318,11 @@ int main() {
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
-    scene_t *scene = make_game_scene();
-    body_t *doodle = scene_get_body(scene, 0);
-
+    scene_t *scene = make_start_scene();
+    
+    
     vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
-
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    vector_t *point = malloc(sizeof(vector_t));
-    point->x = 250; // remove magic numbers
-    point->y = 10;
-    text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point, 200, 25);
-    scene_add_text(scene, text);
 
     vector_t *scoring = malloc(sizeof(vector_t));
     scoring->x = 10;
@@ -322,6 +331,7 @@ int main() {
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
 
+    body_t *doodle;            
 
     // char score[100];
 
@@ -335,73 +345,87 @@ int main() {
     // text_t *score = text_create(score, color, 20, scoring, 20, 20);
 
     while (!sdl_is_done(scene)) {
-        // calculate and display score
-        if (scene_textboxes(scene) > 1) {
-            scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
-        }
-        strcpy(score, "High Score: ");
-        double curr = calculate_score(center);
+        if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) { 
+            if (strcmp(scene_get_next_info(scene), "game") == 0) {
+                scene_free(scene);
+                scene = make_game_scene();
+                doodle = scene_get_body(scene, 0);
 
-        sprintf(buffer, "%.1f", curr);
-        strcat(score, buffer);
-        text_t *scorebox = text_create(score, color, 40, scoring, 200, 40);
-        scene_add_text(scene, scorebox);
-
-        double dt = time_since_last_tick();
-
-        if (!in_screen(center, doodle)) {
-            // PLAYER LOSES, REPLACE BREAK WITH ACTUAL CODE
-            break;
-        }
-
-        for(int i = 3; i < scene_bodies(scene); i++) {
-            if (!in_screen(center, scene_get_body(scene, i))) {
-                scene_remove_body(scene, i);
+                
+                vector_t *point = malloc(sizeof(vector_t));
+                point->x = 250; // remove magic numbers
+                point->y = 10;
+                text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point, 200, 25);
+                scene_add_text(scene, text);
             }
         }
+        if (strcmp(scene_get_info(scene), "game") == 0) {
+            // calculate and display score
+            if (scene_textboxes(scene) > 1) {
+                scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
+            }
+            strcpy(score, "High Score: ");
+            double curr = calculate_score(center);
 
-        // shifting the viewing window if the doodle goes higher than the center
-        if (body_get_centroid(doodle).y > center.y) {
-            // generates more platforms
-            more_platforms(scene, center, false);
-            center.y = body_get_centroid(doodle).y;
-            sdl_set_center(center);
-            for (int i = 1; i < 3; i++) {
-                body_t *background = scene_get_body(scene, i);
-                vector_t centroid = body_get_centroid(background);
-                if (centroid.y <= center.y - HEIGHT2/2) {
-                    centroid.y = center.y + HEIGHT2/2 + HEIGHT2;
-                    body_set_centroid(background, centroid);
+            sprintf(buffer, "%.1f", curr);
+            strcat(score, buffer);
+            text_t *scorebox = text_create(score, color, 40, scoring, 200, 40);
+            scene_add_text(scene, scorebox);
+
+            double dt = time_since_last_tick();
+
+            if (!in_screen(center, doodle)) {
+                // PLAYER LOSES, REPLACE BREAK WITH ACTUAL CODE
+                break;
+            }
+
+            for(int i = 3; i < scene_bodies(scene); i++) {
+                if (!in_screen(center, scene_get_body(scene, i))) {
+                    scene_remove_body(scene, i);
                 }
             }
-        }
 
-        if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
-            timer++;
-        }
+            // shifting the viewing window if the doodle goes higher than the center
+            if (body_get_centroid(doodle).y > center.y) {
+                // generates more platforms
+                more_platforms(scene, center, false);
+                center.y = body_get_centroid(doodle).y;
+                sdl_set_center(center);
+                for (int i = 1; i < 3; i++) {
+                    body_t *background = scene_get_body(scene, i);
+                    vector_t centroid = body_get_centroid(background);
+                    if (centroid.y <= center.y - HEIGHT2/2) {
+                        centroid.y = center.y + HEIGHT2/2 + HEIGHT2;
+                        body_set_centroid(background, centroid);
+                    }
+                }
+            }
 
-        wrap(doodle);
-        scene_tick(scene, dt);
-
-        if (within(1, body_get_velocity(doodle).y, 299.1)) {
-            if (body_get_direction(doodle) == 0) {
-                sprite_crouch(doodle, scene_get_sprite(scene, 2));
+            if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
+                timer++;
             }
-            else {
-                sprite_crouch(doodle, scene_get_sprite(scene, 3));
+            if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
+                if (body_get_direction(doodle) == 0) {
+                    change_motion(doodle, scene_get_sprite(scene, 2));
+                }
+                else {
+                    change_motion(doodle, scene_get_sprite(scene, 3));
+                }
             }
+            else if (timer == 25) {
+                if (body_get_direction(doodle) == 0) {
+                    change_motion(doodle, scene_get_sprite(scene, 0));
+                }
+                else {
+                    change_motion(doodle, scene_get_sprite(scene, 1));
+                }
+                timer = 0;
+            }
+            
+            wrap(doodle);
+            scene_tick(scene, dt);
+            sdl_render_scene(scene);
         }
-        else if (timer == 25) {
-            if (body_get_direction(doodle) == 0) {
-                sprite_jump(doodle, scene_get_sprite(scene, 0));
-            }
-            else {
-                sprite_jump(doodle, scene_get_sprite(scene, 1));
-            }
-            timer = 0;
-        }
-
-        sdl_render_scene(scene);
     }
 
     FILE *file = fopen("highscores.txt", "a+");
