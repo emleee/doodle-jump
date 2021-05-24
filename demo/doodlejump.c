@@ -182,11 +182,19 @@ scene_t *make_start_scene() {
     char *scene_info = malloc(6*sizeof(char));
     strcpy(scene_info, "start");
     scene_t *scene = scene_init_with_info(scene_info, free);
-    char *doodle_info = malloc(7*sizeof(char));
-    strcpy(doodle_info, "doodle");
+    char *doodle_info2 = malloc(7*sizeof(char));
+    strcpy(doodle_info2, "doodle");
     vector_t start = {.x = WIDTH2/2, .y = 0};
-    body_t *doodle = make_doodle(start, DOODLE_BODY_COLOR, doodle_info);
-    return scene;
+
+    body_t *doodle2 = make_doodle(start, DOODLE_BODY_COLOR, doodle_info2);
+    scene_add_body(scene, doodle2);
+
+    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    // vector_t *point2 = malloc(sizeof(vector_t));
+    // point2->x = 250; // remove magic numbers
+    // point2->y = 10;
+    // text_t *text2 = text_create("Doodle Jump: Fairy Tail", color, 22, point2, 200, 25);
+    // scene_add_text(scene, text2);
 }
 
 bool in_screen(vector_t center, body_t *body) {
@@ -281,16 +289,14 @@ void mouse_click(int key, int x, int y, void *scene) {
                 }
             }
             else if (strcmp(scene_get_info(scene), "start") == 0) {
-                if (x < WIDTH2 && x > 0) {
-                    if (y < HEIGHT2 && y > 0) {
+                if (x < (WIDTH2/2 + DOODLE_WIDTH/2) && x > (WIDTH2/2 - DOODLE_WIDTH/2)) {
+                    if (y < (HEIGHT2/2 + DOODLE_WIDTH/2) && y > (HEIGHT2/2 - DOODLE_WIDTH/2)) {
                         char *game_info = malloc(5*sizeof(char));
                         strcpy(game_info, "game");
                         scene_set_next_info(scene, game_info);
                     }
                 }
             }
-            
-            
     }
 }
 
