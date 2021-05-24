@@ -72,7 +72,7 @@ void *scene_get_info(scene_t *scene);
 
 void *scene_get_next_info(scene_t *scene);
 
-void scene_set_info(scene_t *scene);
+void scene_set_info(scene_t *scene, void *info);
 
 void scene_set_next_info(scene_t *scene, void *next_info);
 
