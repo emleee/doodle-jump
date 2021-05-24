@@ -37,7 +37,6 @@ const double MAX_JUMP = 290.0;
 
 const double G = -150.0;
 
-// modify based on theresa's stuff
 body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     list_t *shape = list_init(4, free);
     vector_t *v = malloc(sizeof(*v));
@@ -84,6 +83,12 @@ body_t *make_background_body(vector_t center) {
     return background;
 }
 
+// bool platform_overlap(scene_t *scene, body_t *body1, body_t *body2) { // can't remove without having their ints???
+//     vector_t centroid1 = body_get_centroid(body1);
+//     vector_t centorid2 = body_get_centroid(body2);
+//     return (fabs(centroid1.x - centroid2.x) <= PLATFORM_WIDTH2 || fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2);
+// }
+
 void more_platforms(scene_t *scene, vector_t center, bool first) {
     int num_platforms = 0;
     for (int i = 3; i < scene_bodies(scene); i++) {
@@ -109,6 +114,7 @@ void more_platforms(scene_t *scene, vector_t center, bool first) {
         }
     }
     int i = num_platforms;
+    int body_num = num_platforms;
     if (first) {
         i = MAX_PLATFORMS/2;
     }
@@ -352,7 +358,6 @@ int main() {
 
         // shifting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center.y) {
-            // generates more platforms
             more_platforms(scene, center, false);
             center.y = body_get_centroid(doodle).y;
             sdl_set_center(center);
@@ -360,7 +365,7 @@ int main() {
                 body_t *background = scene_get_body(scene, i);
                 vector_t centroid = body_get_centroid(background);
                 if (centroid.y <= center.y - HEIGHT2/2) {
-                    centroid.y = center.y + HEIGHT2/2 + HEIGHT2;
+                    centroid.y = HEIGHT2*2 + centroid.y;
                     body_set_centroid(background, centroid);
                 }
             }

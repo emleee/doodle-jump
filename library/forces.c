@@ -157,7 +157,7 @@ void platform_collided(void *a) {
             }
         }
         vector_t axis = find_collision(body_get_shape(body1), body_get_shape(body2)).axis;
-        if (max > min + ERROR || body_get_velocity(body1).y > 0 || round(axis.x) != 0 || round(axis.y) != -1) {
+        if ((max > min && min < body_get_centroid(body2).y) || body_get_velocity(body1).y > 0 || round(axis.x) != 0 || round(axis.y) != -1) {
             // printf("%f %f %f\n", max, min, body_get_velocity(body1).y);
             ((collision_package_t *)a)->collided = false;
             return;
@@ -193,13 +193,31 @@ void create_destructive_collision(scene_t *scene, body_t *body1, body_t *body2) 
 }
 
 void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
+    // force_aux_t *a = (force_aux_t *)aux;
+    // double mass1 = body_get_mass(body1);
+    // vector_t v1 = body_get_velocity(body1);
+    // v1.y = 0;
+    // body_set_velocity(body1, v1);
+    // double impulse = mass1 * BOOST;
+    // body_add_impulse(body1, vec_multiply(impulse, axis));
     force_aux_t *a = (force_aux_t *)aux;
+    double c = force_aux_get_constant(a);
     double mass1 = body_get_mass(body1);
+    double mass2 = body_get_mass(body2);
     vector_t v1 = body_get_velocity(body1);
-    v1.y = 0;
-    body_set_velocity(body1, v1);
-    double impulse = mass1 * BOOST;
-    body_add_impulse(body1, vec_multiply(impulse, axis));
+    vector_t v2 = body_get_velocity(body2);
+    double impulse;
+    if (mass1 == INFINITY) {
+        impulse = mass2 * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
+    }
+    else if (mass2 == INFINITY) {
+        impulse = mass1 * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
+    }
+    else {
+        impulse = mass1 * mass2 / (mass1+mass2) * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
+    }
+    body_add_impulse(body1, vec_multiply(impulse + 2*BOOST*mass1, axis));
+    body_add_impulse(body2, vec_multiply(-impulse, axis));
 }
 
 void create_platform_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
