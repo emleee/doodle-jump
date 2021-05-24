@@ -128,3 +128,6 @@ High Score: 44.3
 High Score: 131.2
 High Score: 24.0
 High Score: 86.3
+High Score: 29.8
+High Score: 51.6
+High Score: 40.2
