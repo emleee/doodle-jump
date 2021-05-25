@@ -151,6 +151,19 @@ Mix_Chunk *get_shoot() {
     return shoot;
 }
 
+void play_jump() {
+    if (loadMedia()) {
+        Mix_PlayChannel( -1, jump, 0 );
+    }
+}
+
+void play_shoot() {
+    if (loadMedia()) {
+        Mix_PlayChannel( -1, shoot, 0 );
+    }
+}
+
+
 void sdl_init(vector_t min, vector_t max) {
     // Check parameters
     assert(min.x < max.x);
@@ -186,7 +199,7 @@ sprite_t *create_sprite(char *file) {
 
 text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height) {
     TTF_Init();
-    TTF_Font *font = TTF_OpenFont("fonts/DoodleJump.ttf", ptsize);
+    TTF_Font *font = TTF_OpenFont("fonts/arial.ttf", ptsize);
     SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
     SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
     // SDL_Texture *texture = malloc(sizeof(SDL_Texture));

@@ -3,7 +3,6 @@
 #include "color.h"
 #include "vector.h"
 
-// TEXT RENDERING - MOVE TO OWN FILE?
 typedef struct text {
     SDL_Surface *surface;
     SDL_Texture *texture;

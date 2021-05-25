@@ -50,6 +50,8 @@ typedef void (*mouse_handler_t)(int key, int x, int y, void *scene);
 bool loadMedia();
 Mix_Chunk *get_jump();
 Mix_Chunk *get_shoot();
+void play_jump();
+void play_shoot();
 void free_sounds();
 
 /**
