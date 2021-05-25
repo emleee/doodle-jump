@@ -230,15 +230,29 @@ scene_t *make_start_scene() {
 
     // body_t *start_button = make_button(*point2);
     // scene_add_body(scene, start_button);
+    
+    char *doodle_info = malloc(7*sizeof(char));
+    strcpy(doodle_info, "doodle");
+    vector_t start = {.x = WIDTH2/2, .y = 300};
+    body_t *doodle = make_doodle(start, DOODLE_BODY_COLOR, doodle_info);
+
+    sprite_t *right_jump = body_get_sprite(doodle);
+    scene_add_sprite(scene, right_jump);
+
+    body_set_velocity(doodle, START_VELOCITY);
+    scene_add_body(scene, doodle);
+    create_downward_gravity(scene, G, doodle);
 
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
+
+
     return scene;
 }
 
-scene_t *make_restart_scene() {
+scene_t *make_restart_scene() { // add something to keep track score vs high score and the falling/sad doodle
     char *scene_info = malloc(8*sizeof(char));
     strcpy(scene_info, "restart");
     scene_t *scene = scene_init_with_info(scene_info, free);
@@ -255,10 +269,7 @@ scene_t *make_restart_scene() {
     point2->y = 500;
     text_t *text2 = text_create("Home", color, 22, point2, 200, 30);
     scene_add_text(scene, text2);
-
-    // body_t *start_button = make_button(*point2);
-    // scene_add_body(scene, start_button);
-
+    
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
     scene_add_body(scene, background1);
@@ -461,7 +472,7 @@ int main() {
             if (scene_textboxes(scene) > 1) {
                 scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
             }
-            strcpy(score, "High Score: ");
+            strcpy(score, "Score: ");
             double curr = calculate_score(center);
 
             sprintf(buffer, "%.1f", curr);
@@ -530,6 +541,8 @@ int main() {
             sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "restart") == 0) {
+            double dt = time_since_last_tick();
+            scene_tick(scene,dt);
             sdl_render_scene(scene);
         }
     }
