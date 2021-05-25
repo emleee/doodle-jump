@@ -88,11 +88,28 @@ body_t *make_background_body(vector_t center) {
     return background;
 }
 
-// bool platform_overlap(scene_t *scene, body_t *body1, body_t *body2) { // can't remove without having their ints???
-//     vector_t centroid1 = body_get_centroid(body1);
-//     vector_t centorid2 = body_get_centroid(body2);
-//     return (fabs(centroid1.x - centroid2.x) <= PLATFORM_WIDTH2 || fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2);
-// }
+body_t *make_enemy(vector_t center) {
+    list_t *shape = list_init(4, free);
+    vector_t *v = malloc(sizeof(*v));
+    *v = (vector_t) {0, 0};
+    list_add(shape, v);
+    v = malloc(sizeof(*v));
+    *v = (vector_t) {DOODLE_HEIGHT, 0};
+    list_add(shape, v);
+    v = malloc(sizeof(*v));
+    *v = (vector_t) {DOODLE_HEIGHT, DOODLE_WIDTH};
+    list_add(shape, v);
+    v = malloc(sizeof(*v));
+    *v = (vector_t) {0, DOODLE_WIDTH};
+    list_add(shape, v);
+
+    char *info = malloc(sizeof(char)*6);
+    strcpy(info, "enemy");
+    body_t *doodle = body_init_with_info(shape, 10, DOODLE_BODY_COLOR, info, free);
+    body_set_centroid(doodle, center);
+
+    return doodle;
+}
 
 body_t *make_button(vector_t center) {
     // body shape
@@ -113,6 +130,12 @@ body_t *make_button(vector_t center) {
     body_t *button = body_init_with_info(points, BUTTON_MASS, BUTTON_COLOR, info, free);
     return button;
 }
+
+// bool platform_overlap(scene_t *scene, body_t *body1, body_t *body2) { // can't remove without having their ints???
+//     vector_t centroid1 = body_get_centroid(body1);
+//     vector_t centorid2 = body_get_centroid(body2);
+//     return (fabs(centroid1.x - centroid2.x) <= PLATFORM_WIDTH2 || fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2);
+// }
 
 void more_platforms(scene_t *scene, vector_t center, bool first) {
     int num_platforms = 0;
@@ -167,6 +190,15 @@ void more_platforms(scene_t *scene, vector_t center, bool first) {
     }
 }
 
+bool more_enemies(scene_t *scene, vector_t center) {
+    if (within(5, ((int)round(center.y))%(int)HEIGHT2, 0) && ((int)round(center.y/(int)HEIGHT2))%2 == 0 && center.y != HEIGHT2/2) {
+        vector_t centroid = {.x = (double)rand()/RAND_MAX * (WIDTH2 - DOODLE_HEIGHT) + DOODLE_HEIGHT/2, .y = center.y + (double)rand()/RAND_MAX * HEIGHT2 + HEIGHT2/2};
+        body_t *enemy = make_enemy(centroid);
+        scene_add_body(scene, enemy);
+        // add enemy collision here
+    }
+}
+
 scene_t *make_game_scene() {
     char *game_info = malloc(5*sizeof(char));
     strcpy(game_info, "game");
@@ -197,7 +229,7 @@ scene_t *make_game_scene() {
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 
-    vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2), .y = MAX_JUMP - DOODLE_HEIGHT/2 - PLATFORM_HEIGHT2/2};
+    vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = MAX_JUMP - DOODLE_HEIGHT/2 - PLATFORM_HEIGHT2/2};
     char *info = malloc(24*sizeof(char));
     strcpy(info, "essential platform");
     body_t *platform = normal_platform(platform_center, info);
@@ -420,7 +452,9 @@ int main() {
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
 
-    body_t *doodle;            
+    body_t *doodle;
+
+    bool enemy_present = false;
 
     // char score[100];
 
@@ -472,15 +506,17 @@ int main() {
             double dt = time_since_last_tick();
 
             if (!in_screen(center, doodle)) {
-                // PLAYER LOSES, REPLACE BREAK WITH ACTUAL CODE
-                // break;
                 char *restart_info = malloc(8*sizeof(char));
                 strcpy(restart_info, "restart");
                 scene_set_next_info(scene, restart_info);
             }
 
             for(int i = 3; i < scene_bodies(scene); i++) {
-                if (!in_screen(center, scene_get_body(scene, i))) {
+                body_t *body = scene_get_body(scene, i);
+                if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
+                    enemy_present = true;
+                }
+                if (!in_screen(center, body)) {
                     scene_remove_body(scene, i);
                 }
             }
@@ -489,6 +525,9 @@ int main() {
             if (body_get_centroid(doodle).y > center.y) {
                 // generates more platforms
                 more_platforms(scene, center, false);
+                if (!enemy_present) {
+                    enemy_present = more_enemies(scene, center);
+                }
                 center.y = body_get_centroid(doodle).y;
                 sdl_set_center(center);
                 for (int i = 1; i < 3; i++) {
@@ -500,6 +539,7 @@ int main() {
                     }
                 }
             }
+            enemy_present = false;
 
             if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
                 timer++;
