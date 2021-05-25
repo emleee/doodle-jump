@@ -11,3 +11,7 @@ High Score: 38.3
 High Score: 118.2
 Score: 24.0
 Score: 44.4
+Score: 177.2
+Score: 29.4
+Score: 54.7
+Score: 118.2

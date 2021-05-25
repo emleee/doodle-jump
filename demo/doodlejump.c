@@ -206,7 +206,7 @@ scene_t *make_game_scene() {
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
-    vector_t start = {.x = WIDTH2/2, .y = 0};
+    vector_t start = {.x = WIDTH2/2, .y = 300};
 
     body_t *doodle = make_doodle(start, DOODLE_BODY_COLOR, doodle_info);
 
