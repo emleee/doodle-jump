@@ -539,21 +539,21 @@ void mouse_click(int key, int x, int y, void *scene) {
                         // scene_set_next_info(scene, settings_info);
                     }
                     else if (y < (400 + BUTTON_Y_RADIUS) && y > (400 - BUTTON_Y_RADIUS)) {
-                        switch_sound_preferences();
+                        switch_score_preferences();
                         update_preferences();
-                        text_t *sound = scene_get_text(scene, SCORE_IDX);
-                        scene_remove_text(scene, sound);
+                        text_t *score = scene_get_text(scene, SCORE_IDX);
+                        scene_remove_text(scene, score);
                         vector_t *on1_point = malloc(sizeof(vector_t));
                         on1_point->x = 290; // remove magic numbers
                         on1_point->y = 400;
-                        if (get_sound_preference()) {
-                            sound = text_create("ON", color, 22, on1_point);
-                            scene_add_text(scene, sound);
+                        if (get_score_preference()) {
+                            score = text_create("ON", color, 22, on1_point);
+                            scene_add_text(scene, score);
                             SCORE_IDX = scene_textboxes(scene) - 1;
                         }
-                        if (!get_sound_preference()) {
-                            sound = text_create("OFF", color, 22, on1_point);
-                            scene_add_text(scene, sound);
+                        if (!get_score_preference()) {
+                            score = text_create("OFF", color, 22, on1_point);
+                            scene_add_text(scene, score);
                             SCORE_IDX = scene_textboxes(scene) - 1;
                         }
                         // char *settings_info = malloc(9*sizeof(char));

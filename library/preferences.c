@@ -13,7 +13,7 @@ bool get_sound_preference() {
     FILE* file = fopen("preferences.txt", "r"); 
 
     if (!file) {
-        return;
+        return SOUND_EFFECTS;
     }
 
     char line[500];
@@ -36,7 +36,7 @@ bool get_score_preference() {
     FILE* file = fopen("preferences.txt", "r"); 
 
     if (!file) {
-        return;
+        return SCORE_MARKER;
     }
 
     char line[500];
