@@ -20,6 +20,6 @@
 #include "text.h"
 #include "test_util.h"
 
-body_t *make_boost(vector_t center);
+body_t *make_boost(scene_t *scene, vector_t center);
 
 #endif // #ifndef __POWERUPS_H__

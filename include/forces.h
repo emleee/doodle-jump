@@ -133,6 +133,13 @@ void collided(void *a);
 
 void platform_collided(void *a);
 
+
+void powerup_collided(void *a);
+
+void boost_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux);
+
+void create_boost_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
+
 typedef struct collision_package {
    void *aux;
    collision_handler_t handler;

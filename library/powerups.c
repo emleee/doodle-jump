@@ -19,8 +19,9 @@
 #include "powerups.h"
 
 const rgb_color_t BOOST_COLOR ={.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
+const double RADIUS = 152.0;
 
-body_t *make_boost(vector_t center){
+body_t *make_boost(scene_t *scene, vector_t center){
     list_t *shape = list_init(4, free);
     vector_t *v = malloc(sizeof(*v));
     *v = (vector_t) {0, 0};
@@ -36,7 +37,26 @@ body_t *make_boost(vector_t center){
     list_add(shape, v);
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "boost");
-    body_t *boost = body_init_with_info(shape, 10, BOOST_COLOR, info, free);
+    body_t *boost = body_init_with_info(shape, INFINITY, BOOST_COLOR, info, free);
     body_set_centroid(boost, center);
+
+    scene_add_body(scene, boost);
+    create_boost_collision(scene, 0, scene_get_body(scene, 0), boost);
+    return boost;
+}
+
+body_t *make_immunity(scene_t *scene, vector_t center){
+    list_t *shape = list_init(20, free); // 13/16 + 1
+    for (int i = 0; i < 20; i++) {
+        vector_t *pt = malloc(sizeof(vector_t));
+        pt->x = RADIUS * cos(2 * M_PI * i / 20 + M_PI / 2);
+        pt->y = RADIUS * sin(2 * M_PI * i / 20 + M_PI / 2);
+        list_add(shape, pt);
+    }
+    char *info = malloc(sizeof(char)*9);
+    strcpy(info, "immunity");
+    body_t *boost = body_init_with_info(shape, INFINITY, BOOST_COLOR, info, free);
+    body_set_centroid(boost, center);
+    scene_add_body(scene, boost);
     return boost;
 }
