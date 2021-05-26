@@ -592,13 +592,13 @@ int main() {
     sdl_mouse(mouse_click);
     scene_t *scene = make_start_scene();
 
-
     vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
 
     vector_t *scoring = malloc(sizeof(vector_t));
     scoring->x = 10;
     scoring->y = 10;
+    double curr = 0.0;
 
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
@@ -632,12 +632,12 @@ int main() {
                 scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
             }
             strcpy(score, "Score: ");
-            double curr = calculate_score(center);
+            curr = calculate_score(center);
 
             sprintf(buffer, "%.1f", curr);
             strcat(score, buffer);
             if (get_score_preference()) {
-                text_t *scorebox = text_create(score, color, 40, scoring);
+                text_t *scorebox = text_create(score, color, 30, scoring);
                 scene_add_text(scene, scorebox);
             }
 
@@ -722,12 +722,19 @@ int main() {
         }
     }
 
-    FILE *file = fopen("highscores.txt", "a+");
-    fputs("\n", file);
-    fprintf(file, score);
+    // only save score if it's a high score
+    FILE *file = fopen("highscore.txt", "w+");
+    fgets(buffer, 30, file);
+    char **throwaway = malloc(sizeof(char *));
+    double highscore = strtod(buffer, throwaway);
+    if (curr > highscore) {
+        score+=7;
+        fprintf(file, score);
+    }
 
     fclose(file);
     free(score);
     free(buffer);
+    free(throwaway);
     scene_free(scene);
 }
