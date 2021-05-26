@@ -261,22 +261,22 @@ scene_t *make_start_scene() {
     vector_t *point2 = malloc(sizeof(vector_t));
     point2->x = 250; // remove magic numbers
     point2->y = 200;
-    text_t *text2 = text_create("Start", color, 22, point2, 150, 25);
+    text_t *text2 = text_create("Start", color, 22, point2);
     scene_add_text(scene, text2);
 
     vector_t *point3 = malloc(sizeof(vector_t));
     point3->x = 250; // remove magic numbers
     point3->y = 300;
-    text_t *text3 = text_create("Settings", color, 22, point3, 150, 25);
+    text_t *text3 = text_create("Settings", color, 22, point3);
     scene_add_text(scene, text3);
 
     // body_t *start_button = make_button(*point2);
     // scene_add_body(scene, start_button);
-    
+
     vector_t *point = malloc(sizeof(vector_t));
     point->x = 250; // remove magic numbers
     point->y = 50;
-    text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point, 400, 50);
+    text_t *text = text_create("Doodle Jump: Fairy Tail", color, 22, point);
     scene_add_text(scene, text);
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
@@ -315,21 +315,21 @@ scene_t *make_restart_scene(char *score) { // add something to keep track score 
     vector_t *point1 = malloc(sizeof(vector_t));
     point1->x = 250; // remove magic numbers
     point1->y = 200;
-    text_t *text1 = text_create(score, color, 22, point1, 200, 30);
+    text_t *text1 = text_create(score, color, 22, point1);
     scene_add_text(scene, text1);
 
     vector_t *point = malloc(sizeof(vector_t));
     point->x = 250; // remove magic numbers
     point->y = 400;
-    text_t *text = text_create("Restart", color, 22, point, 200, 30);
+    text_t *text = text_create("Restart", color, 22, point);
     scene_add_text(scene, text);
 
     vector_t *point2 = malloc(sizeof(vector_t));
     point2->x = 250; // remove magic numbers
     point2->y = 500;
-    text_t *text2 = text_create("Home", color, 22, point2, 200, 30);
+    text_t *text2 = text_create("Home", color, 22, point2);
     scene_add_text(scene, text2);
-    
+
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
     scene_add_body(scene, background1);
@@ -346,21 +346,21 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
     vector_t *title_point = malloc(sizeof(vector_t));
     title_point->x = 250; // remove magic numbers
     title_point->y = 50;
-    text_t *title_text = text_create("Settings", color, 22, title_point, 200, 30);
+    text_t *title_text = text_create("Settings", color, 22, title_point);
     scene_add_text(scene, title_text);
 
     vector_t *info_point = malloc(sizeof(vector_t));
     info_point->x = 250; // remove magic numbers
     info_point->y = 80;
-    text_t *info_text = text_create("Click ON or OFF to toggle settings.", color, 22, info_point, 175, 20);
+    text_t *info_text = text_create("Click ON or OFF to toggle settings.", color, 22, info_point);
     scene_add_text(scene, info_text);
-    
+
     vector_t *point2 = malloc(sizeof(vector_t));
     point2->x = 250; // remove magic numbers
     point2->y = 500;
-    text_t *text2 = text_create("Back to Home", color, 22, point2, 200, 30);
+    text_t *text2 = text_create("Back to Home", color, 22, point2);
     scene_add_text(scene, text2);
-    
+
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
     scene_add_body(scene, background1);
@@ -369,34 +369,34 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
     vector_t *sound_point = malloc(sizeof(vector_t));
     sound_point->x = 220; // remove magic numbers
     sound_point->y = 300;
-    text_t *sound_text = text_create("Sound Effects", color, 22, sound_point, 200, 30);
+    text_t *sound_text = text_create("Sound Effects", color, 22, sound_point);
     scene_add_text(scene, sound_text);
     vector_t *on1_point = malloc(sizeof(vector_t));
     on1_point->x = 290; // remove magic numbers
     on1_point->y = 300;
     if (get_sound_preference()) {
-        text_t *sound_text = text_create("ON", color, 22, on1_point, 100, 30);
+        text_t *sound_text = text_create("ON", color, 22, on1_point);
         scene_add_text(scene, sound_text);
     }
     if (!get_sound_preference()) {
-        text_t *sound_text = text_create("OFF", color, 22, on1_point, 100, 30);
+        text_t *sound_text = text_create("OFF", color, 22, on1_point);
         scene_add_text(scene, sound_text);
     }
 
     vector_t *score_point = malloc(sizeof(vector_t));
     score_point->x = 220; // remove magic numbers
     score_point->y = 400;
-    text_t *score_text = text_create("Score Markers", color, 22, score_point, 200, 30);
+    text_t *score_text = text_create("Score Markers", color, 22, score_point);
     scene_add_text(scene, score_text);
     vector_t *on2_point = malloc(sizeof(vector_t));
     on2_point->x = 290; // remove magic numbers
     on2_point->y = 400;
     if (get_score_preference()) {
-        text_t *sound_text = text_create("ON", color, 22, on2_point, 100, 30);
+        text_t *sound_text = text_create("ON", color, 22, on2_point);
         scene_add_text(scene, sound_text);
     }
     if (!get_score_preference()) {
-        text_t *sound_text = text_create("OFF", color, 22, on2_point, 200, 30);
+        text_t *sound_text = text_create("OFF", color, 22, on2_point);
         scene_add_text(scene, sound_text);
     }
 
@@ -525,14 +525,14 @@ void mouse_click(int key, int x, int y, void *scene) {
                         on1_point->x = 290; // remove magic numbers
                         on1_point->y = 300;
                         if (get_sound_preference()) {
-                            sound = text_create("ON", color, 22, on1_point, 100, 30);
+                            sound = text_create("ON", color, 22, on1_point);
                             scene_add_text(scene, sound);
-                            SOUND_IDX = scene_textboxes(scene) - 1; 
+                            SOUND_IDX = scene_textboxes(scene) - 1;
                         }
                         if (!get_sound_preference()) {
-                            sound = text_create("OFF", color, 22, on1_point, 100, 30);
+                            sound = text_create("OFF", color, 22, on1_point);
                             scene_add_text(scene, sound);
-                            SOUND_IDX = scene_textboxes(scene) - 1; 
+                            SOUND_IDX = scene_textboxes(scene) - 1;
                         }
                         // char *settings_info = malloc(9*sizeof(char));
                         // strcpy(settings_info, "settings");
@@ -547,14 +547,14 @@ void mouse_click(int key, int x, int y, void *scene) {
                         on1_point->x = 290; // remove magic numbers
                         on1_point->y = 400;
                         if (get_sound_preference()) {
-                            sound = text_create("ON", color, 22, on1_point, 100, 30);
+                            sound = text_create("ON", color, 22, on1_point);
                             scene_add_text(scene, sound);
-                            SCORE_IDX = scene_textboxes(scene) - 1; 
+                            SCORE_IDX = scene_textboxes(scene) - 1;
                         }
                         if (!get_sound_preference()) {
-                            sound = text_create("OFF", color, 22, on1_point, 100, 30);
+                            sound = text_create("OFF", color, 22, on1_point);
                             scene_add_text(scene, sound);
-                            SCORE_IDX = scene_textboxes(scene) - 1; 
+                            SCORE_IDX = scene_textboxes(scene) - 1;
                         }
                         // char *settings_info = malloc(9*sizeof(char));
                         // strcpy(settings_info, "settings");
@@ -578,10 +578,6 @@ double calculate_score(vector_t center) {
     double score = height / SCORE_FACTOR;
 
     return score;
-
-    // probably need to account for just the Highest doodle reaches? so score doesn't fluctuate
-    // randomly as doodle falls, maybe do this somewhere else tho
-    // like per tick, check if score > current score, if so replace otherwise don't
 }
 
 int main() {
@@ -595,8 +591,8 @@ int main() {
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
     scene_t *scene = make_start_scene();
-    
-    
+
+
     vector_t center = {.x = WIDTH2/2, HEIGHT2/2};
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
 
@@ -610,20 +606,8 @@ int main() {
     body_t *doodle;
 
     bool enemy_present = false;
-
-    // char score[100];
-
-    // score = "High Score: ";
-    // strcat(score, snprintf(score, 50, "%d", calculate_score(scene)));
-    // FILE *file = fopen("highscores.txt", "w");
-    // fprintf(file, score);
-
-
-    // score = calculate_score(scene);
-    // text_t *score = text_create(score, color, 20, scoring, 20, 20);
-
     while (!sdl_is_done(scene)) {
-        if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) { 
+        if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
             if (strcmp(scene_get_next_info(scene), "game") == 0) {
                 scene_free(scene);
                 scene = make_game_scene();
@@ -653,10 +637,10 @@ int main() {
             sprintf(buffer, "%.1f", curr);
             strcat(score, buffer);
             if (get_score_preference()) {
-                text_t *scorebox = text_create(score, color, 40, scoring, 200, 40);
+                text_t *scorebox = text_create(score, color, 40, scoring);
                 scene_add_text(scene, scorebox);
             }
-            
+
 
             double dt = time_since_last_tick();
 
@@ -716,7 +700,7 @@ int main() {
                 }
                 timer = 0;
             }
-            
+
             wrap(doodle);
             scene_tick(scene, dt);
             sdl_render_scene(scene);

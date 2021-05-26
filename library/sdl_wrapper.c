@@ -197,9 +197,9 @@ sprite_t *create_sprite(char *file) {
     return sprite;
 }
 
-text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height) {
+text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center) {
     TTF_Init();
-    TTF_Font *font = TTF_OpenFont("fonts/arial.ttf", ptsize);
+    TTF_Font *font = TTF_OpenFont("fonts/Nunito-SemiBold.ttf", ptsize);
     SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
     SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
     // SDL_Texture *texture = malloc(sizeof(SDL_Texture));
@@ -207,8 +207,8 @@ text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *c
     SDL_Rect *textbox = malloc(sizeof(SDL_Rect));
     textbox->x = center->x;
     textbox->y = center->y;
-    textbox->w = width;
-    textbox->h = height;
+    textbox->w = surface->w;
+    textbox->h = surface->h;
 
     text_t *text = text_init(surface, texture, textbox);
 

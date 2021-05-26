@@ -172,7 +172,7 @@ vector_t get_window_position(vector_t scene_pos, vector_t window_center);
  *
  * @return text struct containing surface, texture, textbox rectangle
  */
-text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center, double width, double height);
+text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center);
 
 
 #endif // #ifndef __SDL_WRAPPER_H__
