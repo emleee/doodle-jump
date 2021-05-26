@@ -614,8 +614,8 @@ int main() {
 
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
-    char *time = malloc(100*sizeof(char));
-    char *buffer2 = malloc(100*sizeof(char));
+    // char *time = malloc(100*sizeof(char));
+    // char *buffer2 = malloc(100*sizeof(char));
 
     body_t *doodle;
 
@@ -654,11 +654,11 @@ int main() {
                 text_t *scorebox = text_create(score, color, 30, scoring);
                 scene_add_text(scene, scorebox);
             }
-            strcpy(time, "Time: ");
-            sprintf(buffer2, "%d", powerup_timer);
-            strcat(time, buffer2);
-            text_t *timing = text_create(time, color, 30, scoring);
-            scene_add_text(scene, timing);
+            // strcpy(time, "Time: ");
+            // sprintf(buffer2, "%d", powerup_timer);
+            // strcat(time, buffer2);
+            // text_t *timing = text_create(time, color, 30, scoring);
+            // scene_add_text(scene, timing);
 
 
             double dt = time_since_last_tick();

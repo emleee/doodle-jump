@@ -11,7 +11,7 @@
 #include "preferences.h"
 
 const double BOOST = -300;
-const double BOOST_POWERUP = -1000;
+const double BOOST_POWERUP = 1000;
 const double DOODLE_HEIGHT2 = 148.0;
 const double ERROR = 5;
 
@@ -344,5 +344,5 @@ void create_boost_collision(scene_t *scene, double elasticity, body_t *body1, bo
     list_add(bodies2, body1);
     list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
-    create_collision(scene, body1, body2, (collision_handler_t)boost_powerup_collision, aux, (free_func_t)force_aux_free, platform_collided);
+    create_collision(scene, body1, body2, (collision_handler_t)boost_powerup_collision, aux, (free_func_t)force_aux_free, collided);
 }
