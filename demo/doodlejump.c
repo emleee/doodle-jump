@@ -18,6 +18,7 @@
 #include "test_util.h"
 #include "preferences.h"
 #include "powerups.h"
+#include "star.h"
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
@@ -166,7 +167,7 @@ void more_platforms(scene_t *scene, vector_t center, bool first, int powerup_tim
                 body_t *new_platform = normal_platform(platform_center, new_info);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-                
+
                 // printf("%d\n", powerup_timer);
                 if (powerup_timer >= 700) {
                     // printf("hello");
@@ -185,7 +186,7 @@ void more_platforms(scene_t *scene, vector_t center, bool first, int powerup_tim
         strcpy(info, "nonessential platform");
         int random = rand() % 4;
         vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * HEIGHT2 + center.y + HEIGHT2/2};
-        
+
         if (random < 2) {
             body_t *new_platform = trick_platform(platform_center, info);
             scene_add_body(scene, new_platform);
@@ -572,6 +573,11 @@ void mouse_click(int key, int x, int y, void *scene) {
     }
 }
 
+// body_t *create_star(vector_t center) {
+//     star_t *starframe = star_init(5); // magic number - points of the star
+//     body_t *star = body_init(body_t)
+// }
+
 double calculate_score(vector_t center) {
     // find doodle center height
     double height = center.y;
@@ -748,19 +754,53 @@ int main() {
         }
     }
 
+
     // only save score if it's a high score
-    FILE *file = fopen("highscore.txt", "w+");
-    fgets(buffer, 30, file);
+    FILE *file = fopen("../highscore.txt", "w+");
+    if (file == NULL) {
+        printf("NULL file.\n");
+    }
+    char *buffer2 = malloc(100*sizeof(char));
+    fgets(buffer2, 5, file);
     char **throwaway = malloc(sizeof(char *));
-    double highscore = strtod(buffer, throwaway);
+    double highscore = strtod(buffer2, throwaway);
     if (curr > highscore) {
         score+=7;
-        fprintf(file, score);
+        fputs(score, file);
     }
+
+   /**
+     * star saving
+     *
+     * create a list? then add any star collected to the list
+     * or just have a variable and every time a star is collected increment the var
+     * save ending in a file?
+     *
+     * star spawning
+     *
+     * pick a random platform, get its center or smth and move vector y up a bit
+     * draw a star there and add it to scene, add magnetic force
+     * how to make it disappear? destructive collision?
+     **/
+
+
+    // // only save score if it's a high score
+    // FILE *file = fopen("scoring/highscore.txt", "w+");
+    // if (file == NULL) {
+    //     printf("NULL file.\n");
+    // }
+    // fgets(buffer, 30, file);
+    // char **throwaway = malloc(sizeof(char *));
+    // double highscore = strtod(buffer, throwaway);
+    // if (curr > highscore) {
+    //     // score+=7;
+    //     fprintf(file, score);
+    // }
 
     fclose(file);
     free(score);
     free(buffer);
+    free(buffer2);
     free(throwaway);
     scene_free(scene);
 }

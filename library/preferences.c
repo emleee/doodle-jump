@@ -10,7 +10,7 @@ bool SOUND_EFFECTS = true;
 bool SCORE_MARKER = true;
 
 bool get_sound_preference() {
-    FILE* file = fopen("preferences.txt", "r"); 
+    FILE* file = fopen("preferences.txt", "r");
 
     if (!file) {
         return SOUND_EFFECTS;
@@ -21,10 +21,12 @@ bool get_sound_preference() {
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Sound: ON\n") == 0) {
             SOUND_EFFECTS = true;
+            fclose(file);
             return true;
         }
         if (strcmp(line, "Sound: OFF\n") == 0) {
             SOUND_EFFECTS = false;
+            fclose(file);
             return false;
         }
     }
@@ -33,7 +35,7 @@ bool get_sound_preference() {
 }
 
 bool get_score_preference() {
-    FILE* file = fopen("preferences.txt", "r"); 
+    FILE* file = fopen("preferences.txt", "r");
 
     if (!file) {
         return SCORE_MARKER;
@@ -44,10 +46,12 @@ bool get_score_preference() {
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Score: ON\n") == 0) {
             SCORE_MARKER = true;
+            fclose(file);
             return true;
         }
         if (strcmp(line, "Score: OFF\n") == 0) {
             SCORE_MARKER = false;
+            fclose(file);
             return false;
         }
     }
