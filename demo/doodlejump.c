@@ -220,7 +220,9 @@ bool more_enemies(scene_t *scene, vector_t center) {
         body_t *enemy = make_enemy(centroid);
         scene_add_body(scene, enemy);
         // add enemy collision here
+        return true;
     }
+    return false;
 }
 
 scene_t *make_game_scene() {
@@ -454,21 +456,25 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
-                if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
-                    change_direction(player, scene_get_sprite(scene, 0));
+                if (strcmp(scene_get_info(scene), "game")==0) {
+                    if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
+                        change_direction(player, scene_get_sprite(scene, 0));
+                    }
+                    body_set_rotation(player, 0);
+                    body_velocity.x = PLAYER_X_VELOCITY;
+                    body_set_velocity(player, body_velocity);
+                    break;
                 }
-                body_set_rotation(player, 0);
-                body_velocity.x = PLAYER_X_VELOCITY;
-                body_set_velocity(player, body_velocity);
-                break;
             case LEFT_ARROW:
-                if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
-                    change_direction(player, scene_get_sprite(scene, 1));
+                if (strcmp(scene_get_info(scene), "game")==0) {
+                    if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
+                        change_direction(player, scene_get_sprite(scene, 1));
+                    }
+                    body_set_rotation(player, M_PI);
+                    body_velocity.x = -1 * PLAYER_X_VELOCITY;
+                    body_set_velocity(player, body_velocity);
+                    break;
                 }
-                body_set_rotation(player, M_PI);
-                body_velocity.x = -1 * PLAYER_X_VELOCITY;
-                body_set_velocity(player, body_velocity);
-                break;
         }
     }
     else {
