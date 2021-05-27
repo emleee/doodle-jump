@@ -1,13 +1,98 @@
 #include <stddef.h>
+#include <math.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include "polygon.h"
+#include "color.h"
+#include "list.h"
+#include <time.h>
 #include <stdio.h>
-#include <stdbool.h>
+#include "forces.h"
+#include "collision.h"
+#include "platforms.h"
+#include "sdl_wrapper.h"
+#include "game_sprites.h"
+#include "SDL2/SDL_mixer.h"
+#include "text.h"
+#include "test_util.h"
 #include "preferences.h"
 
+const double PREF_WIDTH = 720.0;
+const double PREF_HEIGHT = 960.0;
+const double PREF_BUTTON_OFFSET = 100;
 bool SOUND_EFFECTS = true;
 bool SCORE_MARKER = true;
+
+// scene_t *make_settings_scene() { // add something to keep track score vs high score and the falling/sad doodle
+//     char *scene_info = malloc(9*sizeof(char));
+//     strcpy(scene_info, "settings");
+//     scene_t *scene = scene_init_with_info(scene_info, free);
+//     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+
+//     vector_t *title_point = malloc(sizeof(vector_t));
+//     title_point->x = 250; // remove magic numbers
+//     title_point->y = 50;
+//     text_t *title_text = text_create("Settings", color, 28, title_point);
+//     scene_add_text(scene, title_text);
+
+//     vector_t *info_point = malloc(sizeof(vector_t));
+//     info_point->x = 200; // remove magic numbers
+//     info_point->y = 80;
+//     text_t *info_text = text_create("Click ON or OFF to toggle settings.", color, 18, info_point);
+//     scene_add_text(scene, info_text);
+
+//     vector_t *point2 = malloc(sizeof(vector_t));
+//     point2->x = 250; // remove magic numbers
+//     point2->y = 500;
+//     text_t *text2 = text_create("Back to Home", color, 22, point2);
+//     scene_add_text(scene, text2);
+
+//     body_t *background1 = make_background_body((vector_t){.x = 0, .y = PREF_HEIGHT});
+//     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*PREF_HEIGHT});
+//     scene_add_body(scene, background1);
+//     scene_add_body(scene, background2);
+
+//     vector_t *sound_point = malloc(sizeof(vector_t));
+//     sound_point->x = 220; // remove magic numbers
+//     sound_point->y = 300;
+//     text_t *sound_text = text_create("Sound Effects", color, 22, sound_point);
+//     scene_add_text(scene, sound_text);
+
+//     vector_t *score_point = malloc(sizeof(vector_t));
+//     score_point->x = 220; // remove magic numbers
+//     score_point->y = 300 + PREF_BUTTON_OFFSET;
+//     text_t *score_text = text_create("Score Markers", color, 22, score_point);
+//     scene_add_text(scene, score_text);
+
+//     vector_t *on1_point = malloc(sizeof(vector_t));
+//     on1_point->x = 400; // remove magic numbers
+//     on1_point->y = 300;
+//     bool sound_pref = get_sound_preference();
+//     if (sound_pref) {
+//         text_t *sound = text_create("ON", color, 22, on1_point);
+//         scene_add_text(scene, sound);
+//     }
+//     if (!sound_pref) {
+//         text_t *sound = text_create("OFF", color, 22, on1_point);
+//         scene_add_text(scene, sound);
+//     }
+//     vector_t *on2_point = malloc(sizeof(vector_t));
+//     on2_point->x = 400; // remove magic numbers
+//     on2_point->y = 300 + PREF_BUTTON_OFFSET;
+//     bool score_pref = get_score_preference();
+//     if (score_pref) {
+//         text_t *score = text_create("ON", color, 22, on2_point);
+//         scene_add_text(scene, score);
+//     }
+//     if (!score_pref) {
+//         text_t *score = text_create("OFF", color, 22, on2_point);
+//         scene_add_text(scene, score);
+//     }
+//     printf("made settings scene\n");
+
+//     return scene;
+// }
 
 bool get_sound_preference() {
     FILE* file = fopen("preferences.txt", "r");
@@ -70,7 +155,6 @@ void update_preferences() {
     if (!fp) {
         return;
     }
-    printf("opened\n");
     if (SOUND_EFFECTS) {
         fprintf(fp,"Sound: ON\n");
     }
@@ -83,7 +167,5 @@ void update_preferences() {
     else if (!SCORE_MARKER) {
         fprintf(fp,"Score: OFF\n");
     }
-    printf("printed\n");
     fclose(fp);
-    printf("closed\n");
 }

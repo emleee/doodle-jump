@@ -220,6 +220,7 @@ bool more_enemies(scene_t *scene, vector_t center) {
         scene_add_body(scene, enemy);
         return true;
         // add enemy collision here
+        return true;
     }
     return false;
 }
@@ -327,37 +328,6 @@ scene_t *make_start_scene() {
     return scene;
 }
 
-scene_t *make_restart_scene(char *score) { // add something to keep track score vs high score and the falling/sad doodle
-    char *scene_info = malloc(8*sizeof(char));
-    strcpy(scene_info, "restart");
-    scene_t *scene = scene_init_with_info(scene_info, free);
-
-    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    vector_t *point1 = malloc(sizeof(vector_t));
-    point1->x = 250; // remove magic numbers
-    point1->y = 200;
-    text_t *text1 = text_create(score, color, 22, point1);
-    scene_add_text(scene, text1);
-
-    vector_t *point = malloc(sizeof(vector_t));
-    point->x = 250; // remove magic numbers
-    point->y = 400;
-    text_t *text = text_create("Restart", color, 22, point);
-    scene_add_text(scene, text);
-
-    vector_t *point2 = malloc(sizeof(vector_t));
-    point2->x = 250; // remove magic numbers
-    point2->y = 500;
-    text_t *text2 = text_create("Home", color, 22, point2);
-    scene_add_text(scene, text2);
-
-    body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
-    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
-    scene_add_body(scene, background1);
-    scene_add_body(scene, background2);
-    return scene;
-}
-
 scene_t *make_settings_scene() { // add something to keep track score vs high score and the falling/sad doodle
     char *scene_info = malloc(9*sizeof(char));
     strcpy(scene_info, "settings");
@@ -423,8 +393,38 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
         text_t *score = text_create("OFF", color, 22, on2_point);
         scene_add_text(scene, score);
     }
-    printf("made settings scene\n");
 
+    return scene;
+}
+
+scene_t *make_restart_scene(char *score) { // add something to keep track score vs high score and the falling/sad doodle
+    char *scene_info = malloc(8*sizeof(char));
+    strcpy(scene_info, "restart");
+    scene_t *scene = scene_init_with_info(scene_info, free);
+
+    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    vector_t *point1 = malloc(sizeof(vector_t));
+    point1->x = 250; // remove magic numbers
+    point1->y = 200;
+    text_t *text1 = text_create(score, color, 22, point1);
+    scene_add_text(scene, text1);
+
+    vector_t *point = malloc(sizeof(vector_t));
+    point->x = 250; // remove magic numbers
+    point->y = 400;
+    text_t *text = text_create("Restart", color, 22, point);
+    scene_add_text(scene, text);
+
+    vector_t *point2 = malloc(sizeof(vector_t));
+    point2->x = 250; // remove magic numbers
+    point2->y = 500;
+    text_t *text2 = text_create("Home", color, 22, point2);
+    scene_add_text(scene, text2);
+
+    body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
+    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
+    scene_add_body(scene, background1);
+    scene_add_body(scene, background2);
     return scene;
 }
 
@@ -458,21 +458,25 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
-                if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
-                    change_direction(player, scene_get_sprite(scene, 0));
+                if (strcmp(scene_get_info(scene), "game")==0) {
+                    if (body_get_sprite(player) == scene_get_sprite(scene, 1)) {
+                        change_direction(player, scene_get_sprite(scene, 0));
+                    }
+                    body_set_rotation(player, 0);
+                    body_velocity.x = PLAYER_X_VELOCITY;
+                    body_set_velocity(player, body_velocity);
+                    break;
                 }
-                body_set_rotation(player, 0);
-                body_velocity.x = PLAYER_X_VELOCITY;
-                body_set_velocity(player, body_velocity);
-                break;
             case LEFT_ARROW:
-                if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
-                    change_direction(player, scene_get_sprite(scene, 1));
+                if (strcmp(scene_get_info(scene), "game")==0) {
+                    if (body_get_sprite(player) == scene_get_sprite(scene, 0)) {
+                        change_direction(player, scene_get_sprite(scene, 1));
+                    }
+                    body_set_rotation(player, M_PI);
+                    body_velocity.x = -1 * PLAYER_X_VELOCITY;
+                    body_set_velocity(player, body_velocity);
+                    break;
                 }
-                body_set_rotation(player, M_PI);
-                body_velocity.x = -1 * PLAYER_X_VELOCITY;
-                body_set_velocity(player, body_velocity);
-                break;
         }
     }
     else {
@@ -540,12 +544,9 @@ void mouse_click(int key, int x, int y, void *scene) {
                 }
             }
             else if (strcmp(scene_get_info(scene), "settings") == 0) {
-                printf("in settings\n");
                 if (x < (400 + BUTTON_X_RADIUS) && x > (400 - BUTTON_X_RADIUS)) {
-                    printf("click registered\n");
                     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
                     if (y < (300 + BUTTON_Y_RADIUS) && y > (300 - BUTTON_Y_RADIUS)) {
-                        printf("sound switched\n");
                         switch_sound_preferences();
                         update_preferences();
                     }
@@ -558,7 +559,6 @@ void mouse_click(int key, int x, int y, void *scene) {
                         strcpy(start_info, "start");
                         scene_set_next_info(scene, start_info);
                     }
-                    printf("switched\n");
                     text_t *sound = scene_get_text(scene, SOUND_IDX);
                     scene_remove_text(scene, sound);
                     text_t *score = scene_get_text(scene, SCORE_IDX);
@@ -571,7 +571,6 @@ void mouse_click(int key, int x, int y, void *scene) {
                         sound = text_create("ON", color, 22, on1_point);
                     }
                     if (!sound_pref) {
-                        printf("new sound\n");
                         sound = text_create("OFF", color, 22, on1_point);
                     }
                     vector_t *on2_point = malloc(sizeof(vector_t));
@@ -586,23 +585,40 @@ void mouse_click(int key, int x, int y, void *scene) {
                     }
                     scene_add_text(scene, sound);
                     scene_add_text(scene, score);
-                    printf("added\n");
                 }
             }
     }
 }
 
-body_t *create_star(vector_t center) {
+void create_star(scene_t *scene) {
+    // pick a random normal platform
+    int random = 0;
+    char *info = body_get_info(scene_get_body(scene, random));
+    // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
+    bool conflict = true;
+    while (strcmp("essential platform", info) != 0 && conflict) {
+        random = rand() % scene_bodies(scene);
+        info = body_get_info(scene_get_body(scene, random));
+
+        // check if platform already has a star on it
+        for (size_t j = 0; j < scene_bodies(scene); j++) {
+            body_t *body1 = scene_get_body(scene, j);
+            body_t *body2 = scene_get_body(scene, random);
+            if (strcmp("star", body_get_info(scene_get_body(scene, j))) == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
+                break;
+            }
+        }
+        conflict = false;
+    }
+    body_t *platform = scene_get_body(scene, random);
+    vector_t center = body_get_centroid(platform);
+    center.y += 40; // magic number for offset
+
     star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
     body_t *star = body_init_with_info(get_points(starframe), 0.5, color, "star", free); // magic number for star mass
 
-
-    // star_t *starframe = star_init(5); // magic number - points of the star
-    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    // list_t *points = get_points(starframe);
-    // body_t *star = body_init(points, 100, color);
-    // star_free(starframe);
+    scene_add_body(scene, star);
     return star;
 }
 
@@ -645,7 +661,10 @@ int main() {
 
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
-        // printf("next loop\n");
+        // generate a star once in a while
+        
+
+
         if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
             if (strcmp(scene_get_next_info(scene), "game") == 0) {
                 center = (vector_t) {.x = WIDTH2/2, .y = HEIGHT2/2};
@@ -678,19 +697,8 @@ int main() {
         if (strcmp(scene_get_info(scene), "game") == 0) {
             // calculate and display score
             // generate a star once in a while
-            if (star_timer == 50) {
-                // pick a random normal platform
-                int random = 0;
-                char *info = body_get_info(scene_get_body(scene, random));
-                // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
-                while (strcmp("nonessential platform", info) != 0) {
-                    random = rand() % scene_bodies(scene);
-                    info = body_get_info(scene_get_body(scene, random));
-                }
-                body_t *platform = scene_get_body(scene, random);
-                vector_t center = body_get_centroid(platform);
-                center.y += 40; // magic number for offset
-                scene_add_body(scene, create_star(center));
+            if (star_timer == 100) {
+                create_star(scene);
                 star_timer = 0;
             }
             star_timer++;
