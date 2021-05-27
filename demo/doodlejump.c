@@ -27,7 +27,7 @@ const int NUM_POINTS = 50;
 const double BUTTON_X_RADIUS = 125;
 const double BUTTON_Y_RADIUS = 75;
 
-const double MAX_PLATFORMS = 18;
+const double MAX_PLATFORMS = 12;
 const double PLATFORM_WIDTH2 = 146;
 const double PLATFORM_HEIGHT2 = 35;
 
@@ -144,9 +144,9 @@ body_t *make_button(vector_t center) {
 //     return (fabs(centroid1.x - centroid2.x) <= PLATFORM_WIDTH2 || fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2);
 // }
 
-void more_platforms(scene_t *scene, vector_t center, bool first, int powerup_timer) {
+void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
     int num_platforms = 0;
-    for (int i = 3; i < scene_bodies(scene); i++) {
+    for (int i = 0; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);
         if (strstr(info, "platform") == NULL) {
@@ -176,11 +176,20 @@ void more_platforms(scene_t *scene, vector_t center, bool first, int powerup_tim
         }
     }
     int i = num_platforms;
-    int body_num = num_platforms;
-    if (first) {
-        i = MAX_PLATFORMS/2;
+    int difficulty = 0;
+    // int body_num = num_platforms; if i decide to make platforms not overlap
+    if (center.y == -1 * HEIGHT2/2) {
+        i = (int)MAX_PLATFORMS/2 + 3;
     }
-    while (i < MAX_PLATFORMS) {
+    else {
+        difficulty += abs((int)center.y)/(int)HEIGHT2/2;
+        if (difficulty > MAX_PLATFORMS - (int)ceil(HEIGHT2*2/MAX_JUMP)) {
+            if (rand()%100 == 0) {
+                i = MAX_PLATFORMS - difficulty - 1;
+            }
+        }
+    }
+    while (i < MAX_PLATFORMS - difficulty) {
         char *info = malloc(22*sizeof(char));
         strcpy(info, "nonessential platform");
         int random = rand() % 4;
@@ -238,7 +247,7 @@ scene_t *make_game_scene() {
 
     body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
-    create_downward_gravity(scene, G, doodle);
+    // create_downward_gravity(scene, G, doodle);
 
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
@@ -259,7 +268,7 @@ scene_t *make_game_scene() {
     create_platform_collision(scene, 0, doodle, safety_platform);
 
     vector_t center = {.x = WIDTH2/2, .y = -1 * HEIGHT2/2};
-    more_platforms(scene, center, true, 0);
+    more_platforms(scene, center, 0);
 
     return scene;
 }
@@ -683,7 +692,7 @@ int main() {
             // shifting the viewing window if the doodle goes higher than the center
             if (body_get_centroid(doodle).y > center.y) {
                 // generates more platforms
-                more_platforms(scene, center, false, powerup_timer);
+                more_platforms(scene, center, powerup_timer);
                 if (powerup_timer >= 1000) {
                     powerup_timer = 0;
                 }
