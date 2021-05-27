@@ -183,10 +183,8 @@ void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
     }
     else {
         difficulty += abs((int)center.y)/(int)HEIGHT2/2;
-        if (difficulty > MAX_PLATFORMS - (int)ceil(HEIGHT2*2/MAX_JUMP)) {
-            if (rand()%100 == 0) {
-                i = MAX_PLATFORMS - difficulty - 1;
-            }
+        if (num_platforms == (int)(HEIGHT2*2/MAX_JUMP)) {
+            i = MAX_PLATFORMS - difficulty - 1;
         }
     }
     while (i < MAX_PLATFORMS - difficulty) {
