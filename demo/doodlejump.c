@@ -580,10 +580,12 @@ void mouse_click(int key, int x, int y, void *scene) {
     }
 }
 
-// body_t *create_star(vector_t center) {
-//     star_t *starframe = star_init(5); // magic number - points of the star
-//     body_t *star = body_init(body_t)
-// }
+body_t *create_star(vector_t center) {
+    star_t *starframe = star_init(5); // magic number - points of the star
+    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    body_t *star = body_init(get_points(starframe), 100, color);
+    return star;
+}
 
 double calculate_score(vector_t center) {
     // find doodle center height
@@ -603,6 +605,7 @@ int main() {
 
     int timer = 0;
     int powerup_timer = 0;
+    int star_timer = 0;
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
@@ -625,6 +628,16 @@ int main() {
 
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
+        // // generate a star once in a while
+        // if (star_timer == 50) {
+        //     // pick a random platform
+        //     body_t *platform = scene_get_body(scene, (int)rand()/RAND_MAX);
+        //     scene_add_body(scene, create_star())
+        //     star_timer = 0;
+        // }
+        // star_timer++;
+
+
         if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
             if (strcmp(scene_get_next_info(scene), "game") == 0) {
                 center = (vector_t) {.x = WIDTH2/2, .y = HEIGHT2/2};
@@ -763,7 +776,7 @@ int main() {
 
 
     // only save score if it's a high score
-    FILE *file = fopen("../highscore.txt", "w+");
+    FILE *file = fopen("highscore.txt", "w+");
     if (file == NULL) {
         printf("NULL file.\n");
     }
@@ -791,21 +804,8 @@ int main() {
      **/
 
 
-    // // only save score if it's a high score
-    // FILE *file = fopen("scoring/highscore.txt", "w+");
-    // if (file == NULL) {
-    //     printf("NULL file.\n");
-    // }
-    // fgets(buffer, 30, file);
-    // char **throwaway = malloc(sizeof(char *));
-    // double highscore = strtod(buffer, throwaway);
-    // if (curr > highscore) {
-    //     // score+=7;
-    //     fprintf(file, score);
-    // }
 
     fclose(file);
-    free(score);
     free(buffer);
     free(buffer2);
     free(throwaway);
