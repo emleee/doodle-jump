@@ -197,6 +197,25 @@ sprite_t *create_sprite(char *file) {
     return sprite;
 }
 
+// text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center) {
+//     TTF_Init();
+//     TTF_Font *font = TTF_OpenFont("fonts/Nunito-SemiBold.ttf", ptsize);
+//     SDL_Color color = {fontColor.r, fontColor.g, fontColor.b};
+//     SDL_Surface *surface = TTF_RenderText_Solid(font, string, color);
+//     // SDL_Texture *texture = malloc(sizeof(SDL_Texture));
+//     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+//     SDL_Rect *textbox = malloc(sizeof(SDL_Rect));
+//     textbox->x = center->x;
+//     textbox->y = center->y;
+//     textbox->w = surface->w;
+//     textbox->h = surface->h;
+
+//     text_t *text = text_init(surface, texture, textbox);
+
+//     TTF_CloseFont(font);
+//     return text;
+// }
+
 text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *center) {
     TTF_Init();
     TTF_Font *font = TTF_OpenFont("fonts/Nunito-SemiBold.ttf", ptsize);
@@ -205,8 +224,8 @@ text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *c
     // SDL_Texture *texture = malloc(sizeof(SDL_Texture));
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_Rect *textbox = malloc(sizeof(SDL_Rect));
-    textbox->x = center->x;
-    textbox->y = center->y;
+    textbox->x = center->x - (surface->w / 2);
+    textbox->y = center->y - (surface->h / 2);
     textbox->w = surface->w;
     textbox->h = surface->h;
 
