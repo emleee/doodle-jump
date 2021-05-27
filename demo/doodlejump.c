@@ -247,7 +247,7 @@ scene_t *make_game_scene() {
 
     body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
-    // create_downward_gravity(scene, G, doodle);
+    create_downward_gravity(scene, G, doodle);
 
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = HEIGHT2});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*HEIGHT2});
