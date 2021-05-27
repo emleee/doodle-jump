@@ -20,6 +20,8 @@
 #include "text.h"
 #include "test_util.h"
 
+void make_powerup(scene_t *scene, vector_t center);
 body_t *make_boost(scene_t *scene, vector_t center);
+body_t *make_immunity(scene_t *scene, vector_t center);
 
 #endif // #ifndef __POWERUPS_H__

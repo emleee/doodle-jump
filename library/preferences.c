@@ -20,16 +20,15 @@ bool get_sound_preference() {
 
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Sound: ON\n") == 0) {
+            // printf("sound is true");
             SOUND_EFFECTS = true;
-            fclose(file);
-            return true;
         }
-        if (strcmp(line, "Sound: OFF\n") == 0) {
+        else if (strcmp(line, "Sound: OFF\n") == 0) {
+            // printf("sound is false");
             SOUND_EFFECTS = false;
-            fclose(file);
-            return false;
         }
     }
+    // printf("sound is closed");
     fclose(file);
     return SOUND_EFFECTS;
 }
@@ -45,17 +44,16 @@ bool get_score_preference() {
 
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Score: ON\n") == 0) {
+            // printf("sound is true");
             SCORE_MARKER = true;
-            fclose(file);
-            return true;
         }
-        if (strcmp(line, "Score: OFF\n") == 0) {
+        else if (strcmp(line, "Score: OFF\n") == 0) {
+            // printf("score is false");
             SCORE_MARKER = false;
-            fclose(file);
-            return false;
         }
     }
     fclose(file);
+    // printf("score is closed");
     return SCORE_MARKER;
 }
 
@@ -68,11 +66,11 @@ void switch_score_preferences () {
 }
 
 void update_preferences() {
-    FILE *fp; // declaration of file pointer
-    fp =fopen("preferences.txt", "w"); // opening of file
+    FILE *fp = fopen("preferences.txt", "w"); // opening of file
     if (!fp) {
         return;
     }
+    printf("opened\n");
     if (SOUND_EFFECTS) {
         fprintf(fp,"Sound: ON\n");
     }
@@ -85,5 +83,7 @@ void update_preferences() {
     else if (!SCORE_MARKER) {
         fprintf(fp,"Score: OFF\n");
     }
+    printf("printed\n");
     fclose(fp);
+    printf("closed\n");
 }

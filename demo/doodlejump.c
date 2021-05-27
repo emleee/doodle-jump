@@ -147,6 +147,7 @@ body_t *make_button(vector_t center) {
 
 void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
     int num_platforms = 0;
+    vector_t powerup_center;
     for (int i = 0; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);
@@ -161,20 +162,18 @@ void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
             if ((new_height > center.y + HEIGHT2/2) && (new_height < center.y + HEIGHT2/2 + HEIGHT2)) {
                 strcat(info, " done");
                 vector_t platform_center = {.x = (double)rand()/RAND_MAX * (WIDTH2 - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
-                vector_t powerup_center = {.x = platform_center.x, .y = platform_center.y + 50};
+                powerup_center = (vector_t) {.x = platform_center.x, .y = platform_center.y + 50};
                 char *new_info = malloc(24*sizeof(char));
                 strcpy(new_info, "essential platform");
                 body_t *new_platform = normal_platform(platform_center, new_info);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-
-                // printf("%d\n", powerup_timer);
-                if (powerup_timer >= 700) {
-                    // printf("hello");
-                    make_boost(scene, powerup_center);
-                }
             }
         }
+    }
+    // printf("%d\n", powerup_timer);
+    if (powerup_timer >= 950) {
+        make_powerup(scene, powerup_center);
     }
     int i = num_platforms;
     int difficulty = 0;
@@ -219,8 +218,10 @@ bool more_enemies(scene_t *scene, vector_t center) {
         vector_t centroid = {.x = (double)rand()/RAND_MAX * (WIDTH2 - DOODLE_HEIGHT) + DOODLE_HEIGHT/2, .y = center.y + (double)rand()/RAND_MAX * HEIGHT2 + HEIGHT2/2};
         body_t *enemy = make_enemy(centroid);
         scene_add_body(scene, enemy);
+        return true;
         // add enemy collision here
     }
+    return false;
 }
 
 scene_t *make_game_scene() {
@@ -401,25 +402,28 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
     vector_t *on1_point = malloc(sizeof(vector_t));
     on1_point->x = 400; // remove magic numbers
     on1_point->y = 300;
-    if (get_sound_preference()) {
-        text_t *sound_text = text_create("ON", color, 22, on1_point);
-        scene_add_text(scene, sound_text);
+    bool sound_pref = get_sound_preference();
+    if (sound_pref) {
+        text_t *sound = text_create("ON", color, 22, on1_point);
+        scene_add_text(scene, sound);
     }
-    if (!get_sound_preference()) {
-        text_t *sound_text = text_create("OFF", color, 22, on1_point);
-        scene_add_text(scene, sound_text);
+    if (!sound_pref) {
+        text_t *sound = text_create("OFF", color, 22, on1_point);
+        scene_add_text(scene, sound);
     }
     vector_t *on2_point = malloc(sizeof(vector_t));
     on2_point->x = 400; // remove magic numbers
     on2_point->y = 300 + BUTTON_OFFSET;
-    if (get_score_preference()) {
-        text_t *sound_text = text_create("ON", color, 22, on2_point);
-        scene_add_text(scene, sound_text);
+    bool score_pref = get_score_preference();
+    if (score_pref) {
+        text_t *score = text_create("ON", color, 22, on2_point);
+        scene_add_text(scene, score);
     }
-    if (!get_score_preference()) {
-        text_t *sound_text = text_create("OFF", color, 22, on2_point);
-        scene_add_text(scene, sound_text);
+    if (!score_pref) {
+        text_t *score = text_create("OFF", color, 22, on2_point);
+        scene_add_text(scene, score);
     }
+    printf("made settings scene\n");
 
     return scene;
 }
@@ -536,9 +540,12 @@ void mouse_click(int key, int x, int y, void *scene) {
                 }
             }
             else if (strcmp(scene_get_info(scene), "settings") == 0) {
+                printf("in settings\n");
                 if (x < (400 + BUTTON_X_RADIUS) && x > (400 - BUTTON_X_RADIUS)) {
+                    printf("click registered\n");
                     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
                     if (y < (300 + BUTTON_Y_RADIUS) && y > (300 - BUTTON_Y_RADIUS)) {
+                        printf("sound switched\n");
                         switch_sound_preferences();
                         update_preferences();
                     }
@@ -551,6 +558,7 @@ void mouse_click(int key, int x, int y, void *scene) {
                         strcpy(start_info, "start");
                         scene_set_next_info(scene, start_info);
                     }
+                    printf("switched\n");
                     text_t *sound = scene_get_text(scene, SOUND_IDX);
                     scene_remove_text(scene, sound);
                     text_t *score = scene_get_text(scene, SCORE_IDX);
@@ -558,23 +566,27 @@ void mouse_click(int key, int x, int y, void *scene) {
                     vector_t *on1_point = malloc(sizeof(vector_t));
                     on1_point->x = 400; // remove magic numbers
                     on1_point->y = 300;
-                    if (get_sound_preference()) {
+                    bool sound_pref = get_sound_preference();
+                    if (sound_pref) {
                         sound = text_create("ON", color, 22, on1_point);
                     }
-                    if (!get_sound_preference()) {
+                    if (!sound_pref) {
+                        printf("new sound\n");
                         sound = text_create("OFF", color, 22, on1_point);
                     }
                     vector_t *on2_point = malloc(sizeof(vector_t));
                     on2_point->x = 400; // remove magic numbers
-                    on2_point->y = 400;
-                    if (get_score_preference()) {
+                    on2_point->y = 300 + BUTTON_OFFSET;
+                    bool score_pref = get_score_preference();
+                    if (score_pref) {
                         score = text_create("ON", color, 22, on2_point);
                     }
-                    if (!get_score_preference()) {
+                    if (!score_pref) {
                         score = text_create("OFF", color, 22, on2_point);
                     }
                     scene_add_text(scene, sound);
                     scene_add_text(scene, score);
+                    printf("added\n");
                 }
             }
     }
@@ -583,7 +595,7 @@ void mouse_click(int key, int x, int y, void *scene) {
 body_t *create_star(vector_t center) {
     star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
-    body_t *star = body_init_with_info(get_points(starframe), 10, color, "star", free); // magic number for star mass
+    body_t *star = body_init_with_info(get_points(starframe), 0.5, color, "star", free); // magic number for star mass
 
 
     // star_t *starframe = star_init(5); // magic number - points of the star
@@ -633,25 +645,7 @@ int main() {
 
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
-        // generate a star once in a while
-        if (star_timer == 50) {
-            // pick a random normal platform
-            int random = 0;
-            char *info = body_get_info(scene_get_body(scene, random));
-            // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
-            while (strcmp("nonessential platform", info) != 0) {
-                random = rand() % scene_bodies(scene);
-                info = body_get_info(scene_get_body(scene, random));
-            }
-            body_t *platform = scene_get_body(scene, random);
-            vector_t center = body_get_centroid(platform);
-            center.y += 40; // magic number for offset
-            scene_add_body(scene, create_star(center));
-            star_timer = 0;
-        }
-        star_timer++;
-
-
+        // printf("next loop\n");
         if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
             if (strcmp(scene_get_next_info(scene), "game") == 0) {
                 center = (vector_t) {.x = WIDTH2/2, .y = HEIGHT2/2};
@@ -675,14 +669,31 @@ int main() {
                 scene = make_restart_scene(score);
             }
             else if (strcmp(scene_get_next_info(scene), "settings") == 0) {
-                center = (vector_t) {.x = WIDTH2/2, .y = HEIGHT2/2};
-                sdl_set_center(center);
+                // center = (vector_t) {.x = WIDTH2/2, .y = HEIGHT2/2};
+                // sdl_set_center(center);
                 scene_free(scene);
                 scene = make_settings_scene();
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
             // calculate and display score
+            // generate a star once in a while
+            if (star_timer == 50) {
+                // pick a random normal platform
+                int random = 0;
+                char *info = body_get_info(scene_get_body(scene, random));
+                // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
+                while (strcmp("nonessential platform", info) != 0) {
+                    random = rand() % scene_bodies(scene);
+                    info = body_get_info(scene_get_body(scene, random));
+                }
+                body_t *platform = scene_get_body(scene, random);
+                vector_t center = body_get_centroid(platform);
+                center.y += 40; // magic number for offset
+                scene_add_body(scene, create_star(center));
+                star_timer = 0;
+            }
+            star_timer++;
             if (scene_textboxes(scene) > 1) {
                 scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
             }
@@ -782,9 +793,11 @@ int main() {
             sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "settings") == 0) {
-            double dt = time_since_last_tick();
-            scene_tick(scene,dt);
+            // double dt = time_since_last_tick();
+            // scene_tick(scene,dt);
             sdl_render_scene(scene);
+            // printf("got to settings\n");
+            // printf("%s", scene_get_info(scene));
         }
     }
 
@@ -824,4 +837,5 @@ int main() {
     free(buffer2);
     free(throwaway);
     scene_free(scene);
+    return 0;
 }
