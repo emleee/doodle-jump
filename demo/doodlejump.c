@@ -581,9 +581,16 @@ void mouse_click(int key, int x, int y, void *scene) {
 }
 
 body_t *create_star(vector_t center) {
-    star_t *starframe = star_init(5); // magic number - points of the star
-    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    body_t *star = body_init(get_points(starframe), 100, color);
+    star_t *starframe = make_star(center, 5, 10); // magic number for num points, radius
+    rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
+    body_t *star = body_init_with_info(get_points(starframe), 10, color, "star", free); // magic number for star mass
+
+
+    // star_t *starframe = star_init(5); // magic number - points of the star
+    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    // list_t *points = get_points(starframe);
+    // body_t *star = body_init(points, 100, color);
+    // star_free(starframe);
     return star;
 }
 
@@ -621,21 +628,28 @@ int main() {
 
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
-    // char *time = malloc(100*sizeof(char));
-    // char *buffer2 = malloc(100*sizeof(char));
 
     body_t *doodle;
 
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
-        // // generate a star once in a while
-        // if (star_timer == 50) {
-        //     // pick a random platform
-        //     body_t *platform = scene_get_body(scene, (int)rand()/RAND_MAX);
-        //     scene_add_body(scene, create_star())
-        //     star_timer = 0;
-        // }
-        // star_timer++;
+        // generate a star once in a while
+        if (star_timer == 10) {
+            // pick a random normal platform
+            int random = 0;
+            char *info = body_get_info(scene_get_body(scene, random));
+            // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
+            while (strcmp("nonessential platform", info) != 0) {
+                random = rand() % scene_bodies(scene);
+                info = body_get_info(scene_get_body(scene, random));
+            }
+            body_t *platform = scene_get_body(scene, random);
+            vector_t center = body_get_centroid(platform);
+            center.y += 10;
+            scene_add_body(scene, create_star(center));
+            star_timer = 0;
+        }
+        star_timer++;
 
 
         if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
