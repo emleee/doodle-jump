@@ -206,7 +206,8 @@ void more_platforms(scene_t *scene, vector_t center, bool first, int powerup_tim
 }
 
 bool more_enemies(scene_t *scene, vector_t center) {
-    if (within(5, ((int)round(center.y))%(int)HEIGHT2, 0) && ((int)round(center.y/(int)HEIGHT2))%2 == 0 && center.y != HEIGHT2/2) {
+    // if (within(5, ((int)round(center.y))%(int)HEIGHT2, 0) && ((int)round(center.y/(int)HEIGHT2))%2 == 0 && center.y != HEIGHT2/2) {
+    if (rand()%4000 == 0) {
         vector_t centroid = {.x = (double)rand()/RAND_MAX * (WIDTH2 - DOODLE_HEIGHT) + DOODLE_HEIGHT/2, .y = center.y + (double)rand()/RAND_MAX * HEIGHT2 + HEIGHT2/2};
         body_t *enemy = make_enemy(centroid);
         scene_add_body(scene, enemy);
