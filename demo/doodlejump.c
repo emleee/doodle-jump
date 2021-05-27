@@ -580,17 +580,35 @@ void mouse_click(int key, int x, int y, void *scene) {
     }
 }
 
-body_t *create_star(vector_t center) {
+void create_star(scene_t *scene) {
+    // pick a random normal platform
+    int random = 0;
+    char *info = body_get_info(scene_get_body(scene, random));
+    // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
+    bool conflict = true;
+    while (strcmp("essential platform", info) != 0 && conflict) {
+        random = rand() % scene_bodies(scene);
+        info = body_get_info(scene_get_body(scene, random));
+
+        // check if platform already has a star on it
+        for (size_t j = 0; j < scene_bodies(scene); j++) {
+            body_t *body1 = scene_get_body(scene, j);
+            body_t *body2 = scene_get_body(scene, random);
+            if (strcmp("star", body_get_info(scene_get_body(scene, j))) == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
+                break;
+            }
+        }
+        conflict = false;
+    }
+    body_t *platform = scene_get_body(scene, random);
+    vector_t center = body_get_centroid(platform);
+    center.y += 40; // magic number for offset
+
     star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
     body_t *star = body_init_with_info(get_points(starframe), 10, color, "star", free); // magic number for star mass
 
-
-    // star_t *starframe = star_init(5); // magic number - points of the star
-    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    // list_t *points = get_points(starframe);
-    // body_t *star = body_init(points, 100, color);
-    // star_free(starframe);
+    scene_add_body(scene, star);
     return star;
 }
 
@@ -634,19 +652,8 @@ int main() {
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
         // generate a star once in a while
-        if (star_timer == 50) {
-            // pick a random normal platform
-            int random = 0;
-            char *info = body_get_info(scene_get_body(scene, random));
-            // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
-            while (strcmp("nonessential platform", info) != 0) {
-                random = rand() % scene_bodies(scene);
-                info = body_get_info(scene_get_body(scene, random));
-            }
-            body_t *platform = scene_get_body(scene, random);
-            vector_t center = body_get_centroid(platform);
-            center.y += 40; // magic number for offset
-            scene_add_body(scene, create_star(center));
+        if (star_timer == 100) {
+            create_star(scene);
             star_timer = 0;
         }
         star_timer++;
