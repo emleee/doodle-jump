@@ -581,7 +581,7 @@ void mouse_click(int key, int x, int y, void *scene) {
 }
 
 body_t *create_star(vector_t center) {
-    star_t *starframe = make_star(center, 5, 10); // magic number for num points, radius
+    star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
     body_t *star = body_init_with_info(get_points(starframe), 10, color, "star", free); // magic number for star mass
 
@@ -634,7 +634,7 @@ int main() {
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
         // generate a star once in a while
-        if (star_timer == 10) {
+        if (star_timer == 50) {
             // pick a random normal platform
             int random = 0;
             char *info = body_get_info(scene_get_body(scene, random));
@@ -645,7 +645,7 @@ int main() {
             }
             body_t *platform = scene_get_body(scene, random);
             vector_t center = body_get_centroid(platform);
-            center.y += 10;
+            center.y += 40; // magic number for offset
             scene_add_body(scene, create_star(center));
             star_timer = 0;
         }
