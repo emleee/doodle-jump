@@ -594,22 +594,24 @@ void create_star(scene_t *scene) {
     // pick a random normal platform
     int random = 0;
     char *info = body_get_info(scene_get_body(scene, random));
-    // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
-    bool conflict = true;
-    while (strcmp("essential platform", info) != 0 && conflict) {
-        random = rand() % scene_bodies(scene);
-        info = body_get_info(scene_get_body(scene, random));
 
+    bool conflict = false;
+    do {
+        while (strcmp("essential platform", info) != 0) {
+            random = rand() % scene_bodies(scene);
+            info = body_get_info(scene_get_body(scene, random));
+        }
         // check if platform already has a star on it
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body1 = scene_get_body(scene, j);
             body_t *body2 = scene_get_body(scene, random);
             if (strcmp("star", body_get_info(scene_get_body(scene, j))) == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
-                break;
+                conflict = true;
             }
         }
-        conflict = false;
     }
+    while (conflict);
+
     body_t *platform = scene_get_body(scene, random);
     vector_t center = body_get_centroid(platform);
     center.y += 40; // magic number for offset
@@ -618,8 +620,8 @@ void create_star(scene_t *scene) {
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
     body_t *star = body_init_with_info(get_points(starframe), 0.5, color, "star", free); // magic number for star mass
 
+    // create_platform_collision(scene, 0, doodle, platform);
     scene_add_body(scene, star);
-    return star;
 }
 
 double calculate_score(vector_t center) {
@@ -661,10 +663,6 @@ int main() {
 
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
-        // generate a star once in a while
-        
-
-
         if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
             if (strcmp(scene_get_next_info(scene), "game") == 0) {
                 center = (vector_t) {.x = WIDTH2/2, .y = HEIGHT2/2};
@@ -695,13 +693,14 @@ int main() {
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-            // calculate and display score
             // generate a star once in a while
-            if (star_timer == 100) {
+            if (star_timer == 200) {
                 create_star(scene);
                 star_timer = 0;
             }
             star_timer++;
+
+            // calculate and display score
             if (scene_textboxes(scene) > 1) {
                 scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
             }
