@@ -128,6 +128,7 @@ int main() {
     *powerup_timer = 0;
     int *star_timer = malloc(sizeof(int));
     *star_timer = 0;
+    int star_score = 0;
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
@@ -172,6 +173,7 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
+                star_score = scene_stars(scene);
                 scene_free(scene);
                 scene = make_restart_scene(score);
             }
@@ -197,7 +199,7 @@ int main() {
     }
 
     // save the number of stars collected
-    printf("\n%i\n", scene_stars(scene));
+    printf("\n%i\n", star_score);
 
     // only save score if it's a high score
     FILE *file = fopen("highscore.txt", "w+");

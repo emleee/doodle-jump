@@ -148,6 +148,7 @@ typedef struct collision_package {
    bool collided;
 } collision_package_t;
 
+void star_collided(void *a);
 
 /**
  * Adds a force creator to a scene that removes the star when the player collides with it.

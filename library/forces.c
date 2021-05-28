@@ -364,12 +364,30 @@ void star_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
 
     if (mass1 == INFINITY) {
         body_set_second_info(body1, info);
-        body_remove(body1);
+        // body_remove(body1);
     }
     else if (mass2 == INFINITY) {
         body_set_second_info(body2, info);
-        body_remove(body2);
+        // body_remove(body2);
     }
+}
+
+void star_collided(void *a) {
+    force_aux_t *aux = ((collision_package_t *)a)->aux;
+    list_t *bodies = force_aux_get_bodies(aux);
+    body_t *body1 = list_get(bodies, 0);
+    body_t *body2 = list_get(bodies, 1);
+    if (find_collision(body_get_shape(body1), body_get_shape(body2)).collided) {
+        if (((collision_package_t *)a)->collided) {
+            return;
+        }
+        ((collision_package_t *)a)->collided = true;
+        vector_t axis = find_collision(body_get_shape(body1), body_get_shape(body2)).axis;
+        ((collision_package_t *)a)->handler(body1, body2, axis, aux);
+    }
+    // else {
+    //     ((collision_package_t *)a)->collided = false;
+    // }
 }
 
 void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
@@ -381,5 +399,5 @@ void create_star_collision(scene_t *scene, double elasticity, body_t *body1, bod
     list_add(bodies2, body1);
     list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
-    create_collision(scene, body1, body2, (collision_handler_t)star_collision, aux, (free_func_t)force_aux_free, collided);
+    create_collision(scene, body1, body2, (collision_handler_t)star_collision, aux, (free_func_t)force_aux_free, star_collided);
 }
