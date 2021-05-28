@@ -107,17 +107,21 @@ void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
             continue;
         }
         num_platforms++;
-        if (strcmp("essential platform", info) == 0) {
+        char *info2 = body_get_second_info(platform);
+        if (strcmp("essential", info2) == 0) {
             // essential platforms are generated one jump height apart
             double new_height = body_get_centroid(platform).y + GAME_MAX_JUMP;
             // only want to generate platforms that will be within one window height above the current window
             if ((new_height > center.y + GAME_HEIGHT/2) && (new_height < center.y + GAME_HEIGHT/2 + GAME_HEIGHT)) {
-                strcat(info, " done");
+                strcat(info2, " done");
                 vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
                 powerup_center = (vector_t) {.x = platform_center.x, .y = platform_center.y + 50};
-                char *new_info = malloc(24*sizeof(char));
-                strcpy(new_info, "essential platform");
-                body_t *new_platform = normal_platform(platform_center, new_info);
+                char *new_info1 = malloc(16*sizeof(char));
+                strcpy(new_info1, "normal platform");
+                char *new_info2 = malloc(15*sizeof(char));
+                strcpy(new_info2, "essential");
+                body_t *new_platform = normal_platform(platform_center, new_info1);
+                body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
             }
@@ -139,41 +143,47 @@ void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
         }
     }
     while (i < MAX_PLATFORMS - difficulty) {
-        char *info = malloc(22*sizeof(char));
-        strcpy(info, "nonessential platform");
-        int random = rand() % 4;
+        char *info2 = malloc(13*sizeof(char));
+        strcpy(info2, "nonessential");
+        int random = rand() % 8;
         vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * GAME_HEIGHT + center.y + GAME_HEIGHT/2};
-
-        if (random < 2) {
-            body_t *new_platform = trick_platform(platform_center, info);
-            scene_add_body(scene, new_platform);
-            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+        char *info;
+        body_t *new_platform;
+        if (random == 0) {
+            info = malloc(22*sizeof(char));
+            strcpy(info, "disappearing platform");
+            new_platform = disappearing_platform(platform_center, info);
         }
-        else if (random == 2) {
-            body_t *new_platform = sliding_platform(platform_center, info);
-            scene_add_body(scene, new_platform);
-            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+        else if (random < 2) {
+            info = malloc(17*sizeof(char));
+            strcpy(info, "sliding platform");
+            new_platform = sliding_platform(platform_center, info);
+        }
+        else if (random < 5) {
+            info = malloc(15*sizeof(char));
+            strcpy(info, "trick platform");
+            new_platform = trick_platform(platform_center, info);
         }
         else {
-            body_t *new_platform = normal_platform(platform_center, info);
-            scene_add_body(scene, new_platform);
-            create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+            info = malloc(16*sizeof(char));
+            strcpy(info, "normal platform");
+            new_platform = normal_platform(platform_center, info);
         }
+        body_set_second_info(new_platform, info2);
+        scene_add_body(scene, new_platform);
+        create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         i++;
     }
 }
 
-bool more_enemies(scene_t *scene, vector_t center) {
+void more_enemies(scene_t *scene, vector_t center) {
     // if (within(5, ((int)round(center.y))%(int)HEIGHT2, 0) && ((int)round(center.y/(int)HEIGHT2))%2 == 0 && center.y != HEIGHT2/2) {
     if (rand()%4000 == 0) {
         vector_t centroid = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - GAME_DOODLE_HEIGHT) + GAME_DOODLE_HEIGHT/2, .y = center.y + (double)rand()/RAND_MAX * GAME_HEIGHT + GAME_HEIGHT/2};
         body_t *enemy = make_enemy(centroid);
         scene_add_body(scene, enemy);
-        return true;
         // add enemy collision here
-        return true;
     }
-    return false;
 }
 
 scene_t *make_game_scene() {
@@ -207,15 +217,21 @@ scene_t *make_game_scene() {
     scene_add_body(scene, background2);
 
     vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = GAME_MAX_JUMP - GAME_DOODLE_HEIGHT/2 - PLATFORM_HEIGHT2/2};
-    char *info = malloc(24*sizeof(char));
-    strcpy(info, "essential platform");
+    char *info = malloc(16*sizeof(char));
+    strcpy(info, "normal platform");
+    char *info2 = malloc(15*sizeof(char));
+    strcpy(info2, "essential");
     body_t *platform = normal_platform(platform_center, info);
+    body_set_second_info(platform, info2);
     scene_add_body(scene, platform);
     create_platform_collision(scene, 0, doodle, platform);
     vector_t safety_platform_center = {.x = GAME_WIDTH/2, .y = GAME_MAX_JUMP/2};
-    char *other_info = malloc(22*sizeof(char));
-    strcpy(other_info, "nonessential platform");
+    char *other_info = malloc(16*sizeof(char));
+    strcpy(other_info, "normal");
+    char *other_info2 = malloc(15*sizeof(char));
+    strcpy(other_info2, "essential");
     body_t *safety_platform = normal_platform(safety_platform_center, other_info);
+    body_set_second_info(safety_platform, other_info2);
     scene_add_body(scene, safety_platform);
     create_platform_collision(scene, 0, doodle, safety_platform);
 
@@ -289,7 +305,9 @@ void create_star(scene_t *scene) {
 
     star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
-    body_t *star = body_init_with_info(get_points(starframe), 0.5, color, "star", free); // magic number for star mass
+    char *star_info = malloc(5*sizeof(char));
+    strcpy(star_info, "star");
+    body_t *star = body_init_with_info(get_points(starframe), 0.5, color, star_info, free); // magic number for star mass
 
     scene_add_body(scene, star);
     return star;
@@ -366,7 +384,7 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
         if (!in_screen(*center, body)) {
             scene_remove_body(scene, i);
         }
-        if (strcmp(body_get_info(body), "nonessential platform") == 0) {
+        if (strcmp(body_get_info(body), "sliding platform") == 0) {
             sliding_bounce(body);
         }
     }
@@ -379,7 +397,7 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
             *powerup_timer = 0;
         }
         if (!enemy_present) {
-            enemy_present = more_enemies(scene, *center);
+            more_enemies(scene, *center);
         }
         center->y = body_get_centroid(doodle).y;
         sdl_set_center(*center);

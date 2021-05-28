@@ -20,6 +20,7 @@ typedef struct body {
     vector_t force;
     vector_t impulse;
     void *info;
+    void *info2;
     free_func_t info_freer;
     bool remove;
     sprite_t *sprite;
@@ -38,6 +39,7 @@ body_t *body_init(list_t *shape, double mass, rgb_color_t color) {
     body->force = VEC_ZERO;
     body->impulse = VEC_ZERO;
     body->info = NULL;
+    body->info2 = NULL;
     body->info_freer = NULL;
     body->remove = false;
     body->sprite = NULL;
@@ -71,6 +73,8 @@ void body_free(body_t *body) {
     if (body->sprite != NULL) {
         sprite_free(body->sprite);
     }
+    body->info_freer(body->info);
+    body->info_freer(body->info2);
     free(body);
 }
 
@@ -145,6 +149,11 @@ void body_set_mass(body_t *body, double mass) {
     body->mass = mass;
 }
 
+void body_set_second_info(body_t *body, void *info) {
+    body->info_freer(body->info2);
+    body->info2 = info;
+}
+
 void body_add_force(body_t *body, vector_t force) {
     body->force = vec_add(body->force, vec_multiply(1/body->mass, force));
 }
@@ -164,6 +173,10 @@ void body_tick(body_t *body, double dt) {
 
 void *body_get_info(body_t *body) {
     return body->info;
+}
+
+void *body_get_second_info(body_t *body) {
+    return body->info2;
 }
 
 void body_remove(body_t *body) {

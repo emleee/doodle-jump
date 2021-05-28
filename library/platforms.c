@@ -93,5 +93,6 @@ body_t *disappearing_platform(vector_t center, char *info) {
 
 body_t *trick_platform(vector_t center, char *info) {
     body_t *trick_platform = make_platform(center, DISAPPEARING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, NULL);
+    body_set_mass(trick_platform, 0);
     return trick_platform;
 }

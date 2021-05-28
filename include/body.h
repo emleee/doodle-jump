@@ -109,6 +109,8 @@ rgb_color_t body_get_color(body_t *body);
  */
 void *body_get_info(body_t *body);
 
+void *body_get_second_info(body_t *body);
+
 /**
  * Translates a body to a new position.
  * The position is specified by the position of the body's center of mass.

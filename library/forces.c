@@ -251,8 +251,14 @@ void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) 
     else {
         impulse = mass1 * mass2 / (mass1+mass2) * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
     }
-    body_add_impulse(body1, vec_multiply(impulse + BOOST*mass1, axis));
-    body_add_impulse(body2, vec_multiply(-impulse, axis));
+    body_add_impulse(body1, vec_multiply(impulse, axis));
+    if (mass2 == 0) {
+        body_set_velocity(body2, vec_multiply(-1 * BOOST, axis));
+    }
+    else {
+        body_add_impulse(body1, vec_multiply(BOOST*mass1, axis));
+        body_add_impulse(body2, vec_multiply(-1 * impulse, axis));
+    }
 }
 
 void create_platform_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
