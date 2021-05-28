@@ -158,12 +158,6 @@ void scene_tick(scene_t *scene, double dt) {
     }
 
     for (size_t i = 0; i < scene_bodies(scene); i++) {
-        // update star count
-        if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
-            printf("hey %i\n", scene_stars(scene));
-            scene_increase_stars(scene);
-        }
-
         if (body_is_removed(scene_get_body(scene, i))) {
             // check if it has force creators on it
             for (size_t j = 0; j < list_size(scene->forces); j++) {

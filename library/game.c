@@ -349,6 +349,16 @@ void game_mouse_click (scene_t *scene, int x, int y) {
     }
 }
 
+void star_score(scene_t *scene) {
+    // update star count
+    for (size_t i = 0; i < scene_bodies(scene); i++) {
+        if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
+        printf("hey %i\n", scene_stars(scene));
+        scene_increase_stars(scene);
+        }
+    }
+}
+
 char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center) {
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
     bool enemy_present = false;
@@ -364,9 +374,9 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
     if (*star_timer == 100) {
         create_star(scene);
         *star_timer = 0;
-
     }
     (*star_timer)++;
+    star_score(scene);
 
     // calculate and display score
     if (scene_textboxes(scene) > 1) {
@@ -392,9 +402,6 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
 
     for(int i = 3; i < scene_bodies(scene); i++) {
         body_t *body = scene_get_body(scene, i);
-
-        
-
         if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
             enemy_present = true;
         }
