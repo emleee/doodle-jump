@@ -156,6 +156,20 @@ text_t *scene_get_text(scene_t *scene, size_t index);
  */
 size_t scene_textboxes(scene_t *scene);
 
+/**
+ * Increases the counter of stars collected by one.
+ *
+ * @param scene a pointer to a scene returned from scene_init()
+ */
+void scene_increase_stars(scene_t *scene);
+
+/**
+ * Gets the number of stars in a given scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init()
+ * @return the number of stars
+ */
+int scene_stars(scene_t *scene);
 
 /**
  * Executes a tick of a given scene over a small time interval.
