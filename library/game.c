@@ -123,7 +123,7 @@ void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
                     new_info1 = malloc(17*sizeof(char));
                     strcpy(new_info1, "sliding platform");
                     new_platform = sliding_platform(platform_center, new_info1);
-                
+
                 }
                 else {
                     new_info1 = malloc(16*sizeof(char));
@@ -220,7 +220,7 @@ scene_t *make_game_scene() {
 
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
-    // create_downward_gravity(scene, GAME_G, doodle);
+    create_downward_gravity(scene, GAME_G, doodle);
 
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = GAME_HEIGHT});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*GAME_HEIGHT});
@@ -294,7 +294,6 @@ void create_star(scene_t *scene) {
     // pick a random normal platform
     int random = 0;
     char *info = body_get_info(scene_get_body(scene, random));
-    printf("create star\n");
     bool conflict = false;
     do {
         while (strcmp("normal platform", info) != 0) {
@@ -305,14 +304,12 @@ void create_star(scene_t *scene) {
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body1 = scene_get_body(scene, j);
             body_t *body2 = scene_get_body(scene, random);
-            if (strcmp("star", body_get_info(scene_get_body(scene, j))) == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
+            if (strcmp(body_get_info(body1), "star") == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
                 conflict = true;
             }
         }
-        printf("create star1.5\n");
     }
     while (conflict);
-    printf("create star2\n");
 
     body_t *platform = scene_get_body(scene, random);
     vector_t center = body_get_centroid(platform);
@@ -324,10 +321,8 @@ void create_star(scene_t *scene) {
     strcpy(star_info, "star");
     body_t *star = body_init_with_info(get_points(starframe), INFINITY, color, star_info, free);
 
-    printf("create star3\n");
     create_star_collision(scene, 0, scene_get_body(scene, 0), star);
     scene_add_body(scene, star);
-    printf("create star4\n");
 }
 
 
@@ -354,10 +349,17 @@ void game_mouse_click (scene_t *scene, int x, int y) {
     }
 }
 
-char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center) {
-    // calculate and display score
-    // generate a star once in a while
+void star_score(scene_t *scene) {
+    // update star count
+    for (size_t i = 0; i < scene_bodies(scene); i++) {
+        if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
+        printf("hey %i\n", scene_stars(scene));
+        scene_increase_stars(scene);
+        }
+    }
+}
 
+char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center) {
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
     bool enemy_present = false;
     vector_t *scoring = malloc(sizeof(vector_t));
@@ -368,11 +370,15 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
     char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
 
+    // generate a star once in a while
     if (*star_timer == 100) {
         create_star(scene);
         *star_timer = 0;
     }
     (*star_timer)++;
+    star_score(scene);
+
+    // calculate and display score
     if (scene_textboxes(scene) > 1) {
         scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
     }
@@ -396,12 +402,6 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
 
     for(int i = 3; i < scene_bodies(scene); i++) {
         body_t *body = scene_get_body(scene, i);
-
-        // update star count
-        if (body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "collected") == 0) {
-            scene_increase_stars(scene);
-        }
-
         if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
             enemy_present = true;
         }
