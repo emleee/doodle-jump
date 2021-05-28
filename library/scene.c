@@ -150,13 +150,6 @@ void scene_tick(scene_t *scene, double dt) {
         get_force_creator(force)(aux);
     }
 
-    // for (size_t i = 0; i < scene_bodies(scene); i++) {
-    //     if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
-    //         printf("hey %i\n", scene_stars(scene));
-    //         scene_increase_stars(scene);
-    //     }
-    // }
-
     for (size_t i = 0; i < scene_bodies(scene); i++) {
         body_tick(scene_get_body(scene, i), dt);
     }
