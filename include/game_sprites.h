@@ -1,5 +1,5 @@
-#ifndef __GAME_SPRITES__
-#define __GAME_SPRITES__
+#ifndef __GAME_SPRITES_H__
+#define __GAME_SPRITES_H__
 
 #include "sprite.h"
 #include "vector.h"
@@ -16,9 +16,13 @@ sprite_t *make_crouch_left();
 
 sprite_t *make_crouch_right();
 
+body_t *make_doodle(vector_t center, rgb_color_t color, char *info);
+
 sprite_t *make_grass_platform();
 
 sprite_t *make_background();
+
+body_t *make_background_body(vector_t center);
 
 void change_direction(body_t *body, sprite_t *sprite);
 

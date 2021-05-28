@@ -7,6 +7,8 @@
 #include <string.h>
 #include <stdio.h>
 
+scene_t *make_settings_scene();
+
 bool get_sound_preference();
 
 bool get_score_preference();
@@ -17,5 +19,6 @@ void switch_score_preferences ();
 
 void update_preferences();
 
+void settings_mouse_click (scene_t *scene, int x, int y);
 
 #endif // #ifndef __PREFERENCES_H__
