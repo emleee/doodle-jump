@@ -75,7 +75,7 @@ vector_t get_window_center(void);
  */
 void sdl_set_center(vector_t new_center);
 
-sprite_t *create_sprite(char *file);
+sprite_t *create_sprite(char *file, int width, int height);
 
 /**
  * Processes all SDL events and returns whether the window has been closed.

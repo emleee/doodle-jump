@@ -15,29 +15,29 @@ const rgb_color_t COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
 const double DOODLE_WIDTH = 96.0;
 const double DOODLE_HEIGHT = 148.0;
 
-sprite_t *make_jump_left() {
-    sprite_t *sprite = create_sprite("PNGs/Jump_Left.png");
-    sprite_set_parameters(sprite, VEC_ZERO, 117, 207);
-    return sprite;
-}
+// sprite_t *make_jump_left() {
+//     sprite_t *sprite = create_sprite("PNGs/Jump_Left.png", 117, 207);
+//     sprite_set_parameters(sprite, VEC_ZERO, 117, 207);
+//     return sprite;
+// }
 
-sprite_t *make_jump_right() {
-    sprite_t *sprite = create_sprite("PNGs/Jump_Right.png");
-    sprite_set_parameters(sprite, VEC_ZERO, 117, 207);
-    return sprite;
-}
+// sprite_t *make_jump_right() {
+//     sprite_t *sprite = create_sprite("PNGs/Jump_Right.png", 117, 207);
+//     sprite_set_parameters(sprite, VEC_ZERO, 117, 207);
+//     return sprite;
+// }
 
-sprite_t *make_crouch_left() {
-    sprite_t *sprite = create_sprite("PNGs/Crouch_Left.png");
-    sprite_set_parameters(sprite, VEC_ZERO, 165, 140);
-    return sprite;
-}
+// sprite_t *make_crouch_left() {
+//     sprite_t *sprite = create_sprite("PNGs/Crouch_Left.png", 165, 140);
+//     sprite_set_parameters(sprite, VEC_ZERO, 165, 140);
+//     return sprite;
+// }
 
-sprite_t *make_crouch_right() {
-    sprite_t *sprite = create_sprite("PNGs/Crouch_Right.png");
-    sprite_set_parameters(sprite, VEC_ZERO, 165, 140);
-    return sprite;
-}
+// sprite_t *make_crouch_right() {
+//     sprite_t *sprite = create_sprite("PNGs/Crouch_Right.png", 165, 140);
+//     sprite_set_parameters(sprite, VEC_ZERO, 165, 140);
+//     return sprite;
+// }
 
 body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     list_t *shape = list_init(4, free);
@@ -54,22 +54,28 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     *v = (vector_t) {0, DOODLE_HEIGHT};
     list_add(shape, v);
 
-    sprite_t *doodle_sprite = make_jump_right();
+    sprite_t *doodle_sprite = create_sprite("PNGs/Jump_Right.png", 117, 207);
     body_t *doodle = body_init_with_sprite(shape, 10, color, info, free, doodle_sprite);
     body_set_centroid(doodle, center);
 
     return doodle;
 }
 
-sprite_t *make_grass_platform() {
-    sprite_t *sprite = create_sprite("PNGs/Grass_Platform.png");
-    sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
+// sprite_t *make_grass_platform() {
+    // sprite_t *sprite = create_sprite("PNGs/Grass_Platform.png", 146, 35);
+    // sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
+    // return sprite;
+// }
+
+sprite_t *make_flower_platform() {
+    sprite_t *sprite = create_sprite("PNGs/Flower_Platform.png", 146, 35);
+    // sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
     return sprite;
 }
 
 sprite_t *make_background() {
-    sprite_t *sprite = create_sprite("PNGs/Background.png");
-    sprite_set_parameters(sprite, VEC_ZERO, 720, 960);
+    sprite_t *sprite = create_sprite("PNGs/Background.png", 720, 960);
+    // sprite_set_parameters(sprite, VEC_ZERO, 720, 960);
     return sprite;
 }
 

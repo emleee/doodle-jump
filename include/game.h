@@ -33,7 +33,7 @@ body_t *make_button(vector_t center);
 
 void more_platforms(scene_t *scene, vector_t center, int powerup_timer);
 
-bool more_enemies(scene_t *scene, vector_t center);
+void more_enemies(scene_t *scene, vector_t center);
 
 scene_t *make_game_scene();
 

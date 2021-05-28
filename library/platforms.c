@@ -11,6 +11,7 @@
 #include "forces.h"
 #include "collision.h"
 #include "game_sprites.h"
+#include "sdl_wrapper.h"
 
 const double WINDOW_LENGTH = 720.0;
 
@@ -47,7 +48,7 @@ body_t *make_platform(vector_t center, rgb_color_t color, char *info, int width,
 }
 
 body_t *normal_platform(vector_t center, char *info) {
-    sprite_t *sprite = make_grass_platform();
+    sprite_t *sprite = create_sprite("PNGs/Grass_Platform.png", 146, 35);
     body_t *platform = make_platform(center, NORMAL_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, sprite);
     return platform;
 }
