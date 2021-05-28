@@ -13,6 +13,7 @@ typedef struct scene {
     list_t *forces;
     list_t *text;
     list_t *sprites;
+    int stars;
     void *info;
     void *next_info;
     free_func_t info_freer;
@@ -25,6 +26,7 @@ scene_t *scene_init(void) {
     scene->forces = list_init(100, (free_func_t)force_package_free);
     scene->text = list_init(200, (free_func_t)text_free);
     scene->sprites = list_init(4, (free_func_t)sprite_free);
+    scene->stars = 0;
     scene->info = NULL;
     scene->next_info = NULL;
     scene->info_freer = NULL;
@@ -38,6 +40,7 @@ scene_t *scene_init_with_info(void *info, free_func_t info_freer) {
     scene->forces = list_init(100, (free_func_t)force_package_free);
     scene->text = list_init(200, (free_func_t)text_free);
     scene->sprites = list_init(4, (free_func_t)sprite_free);
+    scene->stars = 0;
     scene->info = info;
     scene->next_info = info;
     scene->info_freer = info_freer;
@@ -132,6 +135,14 @@ size_t scene_textboxes(scene_t *scene) {
     return list_size(scene->text);
 }
 
+void scene_increase_stars(scene_t *scene) {
+    scene->stars++;
+}
+
+int scene_stars(scene_t *scene) {
+    return scene->stars;
+}
+
 void scene_tick(scene_t *scene, double dt) {
     for (size_t i = 0; i < list_size(scene->forces); i++) {
         force_package_t *force = list_get(scene->forces, i);
@@ -158,6 +169,4 @@ void scene_tick(scene_t *scene, double dt) {
             i--;
         }
     }
-
-    // add a thing about displaying the text
 }
