@@ -196,6 +196,8 @@ int main() {
         }
     }
 
+    // save the number of stars collected
+    printf("\n%i\n", scene_stars(scene));
 
     // only save score if it's a high score
     FILE *file = fopen("highscore.txt", "w+");

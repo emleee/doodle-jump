@@ -283,22 +283,26 @@ void create_star(scene_t *scene) {
     // pick a random normal platform
     int random = 0;
     char *info = body_get_info(scene_get_body(scene, random));
-    // SWITCH THIS TO NORMAL PLATFORMS LATER SOMEHOW
-    bool conflict = true;
-    while (strcmp("essential platform", info) != 0 && conflict) {
-        random = rand() % scene_bodies(scene);
-        info = body_get_info(scene_get_body(scene, random));
-
+    printf("create star\n");
+    bool conflict = false;
+    do {
+        while (strcmp("normal platform", info) != 0) {
+            random = rand() % scene_bodies(scene);
+            info = body_get_info(scene_get_body(scene, random));
+        }
         // check if platform already has a star on it
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body1 = scene_get_body(scene, j);
             body_t *body2 = scene_get_body(scene, random);
             if (strcmp("star", body_get_info(scene_get_body(scene, j))) == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
-                break;
+                conflict = true;
             }
         }
-        conflict = false;
+        printf("create star1.5\n");
     }
+    while (conflict);
+    printf("create star2\n");
+
     body_t *platform = scene_get_body(scene, random);
     vector_t center = body_get_centroid(platform);
     center.y += 40; // magic number for offset
@@ -307,11 +311,14 @@ void create_star(scene_t *scene) {
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
     char *star_info = malloc(5*sizeof(char));
     strcpy(star_info, "star");
-    body_t *star = body_init_with_info(get_points(starframe), 0.5, color, star_info, free); // magic number for star mass
+    body_t *star = body_init_with_info(get_points(starframe), INFINITY, color, star_info, free);
 
+    printf("create star3\n");
+    create_star_collision(scene, 0, scene_get_body(scene, 0), star);
     scene_add_body(scene, star);
-    return star;
+    printf("create star4\n");
 }
+
 
 double calculate_score(vector_t center) {
     // find doodle center height
@@ -339,7 +346,7 @@ void game_mouse_click (scene_t *scene, int x, int y) {
 char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center) {
     // calculate and display score
     // generate a star once in a while
-    
+
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
     bool enemy_present = false;
     vector_t *scoring = malloc(sizeof(vector_t));
@@ -378,6 +385,12 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
 
     for(int i = 3; i < scene_bodies(scene); i++) {
         body_t *body = scene_get_body(scene, i);
+
+        // update star count
+        if (body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "collected") == 0) {
+            scene_increase_stars(scene);
+        }
+
         if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
             enemy_present = true;
         }

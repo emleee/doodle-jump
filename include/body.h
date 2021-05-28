@@ -184,6 +184,8 @@ void body_remove(body_t *body);
 
 void body_set_mass(body_t *body, double mass);
 
+void body_set_second_info(body_t *body, void *info);
+
 /**
  * Returns whether a body has been marked for removal.
  * This function returns false until body_remove() is called on the body,
