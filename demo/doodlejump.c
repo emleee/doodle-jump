@@ -208,10 +208,12 @@ int main() {
     fgets(buffer2, 5, file);
     char **throwaway = malloc(sizeof(char *));
     double highscore = strtod(buffer2, throwaway);
+    curr = strtod(score+=7, throwaway);
     if (curr > highscore) {
-        score+=7;
+        // score+=7;
         fputs(score, file);
     }
+
 
    /**
      * star saving
