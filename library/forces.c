@@ -364,11 +364,9 @@ void star_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
 
     if (mass1 == INFINITY) {
         body_set_second_info(body1, info);
-        // body_remove(body1);
     }
     else if (mass2 == INFINITY) {
         body_set_second_info(body2, info);
-        // body_remove(body2);
     }
 }
 
@@ -385,9 +383,6 @@ void star_collided(void *a) {
         vector_t axis = find_collision(body_get_shape(body1), body_get_shape(body2)).axis;
         ((collision_package_t *)a)->handler(body1, body2, axis, aux);
     }
-    // else {
-    //     ((collision_package_t *)a)->collided = false;
-    // }
 }
 
 void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
