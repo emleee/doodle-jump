@@ -148,4 +148,15 @@ typedef struct collision_package {
    bool collided;
 } collision_package_t;
 
+
+/**
+ * Adds a force creator to a scene that removes the star when the player collides with it.
+ *
+ * @param scene the scene containing the bodies
+ * @param elasticity elasticity for force aux
+ * @param body1 the first body
+ * @param body2 the second body
+ */
+void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
+
 #endif // #ifndef __FORCES_H__

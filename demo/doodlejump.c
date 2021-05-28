@@ -618,9 +618,9 @@ void create_star(scene_t *scene) {
 
     star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
     rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
-    body_t *star = body_init_with_info(get_points(starframe), 0.5, color, "star", free); // magic number for star mass
+    body_t *star = body_init_with_info(get_points(starframe), INFINITY, color, "star", free);
 
-    // create_platform_collision(scene, 0, doodle, platform);
+    create_star_collision(scene, 0, scene_get_body(scene, 0), star);
     scene_add_body(scene, star);
 }
 
