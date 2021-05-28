@@ -116,11 +116,22 @@ void more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
                 strcat(info2, " done");
                 vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
                 powerup_center = (vector_t) {.x = platform_center.x, .y = platform_center.y + 50};
-                char *new_info1 = malloc(16*sizeof(char));
-                strcpy(new_info1, "normal platform");
+                int random = rand()%4;
+                char *new_info1;
+                body_t *new_platform;
+                if (random == 0) {
+                    new_info1 = malloc(17*sizeof(char));
+                    strcpy(new_info1, "sliding platform");
+                    new_platform = sliding_platform(platform_center, new_info1);
+                
+                }
+                else {
+                    new_info1 = malloc(16*sizeof(char));
+                    strcpy(new_info1, "normal platform");
+                    new_platform = normal_platform(platform_center, new_info1);
+                }
                 char *new_info2 = malloc(15*sizeof(char));
                 strcpy(new_info2, "essential");
-                body_t *new_platform = normal_platform(platform_center, new_info1);
                 body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
@@ -209,7 +220,7 @@ scene_t *make_game_scene() {
 
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
-    create_downward_gravity(scene, GAME_G, doodle);
+    // create_downward_gravity(scene, GAME_G, doodle);
 
     body_t *background1 = make_background_body((vector_t){.x = 0, .y = GAME_HEIGHT});
     body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*GAME_HEIGHT});

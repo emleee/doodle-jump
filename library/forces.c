@@ -252,6 +252,9 @@ void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) 
         impulse = mass1 * mass2 / (mass1+mass2) * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
     }
     body_add_impulse(body1, vec_multiply(impulse, axis));
+    if (strcmp(body_get_info(body2), "disappearing platform") == 0) {
+        body_remove(body2);
+    }
     if (mass2 == 0) {
         body_set_velocity(body2, vec_multiply(-1 * BOOST, axis));
     }
