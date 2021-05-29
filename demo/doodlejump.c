@@ -155,6 +155,7 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 free(score);
                 score = malloc(100*sizeof(char));
@@ -165,6 +166,7 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_start_scene();
             }
@@ -172,17 +174,18 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
-                star_score = scene_stars(scene);
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_restart_scene(score);
             }
             else if (strcmp(scene_get_next_info(scene), "settings") == 0) {
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_settings_scene();
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-           game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
+            game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
             double dt = time_since_last_tick();
@@ -198,43 +201,39 @@ int main() {
     }
 
     // save the number of stars collected
-    printf("\n%i\n", star_score);
-
-    // only save score if it's a high score
-    FILE *file = fopen("highscore.txt", "w+");
-    if (file == NULL) {
+    FILE *star_file = fopen("stars.txt", "w+");
+    if (star_file == NULL) {
         printf("NULL file.\n");
     }
-    char *buffer2 = malloc(100*sizeof(char));
-    fgets(buffer2, 5, file);
+    char *star_reading = malloc(10*sizeof(char));
+    fgets(star_reading, 5, star_file);
     char **throwaway = malloc(sizeof(char *));
-    double highscore = strtod(buffer2, throwaway);
+    printf("%i %i\n", star_score, strtol(star_reading, throwaway, 10));
+    star_score += (int)strtod(star_reading, throwaway);
+    printf("%i %i\n", star_score, strtol(star_reading, throwaway, 10));
+    sprintf(star_reading, "%i", star_score);
+    fputs(star_reading, star_file);
+
+    // only save score if it's a high score
+    FILE *score_file = fopen("highscore.txt", "w+");
+    if (score_file == NULL) {
+        printf("NULL file.\n");
+    }
+    char *score_reading = malloc(100*sizeof(char));
+    fgets(score_reading, 5, score_file);
+    double highscore = strtod(score_reading, throwaway);
     curr = strtod(score+=7, throwaway);
     if (curr > highscore) {
-        // score+=7;
-        fputs(score, file);
+        fputs(score, score_file);
     }
 
-
-   /**
-     * star saving
-     *
-     * create a list? then add any star collected to the list
-     * or just have a variable and every time a star is collected increment the var
-     * save ending in a file?
-     *
-     * star spawning
-     *
-     * pick a random platform, get its center or smth and move vector y up a bit
-     * draw a star there and add it to scene, add magnetic force
-     * how to make it disappear? destructive collision?
-     **/
-
-
-
-    fclose(file);
-    free(buffer2);
+    free(star_reading);
+    fclose(star_file);
+    fclose(score_file);
+    free(score_reading);
     free(throwaway);
+
+
     scene_free(scene);
     return 0;
 }

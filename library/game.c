@@ -315,7 +315,6 @@ void create_star(scene_t *scene) {
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body1 = scene_get_body(scene, j);
             if (strcmp(body_get_info(body1), "star") == 0 && random != j && vec_is_close(body_get_centroid(body1), centroid)) {
-                printf("CONFLICT\n");
                 conflict = true;
             }
         }
@@ -328,7 +327,7 @@ void create_star(scene_t *scene) {
     center.y += 40; // magic number for offset
 
     star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
-    rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
+    rgb_color_t color = {.r = 1, .g = 1, .b = 0}; // make const for 'yellow' star color
     char *star_info = malloc(5*sizeof(char));
     strcpy(star_info, "star");
     body_t *star = body_init_with_info(get_points(starframe), INFINITY, color, star_info, free);
