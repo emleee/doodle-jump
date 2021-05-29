@@ -359,7 +359,7 @@ void star_score(scene_t *scene) {
     }
 }
 
-char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center) {
+void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score) {
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
     bool enemy_present = false;
     vector_t *scoring = malloc(sizeof(vector_t));
@@ -367,7 +367,6 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
     scoring->y = 20;
     double curr = 0.0;
 
-    char *score = malloc(100*sizeof(char));
     char *buffer = malloc(100*sizeof(char));
 
     // generate a star once in a while
@@ -459,5 +458,5 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
     wrap(doodle);
     scene_tick(scene, dt);
     sdl_render_scene(scene);
-    return score;
+    free(buffer);
 }
