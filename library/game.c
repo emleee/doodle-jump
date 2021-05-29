@@ -52,23 +52,28 @@ const double BUTTON_OFFSET = 100;
 const double MAGNET_TIMER = 1000;
 
 body_t *make_enemy(vector_t center) {
-    list_t *shape = list_init(4, free);
-    vector_t *v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {GAME_DOODLE_HEIGHT, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {GAME_DOODLE_HEIGHT, GAME_DOODLE_WIDTH};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {0, GAME_DOODLE_WIDTH};
-    list_add(shape, v);
-
+    int idx = (rand() % (3 - 1 + 1)) + 1;
+    list_t *shape;
+    sprite_t *sprite = NULL;
+    if (idx == 1) {
+        vector_t bottom_left = {.x = center.x-1027/16, .y = center.y-1321/16};
+        shape = make_rectangle(bottom_left, 1027/8, 1321/8);
+        sprite = create_sprite("PNGs/Enemy_1.png", 1027/8, 1321/8);
+    }
+    if (idx == 2) {
+        vector_t bottom_left = {.x = center.x-1072/16, .y = center.y-1300/16};
+        shape = make_rectangle(bottom_left, 1072/8, 1300/8);
+        sprite = create_sprite("PNGs/Enemy_2.png", 1072/8, 1300/8);
+    }
+    if (idx == 3) {
+        vector_t bottom_left = {.x = center.x-905/16, .y = center.y-1399/16};
+        shape = make_rectangle(bottom_left, 905/8, 1399/8);
+        sprite = create_sprite("PNGs/Enemy_3.png", 905/8, 1399/8);
+    }
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "enemy");
     body_t *doodle = body_init_with_info(shape, 10, GAME_DOODLE_COLOR, info, free);
+    body_set_sprite(doodle, sprite);
     body_set_centroid(doodle, center);
 
     return doodle;
@@ -203,6 +208,7 @@ void more_enemies(scene_t *scene, vector_t center) {
         vector_t centroid = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - GAME_DOODLE_HEIGHT) + GAME_DOODLE_HEIGHT/2, .y = center.y + (double)rand()/RAND_MAX * GAME_HEIGHT + GAME_HEIGHT/2};
         body_t *enemy = make_enemy(centroid);
         scene_add_body(scene, enemy);
+        create_destructive_collision(scene, scene_get_body(scene, 0), enemy);
         // add enemy collision here
     }
 }
@@ -371,6 +377,11 @@ void game_mouse_click (scene_t *scene, int x, int y) {
     body_t *pellet;
     pellet = make_pellet(mouth);
     body_set_velocity(pellet, (vector_t){.x = x-mouth_window.x, .y = -y+mouth_window.y});
+    for (int i = 0; i < scene_bodies(scene); i++) {
+        if (strcmp(body_get_info(scene_get_body(scene, i)), "enemy") == 0) {
+            create_destructive_collision(scene, pellet, scene_get_body(scene, i));
+        }
+    }
     scene_add_body(scene, pellet);
     if (get_sound_preference()) {
         play_shoot();
