@@ -209,12 +209,12 @@ scene_t *make_game_scene() {
     body_t *doodle = make_doodle(start, GAME_DOODLE_COLOR, doodle_info);
 
     sprite_t *right_jump = body_get_sprite(doodle);
-    sprite_t *left_jump = make_jump_left();
+    sprite_t *left_jump = create_sprite("PNGs/Jump_Left.png", 117, 207);
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
-    sprite_t *right_crouch = make_crouch_right();
-    sprite_t *left_crouch = make_crouch_left();
+    sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 165, 140);
+    sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 165, 140);;
     scene_add_sprite(scene, right_crouch);
     scene_add_sprite(scene, left_crouch);
 
