@@ -1,6 +1,8 @@
 #ifndef __VECTOR_H__
 #define __VECTOR_H__
 
+#include <stdbool.h>
+
 /**
  * A real-valued 2-dimensional vector.
  * Positive x is towards the right; positive y is towards the top.
@@ -91,5 +93,23 @@ double vec_cross(vector_t v1, vector_t v2);
  * @return v rotated by the given angle
  */
 vector_t vec_rotate(vector_t v, double angle);
+
+/**
+ * Checks if two vectors are close.
+ *
+ * @param v1 first vector
+ * @param v2 second vector
+ * @return close or not
+ */
+bool vec_is_close(vector_t v1, vector_t v2);
+
+/**
+ * Checks if two values are close.
+ *
+ * @param d1 first double
+ * @param d2 second double
+ * @return close or not
+ */
+bool is_close(double d1, double d2);
 
 #endif // #ifndef __VECTOR_H__

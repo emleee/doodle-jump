@@ -145,7 +145,6 @@ int main() {
     double curr = 0.0;
 
     char *score = malloc(100*sizeof(char));
-    // char *buffer = malloc(100*sizeof(char));
 
     body_t *doodle;
 
@@ -234,7 +233,6 @@ int main() {
 
 
     fclose(file);
-    // free(buffer);
     free(buffer2);
     free(throwaway);
     scene_free(scene);

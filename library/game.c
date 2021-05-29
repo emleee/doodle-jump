@@ -295,19 +295,31 @@ void create_star(scene_t *scene) {
     int random = 0;
     char *info = body_get_info(scene_get_body(scene, random));
     bool conflict = false;
+    int counter = 0;
     do {
+        if (counter == scene_bodies(scene)) {
+            // too many stars for now, just return
+            return;
+        }
+
         while (strcmp("normal platform", info) != 0) {
             random = rand() % scene_bodies(scene);
             info = body_get_info(scene_get_body(scene, random));
         }
+
         // check if platform already has a star on it
+        body_t *body2 = scene_get_body(scene, random);
+        vector_t centroid = body_get_centroid(body2);
+        centroid.y += 40;
+
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body1 = scene_get_body(scene, j);
-            body_t *body2 = scene_get_body(scene, random);
-            if (strcmp(body_get_info(body1), "star") == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
+            if (strcmp(body_get_info(body1), "star") == 0 && random != j && vec_is_close(body_get_centroid(body1), centroid)) {
+                printf("CONFLICT\n");
                 conflict = true;
             }
         }
+        counter++;
     }
     while (conflict);
 
@@ -370,7 +382,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
     char *buffer = malloc(100*sizeof(char));
 
     // generate a star once in a while
-    if (*star_timer == 100) {
+    if (*star_timer == 500) {
         create_star(scene);
         *star_timer = 0;
     }
