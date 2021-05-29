@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "vector.h"
+#include "test_util.h"
 
 
 const vector_t VEC_ZERO = {.x=0.0, .y=0.0};

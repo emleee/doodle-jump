@@ -67,11 +67,11 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     // return sprite;
 // }
 
-sprite_t *make_flower_platform() {
-    sprite_t *sprite = create_sprite("PNGs/Flower_Platform.png", 146, 35);
-    // sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
-    return sprite;
-}
+// sprite_t *make_flower_platform() {
+//     sprite_t *sprite = create_sprite("PNGs/Flower_Platform.png", 146, 35);
+//     sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
+//     return sprite;
+// }
 
 sprite_t *make_background() {
     sprite_t *sprite = create_sprite("PNGs/Background.png", 720, 960);
