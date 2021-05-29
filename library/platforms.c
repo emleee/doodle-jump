@@ -82,7 +82,8 @@ body_t *disappearing_platform(vector_t center, char *info) {
 }
 
 body_t *trick_platform(vector_t center, char *info) {
-    body_t *trick_platform = make_platform(center, DISAPPEARING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, NULL);
+    sprite_t *sprite = create_sprite("PNGs/Branch_Platform.png", 1592/12, 320/12);
+    body_t *trick_platform = make_platform(center, DISAPPEARING_COLOR, info, 1592/12, 320/12, sprite);
     body_set_mass(trick_platform, 0);
     return trick_platform;
 }
