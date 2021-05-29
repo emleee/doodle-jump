@@ -67,20 +67,20 @@ void polygon_rotate(list_t *polygon, double angle, vector_t point) {
     polygon_translate(polygon, point);
 }
 
-list_t *make_rectangle(double width, double height) {
+list_t *make_rectangle(vector_t bottom_left, double width, double height) {
     list_t *rectangle = list_init(4, free);
     vector_t *v = malloc(sizeof(*v));
 
-    *v = (vector_t) {0, 0};
+    *v = (vector_t) {bottom_left.x, bottom_left.y};
     list_add(rectangle, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {width, 0};
+    *v = (vector_t) {bottom_left.x + width, bottom_left.y};
     list_add(rectangle, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {width, height};
+    *v = (vector_t) {bottom_left.x + width, bottom_left.y + height};
     list_add(rectangle, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, height};
+    *v = (vector_t) {bottom_left.x, bottom_left.y + height};
     list_add(rectangle, v);
 
     return rectangle;
