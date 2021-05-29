@@ -183,7 +183,7 @@ int main() {
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-           strcpy(score, game_main(scene, doodle, star_timer, powerup_timer, timer, center));
+           game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
             double dt = time_since_last_tick();
