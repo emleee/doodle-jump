@@ -9,7 +9,7 @@
 
 typedef struct sprite sprite_t;
 
-sprite_t *sprite_init(SDL_Texture *texture);
+sprite_t *sprite_init(SDL_Texture *texture, int width, int height);
 
 void sprite_set_parameters(sprite_t *sprite, vector_t center, double width, double height);
 

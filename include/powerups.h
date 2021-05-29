@@ -20,11 +20,11 @@
 #include "text.h"
 #include "test_util.h"
 
-void make_powerup(scene_t *scene, vector_t center);
+body_t *make_powerup(scene_t *scene);
 body_t *make_boost(scene_t *scene, vector_t center);
 body_t *make_immunity(scene_t *scene, vector_t center);
 
-body_t *make_magnet(scene_t *scene, vector_t center);
-void magnet_powerup(scene_t *scene);
+body_t *make_magnet(scene_t *scene, vector_t center, bool collected);
+void magnet_powerup(scene_t *scene, int *powerup_timer);
 
 #endif // #ifndef __POWERUPS_H__

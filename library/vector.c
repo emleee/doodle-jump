@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "vector.h"
 
+
 const vector_t VEC_ZERO = {.x=0.0, .y=0.0};
 
 vector_t vec_add(vector_t v1, vector_t v2) {
@@ -46,4 +47,12 @@ vector_t vec_rotate(vector_t v, double angle) {
     rot.x = v.x*cos(angle) - v.y*sin(angle);
     rot.y = v.x*sin(angle) + v.y*cos(angle);
     return rot;
+}
+
+bool vec_is_close(vector_t v1, vector_t v2) {
+    return is_close(v1.x, v2.x) && is_close(v1.y, v2.y);
+}
+
+bool is_close(double d1, double d2) {
+    return within(1e-7, d1, d2);
 }

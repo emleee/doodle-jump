@@ -44,6 +44,12 @@ const double G = -150.0;
 
 void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     body_t *player = scene_get_body((scene_t *)scene, 0);
+    body_t *magnet = NULL;
+    for (int i = 0; i < scene_bodies(scene); i++) {
+        if (strcmp(body_get_info(scene_get_body(scene, i)), "magnet") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+            magnet = scene_get_body(scene, i);
+        }
+    }
     vector_t body_velocity = body_get_velocity(player);
     // double mass = body_get_mass(player);
     if (type == KEY_PRESSED) {
@@ -56,6 +62,9 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
                     body_set_rotation(player, 0);
                     body_velocity.x = PLAYER_X_VELOCITY;
                     body_set_velocity(player, body_velocity);
+                    if (magnet != NULL) {
+                        body_set_velocity(magnet, body_velocity);
+                    }
                     break;
                 }
             case LEFT_ARROW:
@@ -66,6 +75,9 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
                     body_set_rotation(player, M_PI);
                     body_velocity.x = -1 * PLAYER_X_VELOCITY;
                     body_set_velocity(player, body_velocity);
+                    if (magnet != NULL) {
+                        body_set_velocity(magnet, body_velocity);
+                    }
                     break;
                 }
         }
@@ -73,6 +85,9 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     else {
         body_velocity.x = 0;
         body_set_velocity(player, body_velocity);
+        if (magnet != NULL) {
+            body_set_velocity(magnet, body_velocity);
+        }
     }
 }
 
@@ -128,6 +143,7 @@ int main() {
     *powerup_timer = 0;
     int *star_timer = malloc(sizeof(int));
     *star_timer = 0;
+    int star_score = 0;
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
@@ -144,7 +160,6 @@ int main() {
     double curr = 0.0;
 
     char *score = malloc(100*sizeof(char));
-    char *buffer = malloc(100*sizeof(char));
 
     body_t *doodle;
 
@@ -155,6 +170,7 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 free(score);
                 free(timer);
@@ -174,6 +190,7 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_start_scene();
             }
@@ -181,17 +198,18 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
-                
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_restart_scene(score);
             }
             else if (strcmp(scene_get_next_info(scene), "settings") == 0) {
+                star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_settings_scene();
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-           game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
+            game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
             double dt = time_since_last_tick();
@@ -207,47 +225,39 @@ int main() {
     }
 
     // save the number of stars collected
-    printf("\n%i\n", scene_stars(scene));
-
-    // only save score if it's a high score
-    FILE *file = fopen("highscore.txt", "w+");
-    if (file == NULL) {
+    FILE *star_file = fopen("stars.txt", "w+");
+    if (star_file == NULL) {
         printf("NULL file.\n");
     }
-    char *buffer2 = malloc(100*sizeof(char));
-    fgets(buffer2, 5, file);
+    char *star_reading = malloc(10*sizeof(char));
+    fgets(star_reading, 5, star_file);
     char **throwaway = malloc(sizeof(char *));
-    double highscore = strtod(buffer2, throwaway);
+    printf("%i %i\n", star_score, strtol(star_reading, throwaway, 10));
+    star_score += (int)strtod(star_reading, throwaway);
+    printf("%i %i\n", star_score, strtol(star_reading, throwaway, 10));
+    sprintf(star_reading, "%i", star_score);
+    fputs(star_reading, star_file);
+
+    // only save score if it's a high score
+    FILE *score_file = fopen("highscore.txt", "w+");
+    if (score_file == NULL) {
+        printf("NULL file.\n");
+    }
+    char *score_reading = malloc(100*sizeof(char));
+    fgets(score_reading, 5, score_file);
+    double highscore = strtod(score_reading, throwaway);
+    curr = strtod(score+=7, throwaway);
     if (curr > highscore) {
-        score+=7;
-        fputs(score, file);
+        fputs(score, score_file);
     }
 
-   /**
-     * star saving
-     *
-     * create a list? then add any star collected to the list
-     * or just have a variable and every time a star is collected increment the var
-     * save ending in a file?
-     *
-     * star spawning
-     *
-     * pick a random platform, get its center or smth and move vector y up a bit
-     * draw a star there and add it to scene, add magnetic force
-     * how to make it disappear? destructive collision?
-     **/
-
-
-    // free scoring, score, timers
-    fclose(file);
-    free(timer);
-    free(powerup_timer);
-    free(star_timer);
-    free(score);
-    free(scoring);
-    free(buffer);
-    free(buffer2);
+    free(star_reading);
+    fclose(star_file);
+    fclose(score_file);
+    free(score_reading);
     free(throwaway);
+
+
     scene_free(scene);
     return 0;
 }

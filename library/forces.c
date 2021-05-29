@@ -55,11 +55,11 @@ void magnet(void *a) {
     //     return;
     // }
     vector_t force = vec_multiply(-1 * G * body_get_mass(body1) * body_get_mass(body2) / distance / distance / distance, between);
-    body_add_force(body2, force);
-    // body_add_force(body1, vec_negate(force));
+    // body_add_force(body2, force);
+    body_add_force(body1, vec_negate(force));
 }
 
-void create_magnet(scene_t *scene, double k, body_t *body1, body_t *body2) {
+void create_magnetic_force(scene_t *scene, double k, body_t *body1, body_t *body2) {
     force_aux_t *aux = force_aux_init(k);
     list_t *bodies1 = list_init(2, NULL);
     list_t *bodies2 = list_init(2, NULL);
@@ -279,21 +279,21 @@ void create_platform_collision(scene_t *scene, double elasticity, body_t *body1,
 void powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
     if (strcmp(body_get_info(body1), "magnet") == 0 ||strcmp(body_get_info(body1), "immunity") == 0) {
         // body_remove(body1);
-        body_set_centroid(body1, body_get_centroid(body2));
-        body_set_velocity(body1, body_get_velocity(body2));
+        // body_set_centroid(body1, body_get_centroid(body2));
+        // body_set_velocity(body1, body_get_velocity(body2));
         char *info = malloc(10*sizeof(char));
         strcpy(info, "collected");
         body_set_second_info(body1, info);
-        body_set_mass(body1, body_get_mass(body2));
+        // body_set_mass(body1, body_get_mass(body2));
     }
     else if (strcmp(body_get_info(body2), "magnet") == 0||strcmp(body_get_info(body2), "immunity") == 0) {
         // body_remove(body2);
-        body_set_centroid(body2, body_get_centroid(body1));
-        body_set_velocity(body2, body_get_velocity(body1));
+        // body_set_centroid(body2, body_get_centroid(body1));
+        // body_set_velocity(body2, body_get_velocity(body1));
         char *info = malloc(10*sizeof(char));
         strcpy(info, "collected");
         body_set_second_info(body2, info);
-        body_set_mass(body2, body_get_mass(body1));
+        // body_set_mass(body2, body_get_mass(body1));
     }
 }
 
@@ -355,13 +355,26 @@ void star_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
     char *info = malloc(10*sizeof(char));
     strcpy(info, "collected");
 
-    if (mass1 == INFINITY) {
+    if (strcmp(body_get_info(body1), "star") == 0) {
         body_set_second_info(body1, info);
-        body_remove(body1);
     }
-    else if (mass2 == INFINITY) {
+    else if (strcmp(body_get_info(body2), "star") == 0) {
         body_set_second_info(body2, info);
-        body_remove(body2);
+    }
+}
+
+void star_collided(void *a) {
+    force_aux_t *aux = ((collision_package_t *)a)->aux;
+    list_t *bodies = force_aux_get_bodies(aux);
+    body_t *body1 = list_get(bodies, 0);
+    body_t *body2 = list_get(bodies, 1);
+    if (find_collision(body_get_shape(body1), body_get_shape(body2)).collided) {
+        if (((collision_package_t *)a)->collided) {
+            return;
+        }
+        ((collision_package_t *)a)->collided = true;
+        vector_t axis = find_collision(body_get_shape(body1), body_get_shape(body2)).axis;
+        ((collision_package_t *)a)->handler(body1, body2, axis, aux);
     }
 }
 
@@ -374,5 +387,5 @@ void create_star_collision(scene_t *scene, double elasticity, body_t *body1, bod
     list_add(bodies2, body1);
     list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
-    create_collision(scene, body1, body2, (collision_handler_t)star_collision, aux, (free_func_t)force_aux_free, collided);
+    create_collision(scene, body1, body2, (collision_handler_t)star_collision, aux, (free_func_t)force_aux_free, star_collided);
 }

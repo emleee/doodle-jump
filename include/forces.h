@@ -150,6 +150,7 @@ typedef struct collision_package {
    bool collided;
 } collision_package_t;
 
+void star_collided(void *a);
 
 /**
  * Adds a force creator to a scene that removes the star when the player collides with it.
@@ -162,6 +163,6 @@ typedef struct collision_package {
 void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
 
 void magnet(void *a);
-void create_magnet(scene_t *scene, double k, body_t *body1, body_t *body2);
+void create_magnetic_force(scene_t *scene, double k, body_t *body1, body_t *body2);
 
 #endif // #ifndef __FORCES_H__

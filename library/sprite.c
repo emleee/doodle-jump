@@ -10,19 +10,23 @@ typedef struct sprite {
     SDL_Texture *texture;
 } sprite_t;
 
-sprite_t *sprite_init(SDL_Texture *texture) {
+sprite_t *sprite_init(SDL_Texture *texture, int width, int height) {
     sprite_t *sprite = malloc(sizeof(sprite_t));
     sprite->texture = texture;
     sprite->box = malloc(sizeof(SDL_Rect));
+    *(sprite->box) = (SDL_Rect) {.x = -width/2, .y = -height/2, .h = height, .w = width};
+    sprite->box->w = width;
+    sprite->box->h = height;
+    sprite->center = VEC_ZERO;
     return sprite;
 }
 
-void sprite_set_parameters(sprite_t *sprite, vector_t center, double width, double height) {
-    *(sprite->box) = (SDL_Rect) {.x = center.x-width/2, .y = center.y-height/2, .h = height, .w = width};
-    sprite->box->w = width;
-    sprite->box->h = height;
-    sprite->center = center;
-}
+// void sprite_set_parameters(sprite_t *sprite, vector_t center, double width, double height) {
+//     *(sprite->box) = (SDL_Rect) {.x = center.x-width/2, .y = center.y-height/2, .h = height, .w = width};
+//     sprite->box->w = width;
+//     sprite->box->h = height;
+//     sprite->center = center;
+// }
 
 void sprite_translate(sprite_t *sprite, vector_t displacement) {
     sprite->box->x += displacement.x;

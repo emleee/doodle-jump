@@ -20,6 +20,7 @@
 #include "powerups.h"
 #include "star.h"
 #include "game.h"
+#include "vector.h"
 
 const double GAME_WIDTH = 720.0;
 const double GAME_HEIGHT = 960.0;
@@ -48,7 +49,7 @@ const double GAME_G = -150.0;
 
 const double BUTTON_OFFSET = 100;
 
-const double MAGNET_TIMER = 960;
+const double MAGNET_TIMER = 1000;
 
 body_t *make_enemy(vector_t center) {
     list_t *shape = list_init(4, free);
@@ -109,10 +110,7 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
         if (strstr(info, "platform") == NULL) {
             continue;
         }
-        if (strcmp(body_get_info(platform), "magnet") == 0) {
-            printf("magnet present");
-            magnet_idx = i;
-        }
+        
         num_platforms++;
         char *info2 = body_get_second_info(platform);
         if (strcmp("essential", info2) == 0) {
@@ -136,31 +134,18 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
                     strcpy(new_info1, "normal platform");
                     new_platform = normal_platform(platform_center, new_info1);
                     vector_t powerup_center = (vector_t) {.x = platform_center.x, .y = platform_center.y + 50};
-                    printf("x: %f, y: %f\n", powerup_center.x, powerup_center.y);
-                    if (powerup_timer >= 960) {
-                        printf("make powerup\n");
-                        printf("x: %f, y: %f\n", powerup_center.x, powerup_center.y);
-                        make_powerup(scene, powerup_center);
-                        success = true;
-                    }
+                    
                 }
                 char *new_info2 = malloc(15*sizeof(char));
                 strcpy(new_info2, "essential");
                 body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-                if (magnet_idx != -1) {
-                    body_t *magnet = scene_get_body(scene, magnet_idx);
-                    if (strcmp(body_get_info(magnet), "magnet") == 0 && strcmp(body_get_second_info(magnet), "collected") == 0) {
-                        printf("magnet present");
-                        magnet_powerup(scene);
-                    }
-                }
                 
             }
         }
     }
-    // printf("%f", powerup_timer);
+    
     
     int i = num_platforms;
     int difficulty = 0;
@@ -205,7 +190,6 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
         scene_add_body(scene, new_platform);
         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         if (magnet_idx != -1) {
-            printf("magnet present");
             create_platform_collision(scene, 0, scene_get_body(scene, magnet_idx), new_platform);
         }
         i++;
@@ -235,12 +219,12 @@ scene_t *make_game_scene() {
     body_t *doodle = make_doodle(start, GAME_DOODLE_COLOR, doodle_info);
 
     sprite_t *right_jump = body_get_sprite(doodle);
-    sprite_t *left_jump = make_jump_left();
+    sprite_t *left_jump = create_sprite("PNGs/Jump_Left.png", 117, 207);
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
-    sprite_t *right_crouch = make_crouch_right();
-    sprite_t *left_crouch = make_crouch_left();
+    sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 165, 140);
+    sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 165, 140);;
     scene_add_sprite(scene, right_crouch);
     scene_add_sprite(scene, left_crouch);
 
@@ -264,9 +248,9 @@ scene_t *make_game_scene() {
     create_platform_collision(scene, 0, doodle, platform);
     vector_t safety_platform_center = {.x = GAME_WIDTH/2, .y = GAME_MAX_JUMP/2};
     char *other_info = malloc(16*sizeof(char));
-    strcpy(other_info, "normal");
-    char *other_info2 = malloc(15*sizeof(char));
-    strcpy(other_info2, "essential");
+    strcpy(other_info, "normal platform");
+    char *other_info2 = malloc(13*sizeof(char));
+    strcpy(other_info2, "nonessential");
     body_t *safety_platform = normal_platform(safety_platform_center, other_info);
     body_set_second_info(safety_platform, other_info2);
     scene_add_body(scene, safety_platform);
@@ -321,20 +305,34 @@ void create_star(scene_t *scene) {
     int random = 0;
     char *info = body_get_info(scene_get_body(scene, random));
     bool conflict = false;
+    int counter = 0;
     int magnet_idx = -1;
     do {
+        if (counter == scene_bodies(scene)) {
+            // too many stars for now, just return
+            return;
+        }
+
         while (strcmp("normal platform", info) != 0) {
             random = rand() % scene_bodies(scene);
             info = body_get_info(scene_get_body(scene, random));
         }
+
         // check if platform already has a star on it
+        body_t *body2 = scene_get_body(scene, random);
+        vector_t centroid = body_get_centroid(body2);
+        centroid.y += 40;
+
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body1 = scene_get_body(scene, j);
-            body_t *body2 = scene_get_body(scene, random);
-            if (strcmp(body_get_info(body1), "star") == 0 && random != j && body_get_centroid(body1).x == body_get_centroid(body2).x) {
+            if (strcmp(body_get_info(body1), "star") == 0 && random != j && vec_isclose(body_get_centroid(body1), centroid)) {
                 conflict = true;
             }
+            if (strcmp(body_get_info(body1), "magnet") == 0 && body_get_second_info(body1) != NULL && strcmp(body_get_second_info(body1), "equipped") == 0) {
+                magnet_idx = j;
+            }
         }
+        counter++;
     }
     while (conflict);
 
@@ -343,12 +341,15 @@ void create_star(scene_t *scene) {
     center.y += 40; // magic number for offset
 
     star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
-    rgb_color_t color = {.r = get_r(starframe), .g = get_g(starframe), .b = get_b(starframe)};
+    rgb_color_t color = {.r = 1, .g = 1, .b = 0}; // make const for 'yellow' star color
     char *star_info = malloc(5*sizeof(char));
     strcpy(star_info, "star");
-    body_t *star = body_init_with_info(get_points(starframe), INFINITY, color, star_info, free);
+    body_t *star = body_init_with_info(get_points(starframe), 0.001, color, star_info, free);
 
     create_star_collision(scene, 0, scene_get_body(scene, 0), star);
+    if (magnet_idx != -1) {
+        create_magnetic_force(scene, 500000, scene_get_body(scene, magnet_idx), star);
+    }
     scene_add_body(scene, star);
 }
 
@@ -379,14 +380,14 @@ void game_mouse_click (scene_t *scene, int x, int y) {
 void star_score(scene_t *scene) {
     // update star count
     for (size_t i = 0; i < scene_bodies(scene); i++) {
-        if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
-            printf("hey %i\n", scene_stars(scene));
+        if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0 && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
             scene_increase_stars(scene);
+            scene_remove_body(scene, i);
         }
     }
 }
 
-char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score) {
+void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score) {
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
     bool enemy_present = false;
     vector_t *scoring = malloc(sizeof(vector_t));
@@ -394,15 +395,21 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
     scoring->y = 20;
     double curr = 0.0;
     char *buffer = malloc(100*sizeof(char));
-
     // generate a star once in a while
-    if (*star_timer == 500) {
+    if (*star_timer == 200) {
         create_star(scene);
         *star_timer = 0;
     }
     (*star_timer)++;
-    // printf("%f\n", *star_timer);
     star_score(scene);
+    bool success = false;
+    
+    magnet_powerup(scene, powerup_timer);
+    if (*powerup_timer == 1200) {
+        body_t *powerup = make_powerup(scene);
+        *powerup_timer = 0;
+    }
+    
 
     // calculate and display score
     if (scene_textboxes(scene) > 1) {
@@ -419,7 +426,6 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
     }
 
     double dt = time_since_last_tick();
-    printf("%d\n", *powerup_timer);
     *powerup_timer += 1;
     if (!in_screen(*center, doodle)) {
         char *restart_info = malloc(8*sizeof(char));
@@ -445,7 +451,6 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
         // generates more platforms
         
         if (more_platforms(scene, *center, *powerup_timer)) {
-            // printf("reset powerup timer to 0");
             *powerup_timer = 0;
         }
         if (!enemy_present) {
@@ -464,14 +469,17 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
     }
     enemy_present = false;
 
-    if (*powerup_timer >= MAGNET_TIMER) {
+    if (*powerup_timer == MAGNET_TIMER) {
         for (int i = 0; i < scene_bodies(scene); i++) {
-            if (strcmp(body_get_info(scene_get_body(scene, i)), "magnet") == 0 && strcmp(body_get_info(scene_get_body(scene, i)), "collected") == 0) {
-                body_remove(scene_get_body(scene,i));
+            if (strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0) {
+                body_set_velocity(scene_get_body(scene, i), VEC_ZERO);
+            }
+            if (strcmp(body_get_info(scene_get_body(scene, i)), "magnet") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+                scene_remove_body(scene, i);
             }
         }
     }
-    // printf("%f\n", body_get_centroid(doodle).y);
+    
     if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
         (*timer)++;
     }
@@ -490,11 +498,11 @@ char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_t
         else {
             change_motion(doodle, scene_get_sprite(scene, 1));
         }
-        // printf("change motion timer reset");
+        
         *timer = 0;
     }
     wrap(doodle);
     scene_tick(scene, dt);
     sdl_render_scene(scene);
-    return score;
+    free(buffer);
 }

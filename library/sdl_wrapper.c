@@ -189,10 +189,10 @@ void sdl_init(vector_t min, vector_t max) {
 	}
 }
 
-sprite_t *create_sprite(char *file) {
+sprite_t *create_sprite(char *file, int width, int height) {
     SDL_Surface *image = IMG_Load(file);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
-    sprite_t *sprite = sprite_init(texture);
+    sprite_t *sprite = sprite_init(texture, width, height);
     SDL_FreeSurface(image);
     return sprite;
 }
