@@ -239,8 +239,8 @@ scene_t *make_game_scene() {
     vector_t safety_platform_center = {.x = GAME_WIDTH/2, .y = GAME_MAX_JUMP/2};
     char *other_info = malloc(16*sizeof(char));
     strcpy(other_info, "normal platform");
-    char *other_info2 = malloc(15*sizeof(char));
-    strcpy(other_info2, "essential");
+    char *other_info2 = malloc(13*sizeof(char));
+    strcpy(other_info2, "nonessential");
     body_t *safety_platform = normal_platform(safety_platform_center, other_info);
     body_set_second_info(safety_platform, other_info2);
     scene_add_body(scene, safety_platform);

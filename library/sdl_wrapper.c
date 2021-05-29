@@ -329,7 +329,7 @@ void sdl_show(scene_t *scene) {
     size_t body_count = scene_bodies(scene);
     for (size_t i = 0; i < body_count; i++) {
         body_t *body = scene_get_body(scene, i);
-        if (body_get_sprite(body) == NULL || (strcmp(body_get_info(body), "star") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "collected") != 0)) {
+        if (body_get_sprite(body) == NULL) {
             sdl_draw_polygon(body_get_shape(body), body_get_color(body));
         }
     }
