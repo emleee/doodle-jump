@@ -76,7 +76,8 @@ void sliding_bounce(body_t *sliding_platform) {
 }
 
 body_t *disappearing_platform(vector_t center, char *info) {
-    body_t *disappearing_platform = make_platform(center, DISAPPEARING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, NULL);
+    sprite_t *sprite = create_sprite("PNGs/Cloud_Platform.png", 139, 30);
+    body_t *disappearing_platform = make_platform(center, DISAPPEARING_COLOR, info, 139, 30, sprite);
     return disappearing_platform;
 }
 
