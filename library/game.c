@@ -357,7 +357,7 @@ void star_score(scene_t *scene) {
         // }
 
         if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
-            printf("hey %i\n", scene_stars(scene));
+            // printf("hey %i\n", scene_stars(scene));
             scene_increase_stars(scene);
         }
     }

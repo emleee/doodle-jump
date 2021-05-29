@@ -27,20 +27,7 @@ const rgb_color_t TRICK_COLOR = {.r = 102.0/255.0, .g = 51.0/255.0, .b = 0.0/255
 const vector_t PLATFORM_VELOCITY = {.x = 200, .y = 0};
 
 body_t *make_platform(vector_t center, rgb_color_t color, char *info, int width, int height, sprite_t *sprite) {
-    list_t *shape = list_init(4, free);
-    vector_t *v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {width, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {width, height};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {0, height};
-    list_add(shape, v);
-
+    list_t *shape = make_rectangle(width, height);
     body_t *platform = body_init_with_info(shape, PLATFORM_MASS, color, info, free);
     body_set_sprite(platform, sprite);
     body_set_centroid(platform, center);
@@ -54,7 +41,8 @@ body_t *normal_platform(vector_t center, char *info) {
 }
 
 body_t *sliding_platform(vector_t center, char *info) {
-    body_t *sliding_platform = make_platform(center, SLIDING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, NULL);
+    sprite_t *sprite = create_sprite("PNGs/Flower_Platform.png", 146, 35);
+    body_t *sliding_platform = make_platform(center, SLIDING_COLOR, info, PLATFORM_WIDTH, PLATFORM_HEIGHT, sprite);
     body_set_velocity(sliding_platform, PLATFORM_VELOCITY);
     return sliding_platform;
 }

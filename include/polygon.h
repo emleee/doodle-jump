@@ -46,4 +46,6 @@ void polygon_translate(list_t *polygon, vector_t translation);
  */
 void polygon_rotate(list_t *polygon, double angle, vector_t point);
 
+list_t *make_rectangle(double width, double height);
+
 #endif // #ifndef __POLYGON_H__
