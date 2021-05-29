@@ -134,7 +134,9 @@ void collided(void *a);
 void platform_collided(void *a);
 
 
-void powerup_collided(void *a);
+void powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux);
+
+void create_powerup_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
 
 void boost_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux);
 
@@ -158,5 +160,8 @@ typedef struct collision_package {
  * @param body2 the second body
  */
 void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
+
+void magnet(void *a);
+void create_magnet(scene_t *scene, double k, body_t *body1, body_t *body2);
 
 #endif // #ifndef __FORCES_H__

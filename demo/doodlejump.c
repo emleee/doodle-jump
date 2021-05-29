@@ -157,6 +157,15 @@ int main() {
                 sdl_set_center(*center);
                 scene_free(scene);
                 free(score);
+                free(timer);
+                free(powerup_timer);
+                free(star_timer);
+                timer = malloc(sizeof(int));
+                *timer = 0;
+                powerup_timer = malloc(sizeof(int));
+                *powerup_timer = 0;
+                star_timer = malloc(sizeof(int));
+                *star_timer = 0;
                 score = malloc(100*sizeof(char));
                 scene = make_game_scene();
                 doodle = scene_get_body(scene, 0);
@@ -172,6 +181,7 @@ int main() {
                 center->x = WIDTH2/2;
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
+                
                 scene_free(scene);
                 scene = make_restart_scene(score);
             }
@@ -181,7 +191,7 @@ int main() {
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-           strcpy(score, game_main(scene, doodle, star_timer, powerup_timer, timer, center));
+           game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
             double dt = time_since_last_tick();
@@ -228,8 +238,13 @@ int main() {
      **/
 
 
-
+    // free scoring, score, timers
     fclose(file);
+    free(timer);
+    free(powerup_timer);
+    free(star_timer);
+    free(score);
+    free(scoring);
     free(buffer);
     free(buffer2);
     free(throwaway);

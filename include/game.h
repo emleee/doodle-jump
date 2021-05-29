@@ -31,9 +31,9 @@ body_t *make_enemy(vector_t center);
 
 body_t *make_button(vector_t center);
 
-void more_platforms(scene_t *scene, vector_t center, int powerup_timer);
+bool more_platforms(scene_t *scene, vector_t center, int powerup_timer);
 
-bool more_enemies(scene_t *scene, vector_t center);
+void more_enemies(scene_t *scene, vector_t center);
 
 scene_t *make_game_scene();
 
@@ -49,6 +49,6 @@ double calculate_score(vector_t center);
 
 void game_mouse_click (scene_t *scene, int x, int y);
 
-char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center);
+char *game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score);
 
 #endif // #ifndef __GAME_H__

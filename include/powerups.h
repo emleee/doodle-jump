@@ -24,4 +24,7 @@ void make_powerup(scene_t *scene, vector_t center);
 body_t *make_boost(scene_t *scene, vector_t center);
 body_t *make_immunity(scene_t *scene, vector_t center);
 
+body_t *make_magnet(scene_t *scene, vector_t center);
+void magnet_powerup(scene_t *scene);
+
 #endif // #ifndef __POWERUPS_H__
