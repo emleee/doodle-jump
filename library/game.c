@@ -242,8 +242,8 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
-    sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 165, 140);
-    sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 165, 140);;
+    sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 1316/8, 1117/8);
+    sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 1316/8, 1117/8);;
     scene_add_sprite(scene, right_crouch);
     scene_add_sprite(scene, left_crouch);
 

@@ -113,22 +113,12 @@ body_t *make_powerup(scene_t *scene) {
 }
 
 body_t *make_boost(scene_t *scene, vector_t center){
-    list_t *shape = list_init(4, free);
-    vector_t *v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {20, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {20, 20};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 20};
-    list_add(shape, v);
+    list_t *shape = make_rectangle(VEC_ZERO, 1075/13, 843/13);
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "boost");
     body_t *boost = body_init_with_info(shape, INFINITY, BOOST_COLOR, info, free);
+    sprite_t *sprite = create_sprite("PNGs/Boost.png", 1075/13, 843/13);
+    body_set_sprite(boost, sprite);
     body_set_centroid(boost, center);
 
     scene_add_body(scene, boost);
