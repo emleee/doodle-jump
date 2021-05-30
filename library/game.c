@@ -325,7 +325,7 @@ void create_star(scene_t *scene) {
 
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body1 = scene_get_body(scene, j);
-            if (strcmp(body_get_info(body1), "star") == 0 && random != j && vec_isclose(body_get_centroid(body1), centroid)) {
+            if ((strcmp(body_get_info(body1), "star") == 0 || is_powerup(body1)) && random != j && vec_isclose(body_get_centroid(body1), centroid)) {
                 conflict = true;
             }
             if (strcmp(body_get_info(body1), "magnet") == 0 && body_get_second_info(body1) != NULL && strcmp(body_get_second_info(body1), "equipped") == 0) {

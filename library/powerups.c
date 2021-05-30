@@ -39,6 +39,7 @@ bool is_powerup(body_t *body) {
     return false;
 }
 
+// move this to platforms.c so Lucy can use it for create_star!
 vector_t *platform_center(scene_t *scene) {
     int random = 0;
     char *info = body_get_info(scene_get_body(scene, random));
@@ -74,6 +75,9 @@ vector_t *platform_center(scene_t *scene) {
     body_t *platform = scene_get_body(scene, random);
     center->x = body_get_centroid(platform).x;
     center->y = body_get_centroid(platform).y + 40; // magic number for offset
+    if ((*center).y <= body_get_centroid(scene_get_body(scene,0)).y) {
+        return NULL;
+    }
     return center;
 }
 
@@ -88,7 +92,6 @@ body_t *make_powerup(scene_t *scene) {
     }
     int idx = (rand() % (3 - 1 + 1)) + 1;
     if (num_powerups == 0) {
-        // printf("num_powerups: %d\n", num_powerups);
         vector_t *center = platform_center(scene);
         if (center == NULL) {
             return NULL;
@@ -97,13 +100,12 @@ body_t *make_powerup(scene_t *scene) {
             return make_boost(scene, *center);
         }
         else if (idx == IMMUNITY_IDX) {
-            return make_immunity(scene, *center);
+            return make_immunity(scene, *center, false);
         }
         else if (idx == MAGNET_IDX) {
             return make_magnet(scene, *center, false);
         }        
         free(center);
-        return magnet;
     }
     return NULL;
 }
@@ -133,7 +135,7 @@ body_t *make_boost(scene_t *scene, vector_t center){
     return boost;
 }
 
-body_t *make_immunity(scene_t *scene, vector_t center) {
+body_t *make_immunity(scene_t *scene, vector_t center, bool collected) {
     list_t *shape = list_init(20, free); // 13/16 + 1
     for (int i = 0; i < 20; i++) {
         vector_t *pt = malloc(sizeof(vector_t));
@@ -147,7 +149,9 @@ body_t *make_immunity(scene_t *scene, vector_t center) {
     body_set_centroid(immunity, center);
     scene_add_body(scene, immunity);
     body_t *doodle = scene_get_body(scene, 0);
-    create_powerup_collision(scene, 0, doodle, immunity);
+    if (!collected) {
+        create_powerup_collision(scene, 0, doodle, immunity);
+    }
     return immunity;
 }
 
@@ -178,6 +182,38 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     return magnet;
 }
 
+void immunity_powerup(scene_t *scene, int *powerup_timer) {
+    body_t *doodle = scene_get_body(scene, 0);
+    size_t immunity_idx = -1;
+    for (size_t i = 0; i < scene_bodies(scene); i++) {
+        body_t *body = scene_get_body(scene, i);
+        if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
+            immunity_idx = i;
+        }
+        if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+            body_set_centroid(body, body_get_centroid(doodle));
+        }
+    }
+    if (immunity_idx != -1) {
+        body_t *immunity = scene_get_body(scene, immunity_idx);
+        scene_remove_body(scene, immunity_idx);
+        immunity = make_magnet(scene, body_get_centroid(doodle), true);
+        char *info = malloc(sizeof(char)*9);
+        strcpy(info, "equipped");
+        body_set_second_info(immunity, info);
+        *powerup_timer = 0;
+        body_set_mass(immunity, 100);
+        for (size_t j = 0; j < scene_bodies(scene); j++) {
+            body_t *body = scene_get_body(scene, j);
+            if (strcmp(body_get_info(body), "enemy") == 0 && in_screen(body_get_centroid(body), body)) {
+                vector_t velocity = {.x = 1, .y = 1};
+                body_set_velocity(body, velocity);
+                create_magnetic_force(scene, MAGNET_GRAVITY, immunity, body);
+            }
+        }
+    }
+}
+
 void magnet_powerup(scene_t *scene, int *powerup_timer) {
     body_t *doodle = scene_get_body(scene, 0);
     size_t magnet_idx = -1;
@@ -198,9 +234,7 @@ void magnet_powerup(scene_t *scene, int *powerup_timer) {
         strcpy(info, "equipped");
         body_set_second_info(magnet, info);
         *powerup_timer = 0;
-        // body_set_centroid(magnet, body_get_centroid(doodle));
-        body_set_velocity(magnet, body_get_velocity(doodle));
-        body_set_mass(magnet, body_get_mass(doodle));
+        body_set_mass(magnet, 100);
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body = scene_get_body(scene, j);
             if (strcmp(body_get_info(body), "star") == 0 && in_screen(body_get_centroid(body), body)) {
@@ -208,11 +242,6 @@ void magnet_powerup(scene_t *scene, int *powerup_timer) {
                 body_set_velocity(body, velocity);
                 create_magnetic_force(scene, MAGNET_GRAVITY, magnet, body);
             }
-            if (strcmp(body_get_info(body), "normal") == 0 || strcmp(body_get_info(body), "normal platform") == 0 || strcmp(body_get_info(body), "essential") == 0 || strcmp(body_get_info(body), "essential platform") == 0) {
-                create_platform_collision(scene, 0, magnet, body);
-            }
         }
-        create_downward_gravity(scene, NEWTONIAN_GRAVITY, magnet);
-        wrap(magnet);
     }
 }
