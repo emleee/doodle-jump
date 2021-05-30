@@ -23,7 +23,8 @@
 const rgb_color_t BOOST_COLOR = {.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
 const rgb_color_t IMMUNITY_COLOR = {.r = 0.54, .g = 0.54, .b = 0.54};
 const rgb_color_t MAGNET_COLOR = {.r = 1, .g = 1, .b = 0.2};
-const double RADIUS = 20.0; //152.0
+const double RADIUS = 200.0; //152.0
+const double RADIUS2 = 20.0; //152.0
 
 const int BOOST_IDX = 1;
 const int IMMUNITY_IDX = 2;
@@ -137,15 +138,26 @@ body_t *make_boost(scene_t *scene, vector_t center){
 
 body_t *make_immunity(scene_t *scene, vector_t center, bool collected) {
     list_t *shape = list_init(20, free); // 13/16 + 1
-    for (int i = 0; i < 20; i++) {
-        vector_t *pt = malloc(sizeof(vector_t));
-        pt->x = RADIUS * cos(2 * M_PI * i / 20 + M_PI / 2);
-        pt->y = RADIUS * sin(2 * M_PI * i / 20 + M_PI / 2);
-        list_add(shape, pt);
+    if (collected) {
+        for (int i = 0; i < 20; i++) {
+            vector_t *pt = malloc(sizeof(vector_t));
+            pt->x = RADIUS * cos(2 * M_PI * i / 20 + M_PI / 2);
+            pt->y = RADIUS * sin(2 * M_PI * i / 20 + M_PI / 2);
+            list_add(shape, pt);
+        }
     }
+    else {
+        for (int i = 0; i < 20; i++) {
+            vector_t *pt = malloc(sizeof(vector_t));
+            pt->x = RADIUS2 * cos(2 * M_PI * i / 20 + M_PI / 2);
+            pt->y = RADIUS2 * sin(2 * M_PI * i / 20 + M_PI / 2);
+            list_add(shape, pt);
+        }
+    }
+    
     char *info = malloc(sizeof(char)*9);
     strcpy(info, "immunity");
-    body_t *immunity = body_init_with_info(shape, INFINITY, IMMUNITY_COLOR, info, free);
+    body_t *immunity = body_init_with_info(shape, 10, IMMUNITY_COLOR, info, free);
     body_set_centroid(immunity, center);
     scene_add_body(scene, immunity);
     body_t *doodle = scene_get_body(scene, 0);
@@ -189,15 +201,17 @@ void immunity_powerup(scene_t *scene, int *powerup_timer) {
         body_t *body = scene_get_body(scene, i);
         if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
             immunity_idx = i;
+            printf("powerup : %d\n", immunity_idx);
         }
         if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
             body_set_centroid(body, body_get_centroid(doodle));
         }
     }
+    //move this to inner for loop
     if (immunity_idx != -1) {
         body_t *immunity = scene_get_body(scene, immunity_idx);
         scene_remove_body(scene, immunity_idx);
-        immunity = make_magnet(scene, body_get_centroid(doodle), true);
+        immunity = make_immunity(scene, body_get_centroid(doodle), true);
         char *info = malloc(sizeof(char)*9);
         strcpy(info, "equipped");
         body_set_second_info(immunity, info);
@@ -205,10 +219,9 @@ void immunity_powerup(scene_t *scene, int *powerup_timer) {
         body_set_mass(immunity, 100);
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body = scene_get_body(scene, j);
-            if (strcmp(body_get_info(body), "enemy") == 0 && in_screen(body_get_centroid(body), body)) {
-                vector_t velocity = {.x = 1, .y = 1};
-                body_set_velocity(body, velocity);
-                create_magnetic_force(scene, MAGNET_GRAVITY, immunity, body);
+            if (strcmp(body_get_info(body), "enemy") == 0) {
+                printf("added force\n");
+                create_immunity_collision(scene, 0, immunity, body);
             }
         }
     }
