@@ -97,22 +97,22 @@ body_t *make_powerup(scene_t *scene) {
         if (center == NULL) {
             return NULL;
         }
-        if (idx == BOOST_IDX) {
-            return make_boost(scene, *center);
-        }
-        else if (idx == IMMUNITY_IDX) {
-            return make_immunity(scene, *center, false);
-        }
-        else if (idx == MAGNET_IDX) {
-            return make_magnet(scene, *center, false);
-        }        
+        // if (idx == BOOST_IDX) {
+        //     return make_boost(scene, *center);
+        // }
+        // else if (idx == IMMUNITY_IDX) {
+        //     return make_immunity(scene, *center, false);
+        // }
+        // else if (idx == MAGNET_IDX) {
+        //     return make_magnet(scene, *center, false);
+        // }        
+        return make_boost(scene, *center);
         free(center);
     }
     return NULL;
 }
 
 body_t *make_boost(scene_t *scene, vector_t center){
-    printf("made boost\n");
     list_t *shape = list_init(4, free);
     vector_t *v = malloc(sizeof(*v));
     *v = (vector_t) {0, 0};
@@ -201,7 +201,6 @@ void immunity_powerup(scene_t *scene, int *powerup_timer) {
         body_t *body = scene_get_body(scene, i);
         if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
             immunity_idx = i;
-            printf("powerup : %d\n", immunity_idx);
         }
         if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
             body_set_centroid(body, body_get_centroid(doodle));
@@ -220,7 +219,6 @@ void immunity_powerup(scene_t *scene, int *powerup_timer) {
         for (size_t j = 0; j < scene_bodies(scene); j++) {
             body_t *body = scene_get_body(scene, j);
             if (strcmp(body_get_info(body), "enemy") == 0) {
-                printf("added force\n");
                 create_immunity_collision(scene, 0, immunity, body);
             }
         }

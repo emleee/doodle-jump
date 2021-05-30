@@ -355,13 +355,14 @@ void boost_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *
     else {
         impulse = mass1 * mass2 / (mass1+mass2) * (1+c) * (vec_dot(v2, axis) - vec_dot(v1, axis));
     }
+    vector_t collision_axis = {.x = 0, .y = 1};
     if (mass1 == INFINITY) {
         body_remove(body1);
-        body_add_impulse(body2, vec_multiply(impulse + BOOST_POWERUP*mass1, axis));
+        body_add_impulse(body2, vec_multiply(impulse + BOOST_POWERUP*mass2, collision_axis));
     }
     else if (mass2 == INFINITY) {
         body_remove(body2);
-        body_add_impulse(body1, vec_multiply(impulse + BOOST_POWERUP*mass1, axis));
+        body_add_impulse(body1, vec_multiply(impulse + BOOST_POWERUP*mass1, collision_axis));
     }
 }
 

@@ -209,7 +209,6 @@ void more_enemies(scene_t *scene, vector_t center) {
         for (int i = 0; i < scene_bodies(scene); i++) {
             body_t *body = scene_get_body(scene, i);
             if (strcmp(body_get_info(body), "immunity") == 0) {
-                printf("immunity present\n");
             }
             if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
                 immunity_idx = i;
@@ -219,10 +218,8 @@ void more_enemies(scene_t *scene, vector_t center) {
         body_t *enemy = make_enemy(centroid);
         scene_add_body(scene, enemy);
         create_destructive_collision(scene, scene_get_body(scene, 0), enemy);
-        printf("immunity : %d\n", immunity_idx);
         if (immunity_idx != -1) {
             body_t *immunity = scene_get_body(scene, immunity_idx);
-            printf("game added force\n");
             create_immunity_collision(scene, 0, immunity, enemy);
         }
         // add enemy collision here
