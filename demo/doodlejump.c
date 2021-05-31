@@ -23,6 +23,7 @@
 #include "restart.h"
 #include "start.h"
 #include "preferences.h"
+#include "shop.h"
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
@@ -98,18 +99,28 @@ void mouse_click(int key, int x, int y, void *scene) {
                 game_mouse_click(scene, x, y);
             }
             else if (strcmp(scene_get_info(scene), "start") == 0) {
-                if (x < (250 + BUTTON_X_RADIUS) && x > (250 - BUTTON_X_RADIUS)) {
-                    if (y < (200 + BUTTON_Y_RADIUS) && y > (200 - BUTTON_Y_RADIUS)) {
-                        char *game_info = malloc(5*sizeof(char));
-                        strcpy(game_info, "game");
-                        scene_set_next_info(scene, game_info);
-                    }
-                    if (y < (300 + BUTTON_Y_RADIUS) && y > (300 - BUTTON_Y_RADIUS)) {
-                        char *settings_info = malloc(9*sizeof(char));
-                        strcpy(settings_info, "settings");
-                        scene_set_next_info(scene, settings_info);
-                    }
-                }
+                start_mouse_click(scene, x, y);
+                // if (x < (START_BUTTON.x + BUTTON_X_RADIUS) && x > (START_BUTTON.x - BUTTON_X_RADIUS)) {
+                //     if (y < (START_BUTTON.y + BUTTON_Y_RADIUS) && y > (START_BUTTON.y - BUTTON_Y_RADIUS)) {
+                //         char *game_info = malloc(5*sizeof(char));
+                //         strcpy(game_info, "game");
+                //         scene_set_next_info(scene, game_info);
+                //     }
+                // }
+                // if (x < (SETTINGS_BUTTON.x + BUTTON_X_RADIUS) && x > (SETTINGS_BUTTON.x - BUTTON_X_RADIUS)) {
+                //     if (y < (SETTINGS_BUTTON.y + BUTTON_Y_RADIUS) && y > (SETTINGS_BUTTON.y - BUTTON_Y_RADIUS)) {
+                //         char *settings_info = malloc(9*sizeof(char));
+                //         strcpy(settings_info, "settings");
+                //         scene_set_next_info(scene, settings_info);
+                //     }
+                // }
+                // if (x < (SHOP_BUTTON.x + BUTTON_X_RADIUS) && x > (SHOP_BUTTON.x - BUTTON_X_RADIUS)) {
+                //     if (y < (SHOP_BUTTON.y + BUTTON_Y_RADIUS) && y > (SHOP_BUTTON.y - BUTTON_Y_RADIUS)) {
+                //         char *shop_info = malloc(5*sizeof(char));
+                //         strcpy(shop_info, "shop");
+                //         scene_set_next_info(scene, shop_info);
+                //     }
+                // }
             }
             else if (strcmp(scene_get_info(scene), "restart") == 0) {
                 if (x < (250 + BUTTON_X_RADIUS) && x > (250 - BUTTON_X_RADIUS)) {
@@ -207,6 +218,13 @@ int main() {
                 scene_free(scene);
                 scene = make_restart_scene(score);
             }
+            else if (strcmp(scene_get_next_info(scene), "shop") == 0) {
+                center->x = WIDTH2/2;
+                center->y = HEIGHT2/2;
+                sdl_set_center(*center);
+                scene_free(scene);
+                scene = make_shop_scene();
+            }
             else if (strcmp(scene_get_next_info(scene), "settings") == 0) {
                 star_score += scene_stars(scene);
                 scene_free(scene);
@@ -226,6 +244,9 @@ int main() {
             // sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "restart") == 0) {
+            sdl_render_scene(scene);
+        }
+        else if (strcmp(scene_get_info(scene), "shop") == 0) {
             sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "settings") == 0) {

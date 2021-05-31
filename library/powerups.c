@@ -122,7 +122,9 @@ body_t *make_boost(scene_t *scene, vector_t center){
     body_set_centroid(boost, center);
 
     scene_add_body(scene, boost);
-    create_boost_collision(scene, 0, scene_get_body(scene, 0), boost);
+    if (strcmp(scene_get_info(scene), "game") == 0) {
+        create_boost_collision(scene, 0, scene_get_body(scene, 0), boost);
+    }
     return boost;
 }
 
@@ -151,7 +153,7 @@ body_t *make_immunity(scene_t *scene, vector_t center, bool collected) {
     body_set_centroid(immunity, center);
     scene_add_body(scene, immunity);
     body_t *doodle = scene_get_body(scene, 0);
-    if (!collected) {
+    if (!collected && strcmp(scene_get_info(scene), "game") == 0) {
         create_powerup_collision(scene, 0, doodle, immunity);
     }
     return immunity;
@@ -178,7 +180,7 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     body_t *magnet = body_init_with_info(shape, INFINITY, MAGNET_COLOR, info, free);
     body_set_centroid(magnet, center);
     scene_add_body(scene, magnet);
-    if (!collected) {
+    if (!collected & strcmp(scene_get_info(scene), "game") == 0) {
         create_powerup_collision(scene, 0, doodle, magnet);
     }
     return magnet;

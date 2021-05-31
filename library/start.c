@@ -30,32 +30,38 @@ const double START_MAX_JUMP = 295.0;
 
 const double START_G = -150.0;
 
+const vector_t START_BUTTON = {.x = 360, .y = 245};
+const vector_t SHOP_BUTTON = {.x = 360, .y = 425};
+const vector_t SETTINGS_BUTTON = {.x = 360, .y = 588};
+const double START_BUTTON_X_RADIUS = 125;
+const double START_BUTTON_Y_RADIUS = 75;
+
 scene_t *make_start_scene() {
     char *scene_info = malloc(6*sizeof(char));
     strcpy(scene_info, "start");
     scene_t *scene = scene_init_with_info(scene_info, free);
 
-    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    vector_t *point2 = malloc(sizeof(vector_t));
-    point2->x = 250; // remove magic numbers
-    point2->y = 200;
-    text_t *text2 = text_create("Start", color, 22, point2);
-    scene_add_text(scene, text2);
+    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    // vector_t *point2 = malloc(sizeof(vector_t));
+    // point2->x = 250; // remove magic numbers
+    // point2->y = 200;
+    // text_t *text2 = text_create("Start", color, 22, point2);
+    // scene_add_text(scene, text2);
 
-    vector_t *point3 = malloc(sizeof(vector_t));
-    point3->x = 250; // remove magic numbers
-    point3->y = 300;
-    text_t *text3 = text_create("Settings", color, 22, point3);
-    scene_add_text(scene, text3);
+    // vector_t *point3 = malloc(sizeof(vector_t));
+    // point3->x = 250; // remove magic numbers
+    // point3->y = 300;
+    // text_t *text3 = text_create("Settings", color, 22, point3);
+    // scene_add_text(scene, text3);
 
     // body_t *start_button = make_button(*point2);
     // scene_add_body(scene, start_button);
 
-    vector_t *point = malloc(sizeof(vector_t));
-    point->x = 250; // remove magic numbers
-    point->y = 50;
-    text_t *text = text_create("Doodle Jump: Fairy Tail", color, 28, point);
-    scene_add_text(scene, text);
+    // vector_t *point = malloc(sizeof(vector_t));
+    // point->x = 250; // remove magic numbers
+    // point->y = 50;
+    // text_t *text = text_create("Doodle Jump: Fairy Tail", color, 28, point);
+    // scene_add_text(scene, text);
 
     body_t *background = make_background_body("PNGs/Start_Background_1.png", (vector_t){.x = 0, .y = START_HEIGHT});
     scene_add_body(scene, background);
@@ -96,7 +102,31 @@ scene_t *make_start_scene() {
     return scene;
 }
 
-void start_main(scene_t *scene, int timer) {
+void start_mouse_click(scene_t *scene, int x, int y){
+    if (x < (START_BUTTON.x + START_BUTTON_X_RADIUS) && x > (START_BUTTON.x - START_BUTTON_X_RADIUS)) {
+        if (y < (START_BUTTON.y + START_BUTTON_Y_RADIUS) && y > (START_BUTTON.y - START_BUTTON_Y_RADIUS)) {
+            char *game_info = malloc(5*sizeof(char));
+            strcpy(game_info, "game");
+            scene_set_next_info(scene, game_info);
+        }
+    }
+    if (x < (SETTINGS_BUTTON.x + START_BUTTON_X_RADIUS) && x > (SETTINGS_BUTTON.x - START_BUTTON_X_RADIUS)) {
+        if (y < (SETTINGS_BUTTON.y + START_BUTTON_Y_RADIUS) && y > (SETTINGS_BUTTON.y - START_BUTTON_Y_RADIUS)) {
+            char *settings_info = malloc(9*sizeof(char));
+            strcpy(settings_info, "settings");
+            scene_set_next_info(scene, settings_info);
+        }
+    }
+    if (x < (SHOP_BUTTON.x + START_BUTTON_X_RADIUS) && x > (SHOP_BUTTON.x - START_BUTTON_X_RADIUS)) {
+        if (y < (SHOP_BUTTON.y + START_BUTTON_Y_RADIUS) && y > (SHOP_BUTTON.y - START_BUTTON_Y_RADIUS)) {
+            char *shop_info = malloc(5*sizeof(char));
+            strcpy(shop_info, "shop");
+            scene_set_next_info(scene, shop_info);
+        }
+    }
+}
+
+void start_main (scene_t *scene, int timer) {
     if (timer % 320 < 80) {
         body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 0));
     }
