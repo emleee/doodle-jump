@@ -54,8 +54,8 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
     text_t *text2 = text_create("Back to Home", color, 22, point2);
     scene_add_text(scene, text2);
 
-    body_t *background1 = make_background_body((vector_t){.x = 0, .y = PREF_HEIGHT});
-    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*PREF_HEIGHT});
+    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = PREF_HEIGHT});
+    body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*PREF_HEIGHT});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 

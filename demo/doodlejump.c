@@ -145,6 +145,8 @@ int main() {
     *star_timer = 0;
     int star_score = 0;
 
+    int start_timer = 0;
+
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
     scene_t *scene = make_start_scene();
@@ -215,9 +217,24 @@ int main() {
             game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
-            double dt = time_since_last_tick();
-            scene_tick(scene,dt);
+            start_timer++;
+            if (start_timer % 320 < 80) {
+                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 0));
+            }
+            else if (start_timer % 320 < 160) {
+                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 1));
+            }
+            else if (start_timer % 320 < 240) {
+                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 2));
+            }
+            else  {
+                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 1));
+            }
             sdl_render_scene(scene);
+
+            // double dt = time_since_last_tick();
+            // scene_tick(scene,dt);
+            // sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "restart") == 0) {
             sdl_render_scene(scene);
@@ -265,7 +282,7 @@ int main() {
         double highscore = strtod(score_reading, throwaway);
         score+=7;
         curr = strtod(score, throwaway);
-        printf("read %s %f %s %f\n", score_reading, highscore, score, curr);
+        // printf("read %s %f %s %f\n", score_reading, highscore, score, curr); // THIS WAS GIVING AN ERROR SO I COMMENTED IT OUT BUT IDK IF WE SHOULD CHECK THIS???
         if (curr > highscore) {
             fseek(score_file, 0, SEEK_SET);
             fputs(score, score_file);

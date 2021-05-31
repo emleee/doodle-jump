@@ -3,6 +3,7 @@
 #include "vector.h"
 #include "sdl_wrapper.h"
 #include "math.h"
+#include "polygon.h"
 
 const vector_t RIGHT_OFFSET = {.x = 10.5, .y = 29.5};
 const vector_t LEFT_OFFSET = {.x = -10.5, .y = 29.5};
@@ -73,31 +74,32 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
 //     return sprite;
 // }
 
-sprite_t *make_background() {
-    sprite_t *sprite = create_sprite("PNGs/Background.png", 720, 960);
-    // sprite_set_parameters(sprite, VEC_ZERO, 720, 960);
-    return sprite;
-}
+// sprite_t *make_background() {
+//     sprite_t *sprite = create_sprite("PNGs/Background.png", 720, 960);
+//     sprite_set_parameters(sprite, VEC_ZERO, 720, 960);
+//     return sprite;
+// }
 
-body_t *make_background_body(vector_t center) {
+body_t *make_background_body(char *file, vector_t center) {
     char *info = malloc(11*sizeof(char));
     strcpy(info, "background");
 
-    list_t *shape = list_init(4, free);
-    vector_t *v = malloc(sizeof(*v));
-    *v = (vector_t) {-1, 1};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {1, 1};   // magic numbers
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {1, -1};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {-1, -1};
-    list_add(shape, v);
+    list_t *shape = make_rectangle((vector_t){.x=-1, .y=-1}, 2, 2);
+    // list_t *shape = list_init(4, free);
+    // vector_t *v = malloc(sizeof(*v));
+    // *v = (vector_t) {-1, 1};
+    // list_add(shape, v);
+    // v = malloc(sizeof(*v));
+    // *v = (vector_t) {1, 1};   // magic numbers
+    // list_add(shape, v);
+    // v = malloc(sizeof(*v));
+    // *v = (vector_t) {1, -1};
+    // list_add(shape, v);
+    // v = malloc(sizeof(*v));
+    // *v = (vector_t) {-1, -1};
+    // list_add(shape, v);
 
-    sprite_t *sprite = make_background();
+    sprite_t *sprite = create_sprite(file, 720, 960);
     body_t *background = body_init_with_sprite(shape, 1, COLOR, info, free, sprite);
     body_set_centroid(background, center);
     return background;

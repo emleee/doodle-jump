@@ -22,7 +22,7 @@ sprite_t *make_grass_platform();
 
 sprite_t *make_background();
 
-body_t *make_background_body(vector_t center);
+body_t *make_background_body(char *file, vector_t center);
 
 void change_direction(body_t *body, sprite_t *sprite);
 

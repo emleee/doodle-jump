@@ -56,30 +56,42 @@ scene_t *make_start_scene() {
     point->y = 50;
     text_t *text = text_create("Doodle Jump: Fairy Tail", color, 28, point);
     scene_add_text(scene, text);
-    char *doodle_info = malloc(7*sizeof(char));
-    strcpy(doodle_info, "doodle");
-    vector_t start = {.x = 50, .y = VELOCITY.y/2 + START_DOODLE_HEIGHT/2};
-    body_t *doodle = make_doodle(start, START_DOODLE_BODY_COLOR, doodle_info);
 
-    sprite_t *right_jump = body_get_sprite(doodle);
-    scene_add_sprite(scene, right_jump);
+    body_t *background = make_background_body("PNGs/Start_Background_1.png", (vector_t){.x = 0, .y = START_HEIGHT});
+    scene_add_body(scene, background);
+    sprite_t *background1 = body_get_sprite(background);
+    sprite_t *background2 = create_sprite("PNGs/Start_Background_2.png", 720, 960);
+    sprite_set_center(background2, (vector_t){.x=360,.y=480});
+    sprite_t *background3 = create_sprite("PNGs/Start_Background_3.png", 720, 960);
+    sprite_set_center(background3, (vector_t){.x=360,.y=480});
+    scene_add_sprite(scene, background1);
+    scene_add_sprite(scene, background2);
+    scene_add_sprite(scene, background3);
+    
+    
+    // char *doodle_info = malloc(7*sizeof(char));
+    // strcpy(doodle_info, "doodle");
+    // vector_t start = {.x = 50, .y = VELOCITY.y/2 + START_DOODLE_HEIGHT/2};
+    // body_t *doodle = make_doodle(start, START_DOODLE_BODY_COLOR, doodle_info);
 
-    body_set_velocity(doodle, VELOCITY);
-    scene_add_body(scene, doodle);
-    create_downward_gravity(scene, START_G, doodle);
+    // sprite_t *right_jump = body_get_sprite(doodle);
+    // scene_add_sprite(scene, right_jump);
 
-    char *other_info = malloc(22*sizeof(char));
-    strcpy(other_info, "nonessential platform");
-    vector_t safety_platform_center = {.x = 50, .y = START_MAX_JUMP/2};
-    body_t *safety_platform = normal_platform(safety_platform_center, other_info);
-    scene_add_body(scene, safety_platform);
-    create_platform_collision(scene, 0, doodle, safety_platform);
+    // body_set_velocity(doodle, VELOCITY);
+    // scene_add_body(scene, doodle);
+    // create_downward_gravity(scene, START_G, doodle);
 
-    body_t *background1 = make_background_body((vector_t){.x = 0, .y = START_HEIGHT});
-    body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*START_HEIGHT});
-    scene_add_body(scene, background1);
-    scene_add_body(scene, background2);
+    // char *other_info = malloc(22*sizeof(char));
+    // strcpy(other_info, "nonessential platform");
+    // vector_t safety_platform_center = {.x = 50, .y = START_MAX_JUMP/2};
+    // body_t *safety_platform = normal_platform(safety_platform_center, other_info);
+    // scene_add_body(scene, safety_platform);
+    // create_platform_collision(scene, 0, doodle, safety_platform);
 
+    // body_t *background1 = make_background_body((vector_t){.x = 0, .y = START_HEIGHT});
+    // body_t *background2 = make_background_body((vector_t){.x = 0, .y = 2*START_HEIGHT});
+    // scene_add_body(scene, background1);
+    // scene_add_body(scene, background2);
 
     return scene;
 }
