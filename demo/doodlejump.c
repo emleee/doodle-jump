@@ -267,9 +267,7 @@ int main() {
     }
     else {
         star_reading[6] = '\0';
-        printf("%s %i %i\n", star_reading, star_score, strtol(star_reading, throwaway, 10));
         star_score += (int)strtod(star_reading, throwaway);
-        printf("%i %i\n", star_score, strtol(star_reading, throwaway, 10));
     }
     sprintf(star_reading, "%i", star_score);
     fseek(star_file, 0, SEEK_SET);
@@ -289,25 +287,21 @@ int main() {
         fputs(score, score_file);
     }
     else {
+        score_reading[6] = '\0';
         double highscore = strtod(score_reading, throwaway);
         score+=7;
         curr = strtod(score, throwaway);
-        // printf("read %s %f %s %f\n", score_reading, highscore, score, curr); // THIS WAS GIVING AN ERROR SO I COMMENTED IT OUT BUT IDK IF WE SHOULD CHECK THIS???
         if (curr > highscore) {
             fseek(score_file, 0, SEEK_SET);
             fputs(score, score_file);
         }
     }
 
-
-
     free(star_reading);
     fclose(star_file);
     fclose(score_file);
     free(score_reading);
     free(throwaway);
-
-
     scene_free(scene);
     return 0;
 }
