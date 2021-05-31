@@ -154,7 +154,6 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
     
     int i = num_platforms;
     int difficulty = 0;
-    // int body_num = num_platforms; if i decide to make platforms not overlap
     if (center.y == -1 * GAME_HEIGHT/2) {
         i = (int)MAX_PLATFORMS/2 + 3;
     }
@@ -203,8 +202,8 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
 }
 
 void more_enemies(scene_t *scene, vector_t center) {
-    // if (within(5, ((int)round(center.y))%(int)HEIGHT2, 0) && ((int)round(center.y/(int)HEIGHT2))%2 == 0 && center.y != HEIGHT2/2) {
-    if (rand()%4000 == 0) {
+    int random = rand()%10000;
+    if (random < 100 && random <= center.y/GAME_HEIGHT) {
         int immunity_idx = -1;
         for (int i = 0; i < scene_bodies(scene); i++) {
             body_t *body = scene_get_body(scene, i);
@@ -222,7 +221,6 @@ void more_enemies(scene_t *scene, vector_t center) {
             body_t *immunity = scene_get_body(scene, immunity_idx);
             create_immunity_collision(scene, 0, immunity, enemy);
         }
-        // add enemy collision here
     }
 }
 

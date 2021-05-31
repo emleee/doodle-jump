@@ -166,7 +166,6 @@ void star_collided(void *a);
  */
 void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
 
-void magnet(void *a);
 void create_magnetic_force(scene_t *scene, double k, body_t *body1, body_t *body2);
 
 #endif // #ifndef __FORCES_H__
