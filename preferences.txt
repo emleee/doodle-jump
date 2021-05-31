@@ -1,2 +1,2 @@
-Sound: ON
-Score: ON
+Sound: OFF
+Score: OFF

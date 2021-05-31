@@ -26,6 +26,6 @@
 scene_t *make_start_scene();
 
 void start_main(scene_t *scene, int timer);
-void start_mouse_click(scene_t *scene, int x, int y);
+void start_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
 
 #endif // #ifndef __START_H__

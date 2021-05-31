@@ -31,17 +31,10 @@ const double HEIGHT2 = 960.0;
 const double BUTTON_X_RADIUS = 125;
 const double BUTTON_Y_RADIUS = 75;
 
-// const double MAX_PLATFORMS = 12;
-// const double PLATFORM_WIDTH2 = 146;
-// const double PLATFORM_HEIGHT2 = 35;
-
-const vector_t START_VELOCITY = {.x = 0, .y = 300};
 const double PLAYER_X_VELOCITY = 600;
 
-const rgb_color_t DOODLE_BODY_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
-const double MAX_JUMP = 295.0;
 
-const double G = -150.0;
+// const double G = -150.0;
 
 void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     body_t *player = scene_get_body((scene_t *)scene, 0);
@@ -99,45 +92,13 @@ void mouse_click(int key, int x, int y, void *scene) {
                 game_mouse_click(scene, x, y);
             }
             else if (strcmp(scene_get_info(scene), "start") == 0) {
-                start_mouse_click(scene, x, y);
-                // if (x < (START_BUTTON.x + BUTTON_X_RADIUS) && x > (START_BUTTON.x - BUTTON_X_RADIUS)) {
-                //     if (y < (START_BUTTON.y + BUTTON_Y_RADIUS) && y > (START_BUTTON.y - BUTTON_Y_RADIUS)) {
-                //         char *game_info = malloc(5*sizeof(char));
-                //         strcpy(game_info, "game");
-                //         scene_set_next_info(scene, game_info);
-                //     }
-                // }
-                // if (x < (SETTINGS_BUTTON.x + BUTTON_X_RADIUS) && x > (SETTINGS_BUTTON.x - BUTTON_X_RADIUS)) {
-                //     if (y < (SETTINGS_BUTTON.y + BUTTON_Y_RADIUS) && y > (SETTINGS_BUTTON.y - BUTTON_Y_RADIUS)) {
-                //         char *settings_info = malloc(9*sizeof(char));
-                //         strcpy(settings_info, "settings");
-                //         scene_set_next_info(scene, settings_info);
-                //     }
-                // }
-                // if (x < (SHOP_BUTTON.x + BUTTON_X_RADIUS) && x > (SHOP_BUTTON.x - BUTTON_X_RADIUS)) {
-                //     if (y < (SHOP_BUTTON.y + BUTTON_Y_RADIUS) && y > (SHOP_BUTTON.y - BUTTON_Y_RADIUS)) {
-                //         char *shop_info = malloc(5*sizeof(char));
-                //         strcpy(shop_info, "shop");
-                //         scene_set_next_info(scene, shop_info);
-                //     }
-                // }
+                start_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
             }
             else if (strcmp(scene_get_info(scene), "restart") == 0) {
-                if (x < (250 + BUTTON_X_RADIUS) && x > (250 - BUTTON_X_RADIUS)) {
-                    if (y < (400 + BUTTON_Y_RADIUS) && y > (400 - BUTTON_Y_RADIUS)) {
-                        char *game_info = malloc(5*sizeof(char));
-                        strcpy(game_info, "game");
-                        scene_set_next_info(scene, game_info);
-                    }
-                    else if (y < (500 + BUTTON_Y_RADIUS) && y > (500 - BUTTON_Y_RADIUS)) {
-                        char *start_info = malloc(6*sizeof(char));
-                        strcpy(start_info, "start");
-                        scene_set_next_info(scene, start_info);
-                    }
-                }
+                restart_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
             }
             else if (strcmp(scene_get_info(scene), "settings") == 0) {
-                settings_mouse_click(scene, x, y);
+                settings_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
             }
     }
 }
@@ -156,7 +117,7 @@ int main() {
     *star_timer = 0;
     int star_score = 0;
 
-    int start_timer = 0;
+    // int start_timer = 0;
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
