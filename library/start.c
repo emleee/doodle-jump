@@ -95,3 +95,18 @@ scene_t *make_start_scene() {
 
     return scene;
 }
+
+void start_main(scene_t *scene, int timer) {
+    if (timer % 320 < 80) {
+        body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 0));
+    }
+    else if (timer % 320 < 160) {
+        body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 1));
+    }
+    else if (timer % 320 < 240) {
+        body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 2));
+    }
+    else  {
+        body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 1));
+    }
+}

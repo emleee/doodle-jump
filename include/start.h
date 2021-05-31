@@ -25,4 +25,6 @@
 
 scene_t *make_start_scene();
 
+void start_main(scene_t *scene, int timer);
+
 #endif // #ifndef __START_H__

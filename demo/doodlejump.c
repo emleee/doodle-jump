@@ -218,18 +218,7 @@ int main() {
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
             start_timer++;
-            if (start_timer % 320 < 80) {
-                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 0));
-            }
-            else if (start_timer % 320 < 160) {
-                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 1));
-            }
-            else if (start_timer % 320 < 240) {
-                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 2));
-            }
-            else  {
-                body_set_sprite(scene_get_body(scene, 0), scene_get_sprite(scene, 1));
-            }
+            start_main(scene, start_timer);
             sdl_render_scene(scene);
 
             // double dt = time_since_last_tick();
