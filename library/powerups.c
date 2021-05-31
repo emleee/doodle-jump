@@ -97,38 +97,28 @@ body_t *make_powerup(scene_t *scene) {
         if (center == NULL) {
             return NULL;
         }
-        // if (idx == BOOST_IDX) {
-        //     return make_boost(scene, *center);
-        // }
-        // else if (idx == IMMUNITY_IDX) {
-        //     return make_immunity(scene, *center, false);
-        // }
-        // else if (idx == MAGNET_IDX) {
-        //     return make_magnet(scene, *center, false);
-        // }        
-        return make_boost(scene, *center);
+        if (idx == BOOST_IDX) {
+            return make_boost(scene, *center);
+        }
+        else if (idx == IMMUNITY_IDX) {
+            return make_immunity(scene, *center, false);
+        }
+        else if (idx == MAGNET_IDX) {
+            return make_magnet(scene, *center, false);
+        }        
+        // return make_boost(scene, *center);
         free(center);
     }
     return NULL;
 }
 
 body_t *make_boost(scene_t *scene, vector_t center){
-    list_t *shape = list_init(4, free);
-    vector_t *v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {20, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {20, 20};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 20};
-    list_add(shape, v);
+    list_t *shape = make_rectangle(VEC_ZERO, 1075/13, 843/13);
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "boost");
     body_t *boost = body_init_with_info(shape, INFINITY, BOOST_COLOR, info, free);
+    sprite_t *sprite = create_sprite("PNGs/Boost.png", 1075/13, 843/13);
+    body_set_sprite(boost, sprite);
     body_set_centroid(boost, center);
 
     scene_add_body(scene, boost);
@@ -193,6 +183,37 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     }
     return magnet;
 }
+
+// void boost_powerup(scene_t *scene, int *powerup_timer) {
+//     body_t *doodle = scene_get_body(scene, 0);
+//     size_t boost_idx = -1;
+//     for (size_t i = 0; i < scene_bodies(scene); i++) {
+//         body_t *body = scene_get_body(scene, i);
+//         if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
+//             boost_idx = i;
+//         }
+//         if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+//             body_set_centroid(body, body_get_centroid(doodle));
+//         }
+//     }
+//     //move this to inner for loop
+//     if (boost_idx != -1) {
+//         body_t *boost = scene_get_body(scene, boost_idx);
+//         scene_remove_body(scene, boost_idx);
+//         boost = make_immunity(scene, body_get_centroid(doodle), true);
+//         char *info = malloc(sizeof(char)*9);
+//         strcpy(info, "equipped");
+//         body_set_second_info(boost, info);
+//         *powerup_timer = 0;
+//         body_set_mass(boost, 100);
+//         for (size_t j = 0; j < scene_bodies(scene); j++) {
+//             body_t *body = scene_get_body(scene, j);
+//             if (strcmp(body_get_info(body), "enemy") == 0) {
+//                 create_immunity_collision(scene, 0, boost, body);
+//             }
+//         }
+//     }
+// }
 
 void immunity_powerup(scene_t *scene, int *powerup_timer) {
     body_t *doodle = scene_get_body(scene, 0);

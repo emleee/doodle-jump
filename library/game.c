@@ -242,8 +242,8 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
-    sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 165, 140);
-    sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 165, 140);;
+    sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 1316/8, 1117/8);
+    sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 1316/8, 1117/8);;
     scene_add_sprite(scene, right_crouch);
     scene_add_sprite(scene, left_crouch);
 
@@ -427,14 +427,16 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
     (*star_timer)++;
     star_score(scene);
     bool success = false;
-    
+    body_t *powerup = NULL;
     magnet_powerup(scene, powerup_timer);
     immunity_powerup(scene, powerup_timer);
     if (*powerup_timer == 1200) {
-        body_t *powerup = make_powerup(scene);
+        powerup = make_powerup(scene);
         *powerup_timer = 0;
     }
-    
+    // if (powerup != NULL && body_get_second_info(powerup) != NULL && strcmp(body_get_second_info(powerup), "equipped") ==0) {
+    //     printf("equipped");
+    // }
 
     // calculate and display score
     if (scene_textboxes(scene) > 1) {
@@ -503,6 +505,9 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 scene_remove_body(scene, i);
             }
             if (strcmp(body_get_info(scene_get_body(scene, i)), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+                scene_remove_body(scene, i);
+            }
+            if (strcmp(body_get_info(scene_get_body(scene, i)), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
                 scene_remove_body(scene, i);
             }
         }
