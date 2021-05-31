@@ -180,7 +180,9 @@ void settings_mouse_click (scene_t *scene, int x, int y) {
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         if (y < (300 + PREF_BUTTON_Y_RADIUS) && y > (300 - PREF_BUTTON_Y_RADIUS)) {
             switch_sound_preferences();
+            // printf("switched\n");
             update_preferences();
+            // printf("updated\n");
         }
         else if (y < (400 + PREF_BUTTON_Y_RADIUS) && y > (400 - PREF_BUTTON_Y_RADIUS)) {
             switch_score_preferences();
@@ -192,8 +194,10 @@ void settings_mouse_click (scene_t *scene, int x, int y) {
             scene_set_next_info(scene, start_info);
         }
         text_t *sound = scene_get_text(scene, SOUND_IDX);
+        // printf("got sound\n");
         scene_remove_text(scene, sound);
         text_t *score = scene_get_text(scene, SCORE_IDX);
+        // printf("got score\n");
         scene_remove_text(scene, score);
         vector_t *on1_point = malloc(sizeof(vector_t));
         on1_point->x = 400; // remove magic numbers

@@ -50,6 +50,12 @@ scene_t *scene_init_with_info(void *info, free_func_t info_freer) {
 void scene_free(scene_t *scene) {
     list_free(scene->bodies);
     list_free(scene->text);
+    // if (scene->next_info != NULL && scene->next_info != scene->info) {
+    //     scene->info_freer(scene->next_info);
+    // }
+    // if (scene->info != NULL) {
+    //     scene->info_freer(scene->info);
+    // } 
     free(scene);
 }
 
@@ -67,7 +73,7 @@ size_t scene_bodies(scene_t *scene) {
 }
 
 body_t *scene_get_body(scene_t *scene, size_t index) {
-    // assert(index < scene_bodies(scene));
+    assert(index < scene_bodies(scene));
     return list_get(scene->bodies, index);
 }
 
