@@ -115,7 +115,7 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
         if (strstr(info, "platform") == NULL) {
             continue;
         }
-        
+
         num_platforms++;
         char *info2 = body_get_second_info(platform);
         if (strcmp("essential", info2) == 0) {
@@ -139,22 +139,21 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
                     strcpy(new_info1, "normal platform");
                     new_platform = normal_platform(platform_center, new_info1);
                     vector_t powerup_center = (vector_t) {.x = platform_center.x, .y = platform_center.y + 50};
-                    
+
                 }
                 char *new_info2 = malloc(15*sizeof(char));
                 strcpy(new_info2, "essential");
                 body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-                
+
             }
         }
     }
-    
-    
+
+
     int i = num_platforms;
     int difficulty = 0;
-    // int body_num = num_platforms; if i decide to make platforms not overlap
     if (center.y == -1 * GAME_HEIGHT/2) {
         i = (int)MAX_PLATFORMS/2 + 3;
     }
@@ -203,8 +202,8 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
 }
 
 void more_enemies(scene_t *scene, vector_t center) {
-    // if (within(5, ((int)round(center.y))%(int)HEIGHT2, 0) && ((int)round(center.y/(int)HEIGHT2))%2 == 0 && center.y != HEIGHT2/2) {
-    if (rand()%4000 == 0) {
+    int random = rand()%10000;
+    if (random < 100 && random <= center.y/GAME_HEIGHT) {
         int immunity_idx = -1;
         for (int i = 0; i < scene_bodies(scene); i++) {
             body_t *body = scene_get_body(scene, i);
@@ -222,7 +221,6 @@ void more_enemies(scene_t *scene, vector_t center) {
             body_t *immunity = scene_get_body(scene, immunity_idx);
             create_immunity_collision(scene, 0, immunity, enemy);
         }
-        // add enemy collision here
     }
 }
 
@@ -439,8 +437,10 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
     // }
 
     // calculate and display score
-    if (scene_textboxes(scene) > 1) {
-        scene_remove_text(scene, scene_get_text(scene, scene_textboxes(scene) - 1));
+    if (scene_textboxes(scene) >= 1) {
+        for (size_t i = 0; i < scene_textboxes(scene); i++) {
+            scene_remove_text(scene, scene_get_text(scene, i));
+        }
     }
     strcpy(score, "Score: ");
     curr = calculate_score(*center);
@@ -476,7 +476,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
     // shifting the viewing window if the doodle goes higher than the center
     if (body_get_centroid(doodle).y > center->y) {
         // generates more platforms
-        
+
         if (more_platforms(scene, *center, *powerup_timer)) {
             *powerup_timer = 0;
         }
@@ -512,7 +512,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             }
         }
     }
-    
+
     if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
         (*timer)++;
     }
@@ -531,7 +531,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         else {
             change_motion(doodle, scene_get_sprite(scene, 1));
         }
-        
+
         *timer = 0;
     }
     wrap(doodle);

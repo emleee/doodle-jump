@@ -13,7 +13,7 @@
 const double BOOST = -300;
 const double BOOST_POWERUP = 1000;
 const double DOODLE_HEIGHT2 = 148.0;
-const double ERROR = 5;
+const double SCREEN_HEIGHT = 960.0;
 
 void gravity(void *a) {
     force_aux_t *aux = (force_aux_t *)a;
@@ -45,18 +45,20 @@ void create_newtonian_gravity(scene_t *scene, double G, body_t *body1, body_t *b
 
 void magnet(void *a) {
     force_aux_t *aux = (force_aux_t *)a;
-    double G = force_aux_get_constant(aux);
+    double k = force_aux_get_constant(aux);
     list_t *bodies = force_aux_get_bodies(aux);
     body_t *body1 = list_get(bodies, 0);
     body_t *body2 = list_get(bodies, 1);
-    vector_t between = vec_subtract(body_get_centroid(body2), body_get_centroid(body1));
+    vector_t centroid1 = body_get_centroid(body1);
+    vector_t centroid2 = body_get_centroid(body2);
+    // printf("%f %f %f\n", centroid2.y, centroid1.y, SCREEN_HEIGHT/2);
+    if (fabs(centroid2.y - centroid1.y) > SCREEN_HEIGHT/2) {
+        return;
+    }
+    vector_t between = vec_subtract(centroid2, centroid1);
     double distance = sqrt(vec_dot(between, between));
-    // if (distance < 5) {
-    //     return;
-    // }
-    vector_t force = vec_multiply(-1 * G * body_get_mass(body1) * body_get_mass(body2) / distance / distance / distance, between);
-    // body_add_force(body2, force);
-    body_add_force(body1, vec_negate(force));
+    vector_t force = vec_multiply(-1 * k * body_get_mass(body1) * body_get_mass(body2) / distance / distance / distance, between);
+    body_add_force(body2, force);
 }
 
 void create_magnetic_force(scene_t *scene, double k, body_t *body1, body_t *body2) {
@@ -68,7 +70,7 @@ void create_magnetic_force(scene_t *scene, double k, body_t *body1, body_t *body
     list_add(bodies2, body1);
     list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
-    scene_add_bodies_force_creator(scene, gravity, aux, bodies2, (free_func_t)force_aux_free);
+    scene_add_bodies_force_creator(scene, magnet, aux, bodies2, (free_func_t)force_aux_free);
 }
 
 void downward_gravity(void *a) {
@@ -228,13 +230,6 @@ void create_destructive_collision(scene_t *scene, body_t *body1, body_t *body2) 
 }
 
 void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    // force_aux_t *a = (force_aux_t *)aux;
-    // double mass1 = body_get_mass(body1);
-    // vector_t v1 = body_get_velocity(body1);
-    // v1.y = 0;
-    // body_set_velocity(body1, v1);
-    // double impulse = mass1 * BOOST;
-    // body_add_impulse(body1, vec_multiply(impulse, axis));
     force_aux_t *a = (force_aux_t *)aux;
     double c = force_aux_get_constant(a);
     double mass1 = body_get_mass(body1);
