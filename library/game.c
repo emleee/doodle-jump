@@ -275,7 +275,6 @@ scene_t *make_game_scene() {
 
     vector_t center = {.x = GAME_WIDTH/2, .y = -1 * GAME_HEIGHT/2};
     more_platforms(scene, center, 0);
-
     return scene;
 }
 
@@ -315,6 +314,41 @@ body_t *make_pellet (vector_t center) {
     polygon_translate(points, center);
     body_t *pellet = body_init_with_info(points, 5, GAME_DOODLE_COLOR, info, free);
     return pellet;
+}
+
+bool first_time_play () {
+    FILE* file = fopen("first_time.txt", "r");
+
+    if (!file) {
+        return false;
+    }
+
+    char line[500];
+
+    while (fgets(line, sizeof(line), file)) {
+        if (strcmp(line, "YES\n") == 0) {
+            // printf("sound is true");
+            fclose(file);
+            return true;
+        }
+        else if (strcmp(line, "NO\n") == 0) {
+            // printf("sound is false");
+            fclose(file);
+            return false;
+        }
+    }
+    // printf("sound is closed");
+    fclose(file);
+    return false;
+}
+
+void set_first_time() {
+    FILE *fp = fopen("first_time.txt", "w"); // opening of file
+    if (!fp) {
+        return;
+    }
+    fprintf(fp, "NO\n");
+    fclose(fp);
 }
 
 void create_star(scene_t *scene) {
@@ -409,133 +443,171 @@ void star_score(scene_t *scene) {
     }
 }
 
-void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score) {
-    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    bool enemy_present = false;
-    vector_t *scoring = malloc(sizeof(vector_t));
-    scoring->x = 80; // magic numbers
-    scoring->y = 20;
-    double curr = 0.0;
-    char *buffer = malloc(100*sizeof(char));
-    // generate a star once in a while
-    if (*star_timer == 200) {
-        create_star(scene);
-        *star_timer = 0;
-    }
-    (*star_timer)++;
-    star_score(scene);
-    bool success = false;
-    body_t *powerup = NULL;
-    magnet_powerup(scene, powerup_timer);
-    immunity_powerup(scene, powerup_timer);
-    if (*powerup_timer == 1200) {
-        powerup = make_powerup(scene);
-        *powerup_timer = 0;
-    }
-    // if (powerup != NULL && body_get_second_info(powerup) != NULL && strcmp(body_get_second_info(powerup), "equipped") ==0) {
-    //     printf("equipped");
-    // }
-
-    // calculate and display score
-    if (scene_textboxes(scene) >= 1) {
-        for (size_t i = 0; i < scene_textboxes(scene); i++) {
-            scene_remove_text(scene, scene_get_text(scene, i));
+void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, int *instructions_timer, vector_t *center, char *score) {
+    bool first_time = first_time_play();
+    if (first_time) {
+        body_t *first = NULL;
+        body_t *second = NULL;
+        if (*instructions_timer == 0) {
+            vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+            list_t *shape = make_rectangle(center, 500, 500);
+            char *info = malloc(sizeof(char)*6);
+            strcpy(info, "first");
+            body_t *first = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+            sprite_t *sprite = create_sprite("PNGs/Game_Instructions_1.png", 500, 500);
+            body_set_sprite(first, sprite);
+            body_set_centroid(first, center);
+            scene_add_body(scene, first);
+        }
+        if (*instructions_timer == 100) {
+            scene_remove_body(scene, scene_bodies(scene)-1);
+            vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+            list_t *shape = make_rectangle(center, 500, 500);
+            char *info = malloc(sizeof(char)*7);
+            strcpy(info, "second");
+            body_t *second = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+            sprite_t *sprite = create_sprite("PNGs/Game_Instructions_2.png", 500, 500);
+            body_set_sprite(second, sprite);
+            body_set_centroid(second, center);
+            scene_add_body(scene, second); 
+        }
+        if (*instructions_timer == 200 ){
+            scene_remove_body(scene, scene_bodies(scene)-1);
+            free(instructions_timer);
+            set_first_time();
+        }
+        else {
+            (*instructions_timer)++;
         }
     }
-    strcpy(score, "Score: ");
-    curr = calculate_score(*center);
-
-    sprintf(buffer, "%.1f", curr);
-    strcat(score, buffer);
-    if (get_score_preference()) {
-        text_t *scorebox = text_create(score, color, 30, scoring);
-        scene_add_text(scene, scorebox);
-    }
-
-    double dt = time_since_last_tick();
-    *powerup_timer += 1;
-    if (!in_screen(*center, doodle)) {
-        char *restart_info = malloc(8*sizeof(char));
-        strcpy(restart_info, "restart");
-        scene_set_next_info(scene, restart_info);
-    }
-
-    for(int i = 3; i < scene_bodies(scene); i++) {
-        body_t *body = scene_get_body(scene, i);
-        if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
-            enemy_present = true;
+    else {
+        rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+        bool enemy_present = false;
+        vector_t *scoring = malloc(sizeof(vector_t));
+        scoring->x = 80; // magic numbers
+        scoring->y = 20;
+        double curr = 0.0;
+        char *buffer = malloc(100*sizeof(char));
+        // generate a star once in a while
+        if (*star_timer == 200) {
+            create_star(scene);
+            *star_timer = 0;
         }
-        if (!in_screen(*center, body)) {
-            scene_remove_body(scene, i);
-        }
-        if (strcmp(body_get_info(body), "sliding platform") == 0) {
-            sliding_bounce(body);
-        }
-    }
-
-    // shifting the viewing window if the doodle goes higher than the center
-    if (body_get_centroid(doodle).y > center->y) {
-        // generates more platforms
-
-        if (more_platforms(scene, *center, *powerup_timer)) {
+        (*star_timer)++;
+        star_score(scene);
+        bool success = false;
+        body_t *powerup = NULL;
+        magnet_powerup(scene, powerup_timer);
+        immunity_powerup(scene, powerup_timer);
+        if (*powerup_timer == 1200) {
+            powerup = make_powerup(scene);
             *powerup_timer = 0;
         }
-        if (!enemy_present) {
-            more_enemies(scene, *center);
-        }
-        center->y = body_get_centroid(doodle).y;
-        sdl_set_center(*center);
-        for (int i = 1; i < 3; i++) {
-            body_t *background = scene_get_body(scene, i);
-            vector_t centroid = body_get_centroid(background);
-            if (centroid.y <= center->y - GAME_HEIGHT/2) {
-                centroid.y += GAME_HEIGHT*2;
-                body_set_centroid(background, centroid);
-            }
-        }
-    }
-    enemy_present = false;
+        // if (powerup != NULL && body_get_second_info(powerup) != NULL && strcmp(body_get_second_info(powerup), "equipped") ==0) {
+        //     printf("equipped");
+        // }
 
-    if (*powerup_timer == MAGNET_TIMER) {
-        for (int i = 0; i < scene_bodies(scene); i++) {
-            if (strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0) {
-                body_set_velocity(scene_get_body(scene, i), VEC_ZERO);
-            }
-            if (strcmp(body_get_info(scene_get_body(scene, i)), "magnet") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
-                scene_remove_body(scene, i);
-            }
-            if (strcmp(body_get_info(scene_get_body(scene, i)), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
-                scene_remove_body(scene, i);
-            }
-            if (strcmp(body_get_info(scene_get_body(scene, i)), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
-                scene_remove_body(scene, i);
+        // calculate and display score
+        if (scene_textboxes(scene) >= 1) {
+            for (size_t i = 0; i < scene_textboxes(scene); i++) {
+                scene_remove_text(scene, scene_get_text(scene, i));
             }
         }
-    }
+        strcpy(score, "Score: ");
+        curr = calculate_score(*center);
 
-    if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
-        (*timer)++;
-    }
-    if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
-        if (body_get_direction(doodle) == 0) {
-            change_motion(doodle, scene_get_sprite(scene, 2));
-        }
-        else {
-            change_motion(doodle, scene_get_sprite(scene, 3));
-        }
-    }
-    else if (*timer == 25) {
-        if (body_get_direction(doodle) == 0) {
-            change_motion(doodle, scene_get_sprite(scene, 0));
-        }
-        else {
-            change_motion(doodle, scene_get_sprite(scene, 1));
+        sprintf(buffer, "%.1f", curr);
+        strcat(score, buffer);
+        if (get_score_preference()) {
+            text_t *scorebox = text_create(score, color, 30, scoring);
+            scene_add_text(scene, scorebox);
         }
 
-        *timer = 0;
+        double dt = time_since_last_tick();
+        *powerup_timer += 1;
+        if (!in_screen(*center, doodle)) {
+            char *restart_info = malloc(8*sizeof(char));
+            strcpy(restart_info, "restart");
+            scene_set_next_info(scene, restart_info);
+        }
+
+        for(int i = 3; i < scene_bodies(scene); i++) {
+            body_t *body = scene_get_body(scene, i);
+            if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
+                enemy_present = true;
+            }
+            if (!in_screen(*center, body)) {
+                scene_remove_body(scene, i);
+            }
+            if (strcmp(body_get_info(body), "sliding platform") == 0) {
+                sliding_bounce(body);
+            }
+        }
+
+        // shifting the viewing window if the doodle goes higher than the center
+        if (body_get_centroid(doodle).y > center->y) {
+            // generates more platforms
+
+            if (more_platforms(scene, *center, *powerup_timer)) {
+                *powerup_timer = 0;
+            }
+            if (!enemy_present) {
+                more_enemies(scene, *center);
+            }
+            center->y = body_get_centroid(doodle).y;
+            sdl_set_center(*center);
+            for (int i = 1; i < 3; i++) {
+                body_t *background = scene_get_body(scene, i);
+                vector_t centroid = body_get_centroid(background);
+                if (centroid.y <= center->y - GAME_HEIGHT/2) {
+                    centroid.y += GAME_HEIGHT*2;
+                    body_set_centroid(background, centroid);
+                }
+            }
+        }
+        enemy_present = false;
+
+        if (*powerup_timer == MAGNET_TIMER) {
+            for (int i = 0; i < scene_bodies(scene); i++) {
+                if (strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0) {
+                    body_set_velocity(scene_get_body(scene, i), VEC_ZERO);
+                }
+                if (strcmp(body_get_info(scene_get_body(scene, i)), "magnet") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+                    scene_remove_body(scene, i);
+                }
+                if (strcmp(body_get_info(scene_get_body(scene, i)), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+                    scene_remove_body(scene, i);
+                }
+                if (strcmp(body_get_info(scene_get_body(scene, i)), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
+                    scene_remove_body(scene, i);
+                }
+            }
+        }
+
+        if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
+            (*timer)++;
+        }
+        if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
+            if (body_get_direction(doodle) == 0) {
+                change_motion(doodle, scene_get_sprite(scene, 2));
+            }
+            else {
+                change_motion(doodle, scene_get_sprite(scene, 3));
+            }
+        }
+        else if (*timer == 25) {
+            if (body_get_direction(doodle) == 0) {
+                change_motion(doodle, scene_get_sprite(scene, 0));
+            }
+            else {
+                change_motion(doodle, scene_get_sprite(scene, 1));
+            }
+
+            *timer = 0;
+        }
+        wrap(doodle);
+        scene_tick(scene, dt);
+        free(buffer);
     }
-    wrap(doodle);
-    scene_tick(scene, dt);
     sdl_render_scene(scene);
-    free(buffer);
 }

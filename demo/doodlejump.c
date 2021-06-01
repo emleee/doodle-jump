@@ -115,6 +115,8 @@ int main() {
     *powerup_timer = 0;
     int *star_timer = malloc(sizeof(int));
     *star_timer = 0;
+    int *instructions_timer = malloc(sizeof(int));
+    *instructions_timer = 0;
     int star_score = 0;
 
     int start_timer = 0;
@@ -122,7 +124,6 @@ int main() {
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
     scene_t *scene = make_start_scene();
-
     vector_t *center = malloc(sizeof(vector_t));
     center->x = WIDTH2/2;
     center->y = HEIGHT2/2;
@@ -152,7 +153,7 @@ int main() {
                 free(score);
                 free(timer);
                 free(powerup_timer);
-                free(star_timer);
+                free(star_timer); // what happens if we quit before it finished intructions
                 timer = malloc(sizeof(int));
                 *timer = 0;
                 powerup_timer = malloc(sizeof(int));
@@ -193,7 +194,7 @@ int main() {
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-            game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
+            game_main(scene, doodle, star_timer, powerup_timer, timer, instructions_timer, center, score);
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
             start_timer++;

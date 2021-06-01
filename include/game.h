@@ -49,6 +49,8 @@ double calculate_score(vector_t center);
 
 void game_mouse_click (scene_t *scene, int x, int y);
 
-void game_main(scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score);
+void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, int *instructions_timer, vector_t *center, char *score);
 
+bool first_time_play ();
+void set_first_time();
 #endif // #ifndef __GAME_H__
