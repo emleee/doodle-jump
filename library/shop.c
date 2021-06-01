@@ -8,9 +8,9 @@ const vector_t HOME_CENTER = {.x = 360, .y = 650};
 const double SHOP_WIDTH = 720.0;
 const double SHOP_HEIGHT = 960.0;
 
-const int BOOST_PRICE = 50;
-const int IMMUNITY_PRICE = 100;
-const int MAGNET_PRICE = 75;
+const int BOOST_PRICE = 100;
+const int IMMUNITY_PRICE = 50;
+const int MAGNET_PRICE = 80;
 
 scene_t *make_shop_scene () {
     char *scene_info = malloc(5*sizeof(char));
@@ -27,6 +27,22 @@ scene_t *make_shop_scene () {
     point2->y = 650;
     text_t *text2 = text_create("Back to Home", color, 22, point2);
     scene_add_text(scene, text2);
+
+    // display a star and the amount of stars the user has
+    char *stars = malloc(10*sizeof(char));
+    sprintf(stars, "%i", get_star_count());
+    vector_t *position = malloc(sizeof(vector_t));
+    position->x = 110; // remove magic numbers
+    position->y = 40;
+    text_t *star_count = text_create(stars, color, 50, position);
+    scene_add_text(scene, star_count);
+
+    vector_t star_pos = {.x = 40, .y = SHOP_HEIGHT - 40};
+    star_t *starframe = make_star(star_pos, 5, 25); // magic number for num points, radius
+    rgb_color_t star_color = {.r = 1, .g = 1, .b = 0}; // make const for 'yellow' star color
+    body_t *star = body_init(get_points(starframe), 0.001, star_color);
+    scene_add_body(scene, star);
+
     body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
     body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*SHOP_HEIGHT});
     scene_add_body(scene, background1);
