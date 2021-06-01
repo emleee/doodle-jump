@@ -59,6 +59,10 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     body_t *doodle = body_init_with_sprite(shape, 10, color, info, free, doodle_sprite);
     body_set_centroid(doodle, center);
 
+    char *second_info = malloc(sizeof(char) * 5);
+    strcpy(second_info, "jump");
+    body_set_second_info(doodle, second_info);
+
     return doodle;
 }
 
@@ -115,10 +119,10 @@ void change_direction(body_t *body, sprite_t *sprite) {
     }
 }
 
-void change_motion(body_t *body, sprite_t *sprite) {
-    body_set_sprite(body, sprite);
-    body_set_centroid(body, body_get_centroid(body));
-}
+// void change_motion(body_t *body, sprite_t *sprite) {
+//     body_set_sprite(body, sprite);
+//     body_set_centroid(body, body_get_centroid(body));
+// }
 
 vector_t find_mouth(body_t *body) {
     vector_t centroid = body_get_centroid(body);

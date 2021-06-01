@@ -422,42 +422,47 @@ void star_score(scene_t *scene) {
     }
 }
 
+void instructions (scene_t *scene, int *instructions_timer) {
+    printf("%d\n", *instructions_timer);
+    body_t *first = NULL;
+    body_t *second = NULL;
+    if (*instructions_timer == 0) {
+        vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+        list_t *shape = make_rectangle(center, 500, 500);
+        char *info = malloc(sizeof(char)*6);
+        strcpy(info, "first");
+        body_t *first = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+        sprite_t *sprite = create_sprite("PNGs/Game_Instructions_1.png", 500, 500);
+        body_set_sprite(first, sprite);
+        body_set_centroid(first, center);
+        scene_add_body(scene, first);
+    }
+    if (*instructions_timer == 1500) {
+        scene_remove_body(scene, scene_bodies(scene)-1);
+        vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+        list_t *shape = make_rectangle(center, 500, 500);
+        char *info = malloc(sizeof(char)*7);
+        strcpy(info, "second");
+        body_t *second = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+        sprite_t *sprite = create_sprite("PNGs/Game_Instructions_2.png", 500, 500);
+        body_set_sprite(second, sprite);
+        body_set_centroid(second, center);
+        scene_add_body(scene, second); 
+    }
+    if (*instructions_timer == 3000){
+        scene_remove_body(scene, scene_bodies(scene)-1);
+        free(instructions_timer);
+        set_first_time();
+    }
+    else {
+        (*instructions_timer)++;
+    }
+}
+
 void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, int *instructions_timer, vector_t *center, char *score) {
     bool first_time = first_time_play();
     if (first_time) {
-        body_t *first = NULL;
-        body_t *second = NULL;
-        if (*instructions_timer == 0) {
-            vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
-            list_t *shape = make_rectangle(center, 500, 500);
-            char *info = malloc(sizeof(char)*6);
-            strcpy(info, "first");
-            body_t *first = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
-            sprite_t *sprite = create_sprite("PNGs/Game_Instructions_1.png", 500, 500);
-            body_set_sprite(first, sprite);
-            body_set_centroid(first, center);
-            scene_add_body(scene, first);
-        }
-        if (*instructions_timer == 100) {
-            scene_remove_body(scene, scene_bodies(scene)-1);
-            vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
-            list_t *shape = make_rectangle(center, 500, 500);
-            char *info = malloc(sizeof(char)*7);
-            strcpy(info, "second");
-            body_t *second = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
-            sprite_t *sprite = create_sprite("PNGs/Game_Instructions_2.png", 500, 500);
-            body_set_sprite(second, sprite);
-            body_set_centroid(second, center);
-            scene_add_body(scene, second); 
-        }
-        if (*instructions_timer == 200 ){
-            scene_remove_body(scene, scene_bodies(scene)-1);
-            free(instructions_timer);
-            set_first_time();
-        }
-        else {
-            (*instructions_timer)++;
-        }
+        instructions(scene, instructions_timer);
     }
     else {
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
@@ -479,12 +484,12 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         magnet_powerup(scene, powerup_timer);
         immunity_powerup(scene, powerup_timer);
         if (*powerup_timer == 1200) {
-            powerup = make_powerup(scene);
+            bool powerup_pref = get_powerup_preference();
+            if (powerup_pref) {
+                powerup = make_powerup(scene);
+            }
             *powerup_timer = 0;
         }
-        // if (powerup != NULL && body_get_second_info(powerup) != NULL && strcmp(body_get_second_info(powerup), "equipped") ==0) {
-        //     printf("equipped");
-        // }
 
         // calculate and display score
         if (scene_textboxes(scene) >= 1) {
@@ -523,7 +528,34 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             }
         }
 
-<<<<<<< HEAD
+        for (int i = 0; i < scene_bodies(scene); i++) {
+            body_t *body = scene_get_body(scene, i);
+            body_t *doodle = scene_get_body(scene, 0);
+            if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+                char *new_info = malloc(sizeof(char) * 7);
+                strcpy(new_info, "winged");
+                body_set_second_info(doodle, new_info);
+                if (body_get_direction(doodle) == 0) {
+                    body_set_sprite(doodle, scene_get_sprite(scene, 2));
+                }
+                else {
+                    body_set_sprite(doodle, scene_get_sprite(scene, 3));
+                }
+            }
+        }
+
+        if (body_get_second_info(doodle) != NULL && strcmp(body_get_second_info(doodle), "winged") == 0 && within(1, body_get_velocity(doodle).y, 0)) {
+            char *new_info = malloc(sizeof(char) * 5);
+            strcpy(new_info, "jump");
+            body_set_second_info(doodle, new_info);
+            if (body_get_direction(doodle) == 0) {
+                    body_set_sprite(doodle, scene_get_sprite(scene, 0));
+                }
+                else {
+                    body_set_sprite(doodle, scene_get_sprite(scene, 1));
+                }
+        }
+
         // shifting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center->y) {
             // generates more platforms
@@ -564,55 +596,30 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             }
         }
 
-        if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
-            (*timer)++;
-        }
-        if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
-            if (body_get_direction(doodle) == 0) {
-                change_motion(doodle, scene_get_sprite(scene, 2));
-            }
-            else {
-                change_motion(doodle, scene_get_sprite(scene, 3));
-            }
-        }
-        else if (*timer == 25) {
-            if (body_get_direction(doodle) == 0) {
-                change_motion(doodle, scene_get_sprite(scene, 0));
-            }
-            else {
-                change_motion(doodle, scene_get_sprite(scene, 1));
-            }
+        // if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
+        //     (*timer)++;
+        // }
+        // if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
+        //     if (body_get_direction(doodle) == 0) {
+        //         change_motion(doodle, scene_get_sprite(scene, 2));
+        //     }
+        //     else {
+        //         change_motion(doodle, scene_get_sprite(scene, 3));
+        //     }
+        // }
+        // else if (*timer == 25) {
+        //     if (body_get_direction(doodle) == 0) {
+        //         change_motion(doodle, scene_get_sprite(scene, 0));
+        //     }
+        //     else {
+        //         change_motion(doodle, scene_get_sprite(scene, 1));
+        //     }
 
-            *timer = 0;
-        }
+        //     *timer = 0;
+        // }
         wrap(doodle);
         scene_tick(scene, dt);
         free(buffer);
     }
-=======
-    // if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
-    //     (*timer)++;
-    // }
-    // if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
-    //     if (body_get_direction(doodle) == 0) {
-    //         change_motion(doodle, scene_get_sprite(scene, 2));
-    //     }
-    //     else {
-    //         change_motion(doodle, scene_get_sprite(scene, 3));
-    //     }
-    // }
-    // else if (*timer == 25) {
-    //     if (body_get_direction(doodle) == 0) {
-    //         change_motion(doodle, scene_get_sprite(scene, 0));
-    //     }
-    //     else {
-    //         change_motion(doodle, scene_get_sprite(scene, 1));
-    //     }
-
-    //     *timer = 0;
-    // }
-    wrap(doodle);
-    scene_tick(scene, dt);
->>>>>>> bd284dc86273008ec92e7785a95ef26c3dae5729
     sdl_render_scene(scene);
 }

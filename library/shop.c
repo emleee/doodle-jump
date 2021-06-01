@@ -48,7 +48,7 @@ int get_star_count() {
     FILE *star_file = fopen("stars.txt", "r+");
     if (star_file == NULL) {
         printf("NULL file.\n");
-        return;
+        return 1;
     }
     char *star_reading = malloc(10*sizeof(char));
     char **throwaway = malloc(sizeof(char *));
@@ -56,7 +56,7 @@ int get_star_count() {
     int num_stars;
     if (fgets(star_reading, 5, star_file) == NULL) {
         printf("Error.\n");
-        return;
+        return 1;
     }
     else {
         star_reading[6] = '\0';

@@ -13,9 +13,13 @@ bool get_sound_preference();
 
 bool get_score_preference();
 
+bool get_powerup_preference();
+
 void switch_sound_preferences ();
 
 void switch_score_preferences ();
+
+void switch_powerup_preferences ();
 
 void update_preferences();
 

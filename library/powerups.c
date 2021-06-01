@@ -1,4 +1,5 @@
 #include "powerups.h"
+#include "game.h"
 
 const rgb_color_t BOOST_COLOR = {.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
 const rgb_color_t IMMUNITY_COLOR = {.r = 0.54, .g = 0.54, .b = 0.54};
@@ -66,8 +67,7 @@ body_t *make_powerup(scene_t *scene) {
     int num_powerups = 0;
     for (int i = 0; i < scene_bodies(scene); i++) {
         body_t *body = scene_get_body(scene, i);
-        char *info = body_get_info(body);
-        if (strcmp(info, "boost") == 0 || strcmp(info, "immunity") == 0 || strcmp(info, "magnet") == 0) {
+        if (is_powerup(body)) {
             num_powerups++;
         }
     }
@@ -160,7 +160,7 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     body_t *magnet = body_init_with_info(shape, INFINITY, MAGNET_COLOR, info, free);
     body_set_centroid(magnet, center);
     scene_add_body(scene, magnet);
-    if (!collected & strcmp(scene_get_info(scene), "game") == 0) {
+    if (!collected && strcmp(scene_get_info(scene), "game") == 0) {
         create_powerup_collision(scene, 0, doodle, magnet);
     }
     return magnet;
