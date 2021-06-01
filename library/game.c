@@ -219,10 +219,10 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
-    // sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 1316/8, 1117/8);
-    // sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 1316/8, 1117/8);;
-    // scene_add_sprite(scene, right_crouch);
-    // scene_add_sprite(scene, left_crouch);
+    sprite_t *right_wing = create_sprite("PNGs/Winged_Right.png", 1262/8, 1653/8);
+    sprite_t *left_wing = create_sprite("PNGs/Winged_Left.png", 1262/8, 1653/8);;
+    scene_add_sprite(scene, right_wing);
+    scene_add_sprite(scene, left_wing);
 
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
