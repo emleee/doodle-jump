@@ -113,13 +113,25 @@ double body_get_direction(body_t *body) {
 void body_set_centroid(body_t *body, vector_t x) {
     polygon_translate(body->shape, vec_subtract(x, body->centroid));
     if (body->sprite != NULL) {
-        if (body->direction == 0 && strcmp(body->info, "doodle") == 0) {
-            vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), RIGHT_OFFSET);
-            sprite_set_center(body->sprite, sprite_pos);
+        if (body->info2 != NULL && strcmp(body->info2, "jump") == 0) {
+            if (body->direction == 0) {
+                vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), RIGHT_OFFSET);
+                sprite_set_center(body->sprite, sprite_pos);
+            }
+            else {
+                vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), LEFT_OFFSET);
+                sprite_set_center(body->sprite, sprite_pos);
+            }
         }
-        else if (body->direction == M_PI && strcmp(body->info, "doodle") == 0){
-            vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), LEFT_OFFSET);
-            sprite_set_center(body->sprite, sprite_pos);
+        else if (body->info2 != NULL && strcmp(body->info2, "winged") == 0) {
+            if (body->direction == 0) {
+                vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), LEFT_OFFSET);
+                sprite_set_center(body->sprite, sprite_pos);
+            }
+            else {
+                vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), RIGHT_OFFSET);
+                sprite_set_center(body->sprite, sprite_pos);
+            }
         }
         else if (strcmp(body->info, "background") == 0) {
             vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), (vector_t){.x = 360, .y = 480});

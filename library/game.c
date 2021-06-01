@@ -240,10 +240,10 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
-    // sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 1316/8, 1117/8);
-    // sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 1316/8, 1117/8);;
-    // scene_add_sprite(scene, right_crouch);
-    // scene_add_sprite(scene, left_crouch);
+    sprite_t *right_boost = create_sprite("PNGs/Winged_Right.png", 1262/8, 1653/8);
+    sprite_t *left_boost = create_sprite("PNGs/Winged_Left.png", 1262/8, 1653/8);;
+    scene_add_sprite(scene, right_boost);
+    scene_add_sprite(scene, left_boost);
 
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
@@ -471,6 +471,34 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         if (strcmp(body_get_info(body), "sliding platform") == 0) {
             sliding_bounce(body);
         }
+    }
+
+    for (int i = 0; i < scene_bodies(scene); i++) {
+        body_t *body = scene_get_body(scene, i);
+        body_t *doodle = scene_get_body(scene, 0);
+        if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+            char *new_info = malloc(sizeof(char) * 7);
+            strcpy(new_info, "winged");
+            body_set_second_info(doodle, new_info);
+            if (body_get_direction(doodle) == 0) {
+                body_set_sprite(doodle, scene_get_sprite(scene, 2));
+            }
+            else {
+                body_set_sprite(doodle, scene_get_sprite(scene, 3));
+            }
+        }
+    }
+
+    if (body_get_second_info(doodle) != NULL && strcmp(body_get_second_info(doodle), "winged") == 0 && within(1, body_get_velocity(doodle).y, 0)) {
+        char *new_info = malloc(sizeof(char) * 5);
+        strcpy(new_info, "jump");
+        body_set_second_info(doodle, new_info);
+        if (body_get_direction(doodle) == 0) {
+                body_set_sprite(doodle, scene_get_sprite(scene, 0));
+            }
+            else {
+                body_set_sprite(doodle, scene_get_sprite(scene, 1));
+            }
     }
 
     // shifting the viewing window if the doodle goes higher than the center
