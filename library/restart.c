@@ -13,6 +13,26 @@
 const double RESTART_HEIGHT = 960.0;
 const double VELOCITY_X = 600;
 
+const vector_t RESTART_BUTTON = {.x = 250, .y = 400};
+const vector_t HOME_BUTTON = {.x = 250, .y = 425};
+
+void restart_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
+    if (x < (RESTART_BUTTON.x + button_x_radius) && x > (RESTART_BUTTON.x - button_x_radius)) {
+        if (y < (RESTART_BUTTON.y + button_y_radius) && y > (RESTART_BUTTON.y - button_y_radius)) {
+            char *game_info = malloc(5*sizeof(char));
+            strcpy(game_info, "game");
+            scene_set_next_info(scene, game_info);
+        }
+    }
+    if (x < (HOME_BUTTON.x + button_x_radius) && x > (HOME_BUTTON.x - button_x_radius)) {
+        if (y < (HOME_BUTTON.y + button_y_radius) && y > (HOME_BUTTON.y - button_y_radius)) {
+            char *start_info = malloc(6*sizeof(char));
+            strcpy(start_info, "start");
+            scene_set_next_info(scene, start_info);
+        }
+    }
+}
+
 scene_t *make_restart_scene(char *score) { // add something to keep track score vs high score and the falling/sad doodle
     char *scene_info = malloc(8*sizeof(char));
     strcpy(scene_info, "restart");

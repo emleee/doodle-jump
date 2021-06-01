@@ -19,6 +19,6 @@ void switch_score_preferences ();
 
 void update_preferences();
 
-void settings_mouse_click (scene_t *scene, int x, int y);
+void settings_mouse_click (scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
 
 #endif // #ifndef __PREFERENCES_H__

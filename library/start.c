@@ -33,8 +33,6 @@ const double START_G = -150.0;
 const vector_t START_BUTTON = {.x = 360, .y = 245};
 const vector_t SHOP_BUTTON = {.x = 360, .y = 425};
 const vector_t SETTINGS_BUTTON = {.x = 360, .y = 588};
-const double START_BUTTON_X_RADIUS = 125;
-const double START_BUTTON_Y_RADIUS = 75;
 
 scene_t *make_start_scene() {
     char *scene_info = malloc(6*sizeof(char));
@@ -102,23 +100,23 @@ scene_t *make_start_scene() {
     return scene;
 }
 
-void start_mouse_click(scene_t *scene, int x, int y){
-    if (x < (START_BUTTON.x + START_BUTTON_X_RADIUS) && x > (START_BUTTON.x - START_BUTTON_X_RADIUS)) {
-        if (y < (START_BUTTON.y + START_BUTTON_Y_RADIUS) && y > (START_BUTTON.y - START_BUTTON_Y_RADIUS)) {
+void start_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius){
+    if (x < (START_BUTTON.x + button_x_radius) && x > (START_BUTTON.x - button_x_radius)) {
+        if (y < (START_BUTTON.y + button_y_radius) && y > (START_BUTTON.y - button_y_radius)) {
             char *game_info = malloc(5*sizeof(char));
             strcpy(game_info, "game");
             scene_set_next_info(scene, game_info);
         }
     }
-    if (x < (SETTINGS_BUTTON.x + START_BUTTON_X_RADIUS) && x > (SETTINGS_BUTTON.x - START_BUTTON_X_RADIUS)) {
-        if (y < (SETTINGS_BUTTON.y + START_BUTTON_Y_RADIUS) && y > (SETTINGS_BUTTON.y - START_BUTTON_Y_RADIUS)) {
+    if (x < (SETTINGS_BUTTON.x + button_x_radius) && x > (SETTINGS_BUTTON.x - button_x_radius)) {
+        if (y < (SETTINGS_BUTTON.y + button_y_radius) && y > (SETTINGS_BUTTON.y - button_y_radius)) {
             char *settings_info = malloc(9*sizeof(char));
             strcpy(settings_info, "settings");
             scene_set_next_info(scene, settings_info);
         }
     }
-    if (x < (SHOP_BUTTON.x + START_BUTTON_X_RADIUS) && x > (SHOP_BUTTON.x - START_BUTTON_X_RADIUS)) {
-        if (y < (SHOP_BUTTON.y + START_BUTTON_Y_RADIUS) && y > (SHOP_BUTTON.y - START_BUTTON_Y_RADIUS)) {
+    if (x < (SHOP_BUTTON.x + button_x_radius) && x > (SHOP_BUTTON.x - button_x_radius)) {
+        if (y < (SHOP_BUTTON.y + button_y_radius) && y > (SHOP_BUTTON.y - button_y_radius)) {
             char *shop_info = malloc(5*sizeof(char));
             strcpy(shop_info, "shop");
             scene_set_next_info(scene, shop_info);
