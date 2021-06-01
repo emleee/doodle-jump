@@ -1,6 +1,4 @@
 #include "forces.h"
-#include "body.h"
-#include "scene.h"
 #include "force_aux.h"
 #include <math.h>
 #include <stdlib.h>

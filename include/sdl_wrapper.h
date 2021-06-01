@@ -2,15 +2,9 @@
 #define __SDL_WRAPPER_H__
 
 #include <stdbool.h>
-#include "color.h"
-#include "list.h"
 #include "scene.h"
-#include "vector.h"
-#include "text.h"
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
-#include "sprite.h"
-#include "body.h"
 
 // Values passed to a key handler when the given arrow key is pressed
 typedef enum {

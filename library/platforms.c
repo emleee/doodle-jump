@@ -1,16 +1,4 @@
-#include <stddef.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include "polygon.h"
-#include "color.h"
-#include "list.h"
-#include <time.h>
-#include <stdio.h>
-#include "forces.h"
-#include "collision.h"
-#include "game_sprites.h"
+#include "platforms.h"
 #include "sdl_wrapper.h"
 
 const double WINDOW_LENGTH = 720.0;

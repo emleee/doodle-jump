@@ -1,12 +1,9 @@
 #include "body.h"
 #include "polygon.h"
-#include "list.h"
-#include "vector.h"
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <math.h>
-#include <sprite.h>
 #include "game_sprites.h"
 #include "sdl_wrapper.h"
 
