@@ -1,5 +1,6 @@
 #include "game.h"
 #include "star.h"
+#include "shop.h"
 
 const double GAME_WIDTH = 720.0;
 const double GAME_HEIGHT = 960.0;
@@ -465,6 +466,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         instructions(scene, instructions_timer);
     }
     else {
+        use_inventory(scene);
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         bool enemy_present = false;
         vector_t *scoring = malloc(sizeof(vector_t));

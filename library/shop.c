@@ -63,6 +63,20 @@ scene_t *make_shop_scene () {
     body_t *immunity_star = body_init_with_info(get_points(immunity_starframe), INFINITY, star_color, immunity_star_info, free);
     scene_add_body(scene, immunity_star);
 
+    // display a star and the amount of stars the user has
+    char *stars = malloc(10*sizeof(char));
+    sprintf(stars, "%i", get_star_count());
+    vector_t *position = malloc(sizeof(vector_t));
+    position->x = 110; // remove magic numbers
+    position->y = 40;
+    text_t *star_count = text_create(stars, text_color, 50, position);
+    scene_add_text(scene, star_count);
+
+    vector_t star_pos = {.x = 40, .y = SHOP_HEIGHT - 40};
+    star_t *starframe = make_star(star_pos, 5, 25); // magic number for num points, radius
+    body_t *star = body_init(get_points(starframe), 0.001, star_color);
+    // scene_add_body(scene, star);
+
     body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
     body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*SHOP_HEIGHT});
     scene_add_body(scene, background1);
@@ -71,37 +85,26 @@ scene_t *make_shop_scene () {
     return scene;
 }
 
-void *shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
+void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
     // if immunity clicked
-    if (x < (BOOST_CENTER.x + button_x_radius) && x > (BOOST_CENTER.x - button_x_radius)) {
-        if (y < (BOOST_CENTER.y + button_y_radius) && y > (BOOST_CENTER.y - button_y_radius)) {
-            // char *start_info = malloc(6*sizeof(char));
-            // strcpy(start_info, "start");
-            // scene_set_next_info(scene, start_info);
+    printf("%d\n", x);
+    printf("%d\n", y);
+    if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
+        if (y < (310 + button_y_radius) && y > (310 - button_y_radius)) {
             buy_boost();
+            
         }
     }
-    if (x < (MAGNET_CENTER.x + button_x_radius) && x > (MAGNET_CENTER.x - button_x_radius)) {
-        if (y < (MAGNET_CENTER.y + button_y_radius) && y > (MAGNET_CENTER.y - button_y_radius)) {
-            // char *start_info = malloc(6*sizeof(char));
-            // strcpy(start_info, "start");
-            // scene_set_next_info(scene, start_info);
+    if (x < (500 + button_x_radius) && x > (500 - button_x_radius)) {
+        if (y < (450 + button_y_radius) && y > (450 - button_y_radius)) {
             buy_magnet();
         }
     }
-    if (x < (IMMUNITY_CENTER.x + button_x_radius) && x > (IMMUNITY_CENTER.x - button_x_radius)) {
-        if (y < (IMMUNITY_CENTER.y + button_y_radius) && y > (IMMUNITY_CENTER.y - button_y_radius)) {
-            // char *start_info = malloc(6*sizeof(char));
-            // strcpy(start_info, "start");
-            // scene_set_next_info(scene, start_info);
+    if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
+        if (y < (550 + button_y_radius) && y > (550 - button_y_radius)) {
             buy_immunity();
         }
     }
-    // buy_immunity();
-    // else if magnet clicked
-    // buy_magnet();
-    // else if boost clicked
-    // buy_boost();
 }
 
 int get_star_count() {
@@ -123,6 +126,7 @@ int get_star_count() {
         num_stars = (int)strtod(star_reading, throwaway);
     }
     return num_stars;
+    fclose(star_file);
 }
 
 void change_star_count(int new_count) {
@@ -134,14 +138,16 @@ void change_star_count(int new_count) {
     sprintf(star_reading, "%i", new_count);
     fseek(star_file, 0, SEEK_SET);
     fputs(star_reading, star_file);
+    fclose(star_file);
 }
 
 void write_powerup(char *powerup) {
-    FILE *powerup_file = fopen("powerup.txt", "w");
+    FILE *powerup_file = fopen("inventory.txt", "w");
     if (powerup_file == NULL) {
         printf("NULL file.\n");
     }
     fputs(powerup, powerup_file);
+    fclose(powerup_file);
 }
 
 void buy_immunity() {
@@ -184,4 +190,33 @@ void buy_boost(){
         boost = "boost";
         write_powerup(boost);
     }
+}
+
+void use_inventory (scene_t *scene) {
+    body_t *doodle = scene_get_body(scene, 0);
+    vector_t center = body_get_centroid(doodle);
+    FILE* file = fopen("inventory.txt", "r");
+    if (!file) {
+        return;
+    }
+    char line[500];
+    while (fgets(line, sizeof(line), file)) {
+        if (strcmp(line, "boost") == 0) {
+            make_boost(scene, center);
+            fclose(file);
+            file = fopen("inventory.txt", "w");
+        }
+        else if (strcmp(line, "magnet") == 0) {
+            make_magnet(scene, center, false); //maybe false?
+            fclose(file);
+            file = fopen("inventory.txt", "w");
+        }
+        else if (strcmp(line, "immunity") == 0) {
+            make_immunity(scene, center, false); //maybe false?
+            fclose(file);
+            file = fopen("inventory.txt", "w");
+        }
+    }
+    // printf("sound is closed");
+    fclose(file);
 }
