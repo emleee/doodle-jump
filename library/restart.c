@@ -1,13 +1,3 @@
-#include <stddef.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include "color.h"
-#include <stdio.h>
-#include "sdl_wrapper.h"
-#include "text.h"
-#include "test_util.h"
 #include "restart.h"
 
 const double RESTART_HEIGHT = 960.0;
