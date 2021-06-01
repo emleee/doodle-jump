@@ -105,10 +105,10 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
             if ((new_height > center.y + GAME_HEIGHT/2) && (new_height < center.y + GAME_HEIGHT/2 + GAME_HEIGHT)) {
                 strcat(info2, " done");
                 vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
-                int random = rand()%4;
+                int random = rand()%40;
                 char *new_info1;
                 body_t *new_platform;
-                if (random == 0) {
+                if (random <= center.y/GAME_HEIGHT) {
                     new_info1 = malloc(17*sizeof(char));
                     strcpy(new_info1, "sliding platform");
                     new_platform = sliding_platform(platform_center, new_info1);
