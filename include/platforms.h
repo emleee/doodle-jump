@@ -2,7 +2,7 @@
 #include "forces.h"
 #include "collision.h"
 
-body_t *make_platform(vector_t center, rgb_color_t color, char *info);
+body_t *make_platform(vector_t center, rgb_color_t color, char *info, int width, int height, sprite_t *sprite);
 
 body_t *normal_platform(vector_t center, char *info);
 
