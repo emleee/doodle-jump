@@ -181,8 +181,8 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
 }
 
 void more_enemies(scene_t *scene, vector_t center) {
-    int random = rand()%10000;
-    if (random < 100 && random <= center.y/GAME_HEIGHT) {
+    int random = rand()%50000;
+    if (random < 15 && random <= center.y/GAME_HEIGHT) {
         int immunity_idx = -1;
         for (int i = 0; i < scene_bodies(scene); i++) {
             body_t *body = scene_get_body(scene, i);
