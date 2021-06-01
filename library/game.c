@@ -541,6 +541,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 else {
                     body_set_sprite(doodle, scene_get_sprite(scene, 3));
                 }
+                scene_remove_body(body);
             }
         }
 
