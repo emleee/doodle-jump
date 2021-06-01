@@ -423,7 +423,7 @@ void star_score(scene_t *scene) {
 }
 
 void instructions (scene_t *scene, int *instructions_timer) {
-    printf("%d\n", *instructions_timer);
+    // printf("%d\n", *instructions_timer);
     body_t *first = NULL;
     body_t *second = NULL;
     if (*instructions_timer == 0) {
@@ -541,7 +541,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 else {
                     body_set_sprite(doodle, scene_get_sprite(scene, 3));
                 }
-                scene_remove_body(body);
+                body_remove(body);
             }
         }
 
@@ -622,5 +622,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         scene_tick(scene, dt);
         free(buffer);
     }
+    
     sdl_render_scene(scene);
 }
