@@ -1,7 +1,6 @@
 #ifndef __FORCE_AUX_H__
 #define __FORCE_AUX_H__
 
-#include "list.h"
 #include "body.h"
 
 /**

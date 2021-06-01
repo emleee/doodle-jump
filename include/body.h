@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "color.h"
 #include "list.h"
-#include "vector.h"
 #include "sprite.h"
 
 /**

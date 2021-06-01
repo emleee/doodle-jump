@@ -1,7 +1,6 @@
 #ifndef __GAME_SPRITES_H__
 #define __GAME_SPRITES_H__
 
-#include "sprite.h"
 #include "vector.h"
 #include "body.h"
 

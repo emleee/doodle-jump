@@ -1,7 +1,4 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include "color.h"
-#include "vector.h"
+#include "text.h"
 
 typedef struct text {
     SDL_Surface *surface;

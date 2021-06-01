@@ -1,26 +1,5 @@
-#include <stddef.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include "polygon.h"
-#include "color.h"
-#include "list.h"
-#include <time.h>
-#include <stdio.h>
-#include "forces.h"
-#include "collision.h"
-#include "platforms.h"
-#include "sdl_wrapper.h"
-#include "game_sprites.h"
-#include "SDL2/SDL_mixer.h"
-#include "text.h"
-#include "test_util.h"
-#include "preferences.h"
-#include "powerups.h"
-#include "star.h"
 #include "game.h"
-#include "vector.h"
+#include "star.h"
 
 const double GAME_WIDTH = 720.0;
 const double GAME_HEIGHT = 960.0;
@@ -240,10 +219,10 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
 
-    sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 1316/8, 1117/8);
-    sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 1316/8, 1117/8);;
-    scene_add_sprite(scene, right_crouch);
-    scene_add_sprite(scene, left_crouch);
+    // sprite_t *right_crouch = create_sprite("PNGs/Crouch_Right.png", 1316/8, 1117/8);
+    // sprite_t *left_crouch = create_sprite("PNGs/Crouch_Left.png", 1316/8, 1117/8);;
+    // scene_add_sprite(scene, right_crouch);
+    // scene_add_sprite(scene, left_crouch);
 
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
@@ -544,6 +523,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             }
         }
 
+<<<<<<< HEAD
         // shifting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center->y) {
             // generates more platforms
@@ -609,5 +589,30 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         scene_tick(scene, dt);
         free(buffer);
     }
+=======
+    // if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
+    //     (*timer)++;
+    // }
+    // if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
+    //     if (body_get_direction(doodle) == 0) {
+    //         change_motion(doodle, scene_get_sprite(scene, 2));
+    //     }
+    //     else {
+    //         change_motion(doodle, scene_get_sprite(scene, 3));
+    //     }
+    // }
+    // else if (*timer == 25) {
+    //     if (body_get_direction(doodle) == 0) {
+    //         change_motion(doodle, scene_get_sprite(scene, 0));
+    //     }
+    //     else {
+    //         change_motion(doodle, scene_get_sprite(scene, 1));
+    //     }
+
+    //     *timer = 0;
+    // }
+    wrap(doodle);
+    scene_tick(scene, dt);
+>>>>>>> bd284dc86273008ec92e7785a95ef26c3dae5729
     sdl_render_scene(scene);
 }
