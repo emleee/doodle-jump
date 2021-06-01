@@ -1,12 +1,8 @@
 #include "scene.h"
-#include "body.h"
 #include "force_aux.h"
 #include "force_package.h"
 #include <stdlib.h>
 #include <assert.h>
-// #include "sdl_wrapper.h"
-#include "text.h"
-#include "sprite.h"
 
 typedef struct scene {
     list_t *bodies;

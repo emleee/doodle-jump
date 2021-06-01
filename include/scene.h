@@ -2,9 +2,7 @@
 #define __SCENE_H__
 
 #include "body.h"
-#include "list.h"
 #include "text.h"
-// #include "sdl_wrapper.h"
 
 /**
  * A collection of bodies and force creators.

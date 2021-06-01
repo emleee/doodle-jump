@@ -4,16 +4,10 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
-#include "sdl_wrapper.h"
-#include "list.h"
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
 #include <string.h>
-#include "text.h"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mouse.h>
-#include "sprite.h"
-#include "body.h"
+#include "sdl_wrapper.h"
 
 const char WINDOW_TITLE[] = "CS 3";
 const int WINDOW_WIDTH = 720;
