@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "collision.h"
 #include "force_package.h"
-#include "SDL2/SDL_mixer.h"
 #include "sdl_wrapper.h"
 #include "preferences.h"
 
