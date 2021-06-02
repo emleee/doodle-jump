@@ -106,9 +106,6 @@ void mouse_click(int key, int x, int y, void *scene) {
             else if (strcmp(scene_get_info(scene), "settings") == 0) {
                 settings_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
             }
-            else if (strcmp(scene_get_info(scene), "shop") == 0) {
-                shop_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
-            }
     }
 }
 

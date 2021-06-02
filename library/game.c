@@ -1,6 +1,5 @@
 #include "game.h"
 #include "star.h"
-#include "shop.h"
 
 const double GAME_WIDTH = 720.0;
 const double GAME_HEIGHT = 960.0;
@@ -105,10 +104,10 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
             if ((new_height > center.y + GAME_HEIGHT/2) && (new_height < center.y + GAME_HEIGHT/2 + GAME_HEIGHT)) {
                 strcat(info2, " done");
                 vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
-                int random = rand()%40;
+                int random = rand()%4;
                 char *new_info1;
                 body_t *new_platform;
-                if (random <= center.y/GAME_HEIGHT) {
+                if (random == 0) {
                     new_info1 = malloc(17*sizeof(char));
                     strcpy(new_info1, "sliding platform");
                     new_platform = sliding_platform(platform_center, new_info1);
@@ -424,7 +423,7 @@ void star_score(scene_t *scene) {
 }
 
 void instructions (scene_t *scene, int *instructions_timer) {
-    // printf("%d\n", *instructions_timer);
+    printf("%d\n", *instructions_timer);
     body_t *first = NULL;
     body_t *second = NULL;
     if (*instructions_timer == 0) {
@@ -466,7 +465,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         instructions(scene, instructions_timer);
     }
     else {
-        use_inventory(scene);
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         bool enemy_present = false;
         vector_t *scoring = malloc(sizeof(vector_t));
@@ -543,7 +541,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 else {
                     body_set_sprite(doodle, scene_get_sprite(scene, 3));
                 }
-                body_remove(body);
             }
         }
 
@@ -624,6 +621,5 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         scene_tick(scene, dt);
         free(buffer);
     }
-    
     sdl_render_scene(scene);
 }
