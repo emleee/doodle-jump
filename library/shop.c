@@ -1,11 +1,11 @@
 #include "shop.h"
 #include "color.h"
 
-const vector_t BOOST_CENTER = {.x = 160, .y = 500};
-const vector_t MAGNET_CENTER = {.x = 560, .y = 350};
-const vector_t IMMUNITY_CENTER = {.x = 160, .y = 200};
-const double PRICE_OFFSET = 340.0;
-const double STAR_OFFSET = 135.0;
+const vector_t BOOST_CENTER = {.x = 500, .y = 700};
+const vector_t MAGNET_CENTER = {.x = 200, .y = 575};
+const vector_t IMMUNITY_CENTER = {.x = 500, .y = 475};
+const double PRICE_OFFSET = 60;
+const double STAR_OFFSET = 60;
 // const vector_t HOME_CENTER = {.x = 360, .y = 650};
 
 const double SHOP_WIDTH = 720.0;
@@ -15,6 +15,7 @@ const int BOOST_PRICE = 100;
 const int MAGNET_PRICE = 75;
 const int IMMUNITY_PRICE = 50;
 const rgb_color_t MESSAGE_COLOR = {.r = 0, .g = 0, .b = 0};
+const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
 
 // do something to check if there is something already in the inventory and give refund
 
@@ -29,57 +30,44 @@ scene_t *make_shop_scene () {
     body_t *magnet = make_magnet(scene, MAGNET_CENTER, false);
 
     rgb_color_t text_color = {.r = 0, .g = 0, .b = 0};
-    
-    rgb_color_t star_color = {.r = 1, .g = 1, .b = 0}; // make const for 'yellow' star color
+
     vector_t *point1 = malloc(sizeof(vector_t));
-    point1->x = 480; // remove magic numbers
-    point1->y = 555;
+    point1->x = BOOST_CENTER.x - 10; // remove magic numbers
+    point1->y = SHOP_HEIGHT - BOOST_CENTER.y + PRICE_OFFSET;
     text_t *text1 = text_create("Buy for 50", text_color, 22, point1);
     scene_add_text(scene, text1);
-    vector_t boost_star_center = {.x = BOOST_CENTER.x + PRICE_OFFSET + STAR_OFFSET, .y = BOOST_CENTER.y};
-    star_t *boost_starframe = make_star(boost_star_center, 5, 17); // magic number for num points, radius
+    vector_t boost_star_center = {.x = BOOST_CENTER.x + STAR_OFFSET, .y = SHOP_HEIGHT - point1->y};
+    star_t *boost_starframe = make_star(boost_star_center, 5, 13); // magic number for num points, radius
     char *boost_star_info = malloc(5*sizeof(char));
     strcpy(boost_star_info, "star");
-    body_t *boost_star = body_init_with_info(get_points(boost_starframe), INFINITY, star_color, boost_star_info, free);
+    body_t *boost_star = body_init_with_info(get_points(boost_starframe), INFINITY, STAR_COLOR, boost_star_info, free);
     scene_add_body(scene, boost_star);
 
     vector_t *point2 = malloc(sizeof(vector_t));
-    point2->x = 200; // remove magic numbers
-    point2->y = 495;
+    point2->x = MAGNET_CENTER.x - 10; // remove magic numbers
+    point2->y = SHOP_HEIGHT - MAGNET_CENTER.y + PRICE_OFFSET * 2;
     text_t *text2 = text_create("Buy for 75", text_color, 22, point2);
     scene_add_text(scene, text2);
-    vector_t magnet_star_center = {.x = MAGNET_CENTER.x - PRICE_OFFSET + STAR_OFFSET - 120, .y = MAGNET_CENTER.y};
-    star_t *magnet_starframe = make_star(magnet_star_center, 5, 17); // magic number for num points, radius
+    vector_t magnet_star_center = {.x = MAGNET_CENTER.x + STAR_OFFSET, .y = SHOP_HEIGHT - point2->y};
+    star_t *magnet_starframe = make_star(magnet_star_center, 5, 13); // magic number for num points, radius
     char *magnet_star_info = malloc(5*sizeof(char));
     strcpy(magnet_star_info, "star");
-    body_t *magnet_star = body_init_with_info(get_points(magnet_starframe), INFINITY, star_color, magnet_star_info, free);
+    body_t *magnet_star = body_init_with_info(get_points(magnet_starframe), INFINITY, STAR_COLOR, magnet_star_info, free);
     scene_add_body(scene, magnet_star);
 
     vector_t *point3 = malloc(sizeof(vector_t));
-    point3->x = 483; // remove magic numbers
-    point3->y = 335;
+    point3->x = IMMUNITY_CENTER.x - 10; // remove magic numbers
+    point3->y = SHOP_HEIGHT - IMMUNITY_CENTER.y + PRICE_OFFSET;
     text_t *text3 = text_create("Buy for 100", text_color, 22, point3);
     scene_add_text(scene, text3);
-    vector_t immunity_star_center = {.x = point1->x + STAR_OFFSET + 5, .y = IMMUNITY_CENTER.y};
-    star_t *immunity_starframe = make_star(immunity_star_center, 5, 17); // magic number for num points, radius
+    vector_t immunity_star_center = {.x = IMMUNITY_CENTER.x + STAR_OFFSET + 5, .y = SHOP_HEIGHT - point3->y};
+    star_t *immunity_starframe = make_star(immunity_star_center, 5, 13); // magic number for num points, radius
     char *immunity_star_info = malloc(5*sizeof(char));
     strcpy(immunity_star_info, "star");
-    body_t *immunity_star = body_init_with_info(get_points(immunity_starframe), INFINITY, star_color, immunity_star_info, free);
+    body_t *immunity_star = body_init_with_info(get_points(immunity_starframe), INFINITY, STAR_COLOR, immunity_star_info, free);
     scene_add_body(scene, immunity_star);
 
-    // display a star and the amount of stars the user has
-    char *stars = malloc(10*sizeof(char));
-    sprintf(stars, "%i", get_star_count());
-    vector_t *position = malloc(sizeof(vector_t));
-    position->x = 110; // remove magic numbers
-    position->y = 40;
-    text_t *star_count = text_create(stars, text_color, 50, position);
-    scene_add_text(scene, star_count);
-
-    vector_t star_pos = {.x = 40, .y = SHOP_HEIGHT - 40};
-    star_t *starframe = make_star(star_pos, 5, 25); // magic number for num points, radius
-    body_t *star = body_init(get_points(starframe), 0.001, star_color);
-    // scene_add_body(scene, star);
+    display_star_count(scene);
 
     body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
     body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*SHOP_HEIGHT});
@@ -87,6 +75,24 @@ scene_t *make_shop_scene () {
     scene_add_body(scene, background2);
 
     return scene;
+}
+
+void display_star_count(scene_t *scene) {
+    // display a star and the amount of stars the user has
+    char *stars = malloc(10*sizeof(char));
+    sprintf(stars, "%i", get_star_count());
+    vector_t *position = malloc(sizeof(vector_t));
+    position->x = 125; // remove magic numbers
+    position->y = 40;
+    text_t *star_count = text_create(stars, MESSAGE_COLOR, 50, position);
+    scene_add_text(scene, star_count);
+
+    vector_t star_pos = {.x = 40, .y = SHOP_HEIGHT - 40};
+    star_t *starframe = make_star(star_pos, 5, 25); // magic number for num points, radius
+    char *star_info = malloc(5*sizeof(char));
+    strcpy(star_info, "star");
+    body_t *star = body_init_with_info(get_points(starframe), 0.001, STAR_COLOR, star_info, free);
+    scene_add_body(scene, star);
 }
 
 scene_t *make_shop_exit_scene() {

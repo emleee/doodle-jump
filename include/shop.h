@@ -52,3 +52,5 @@ void write_powerup(char *powerup);
  * @param button_y_radius the height of the button
  */
 void use_inventory (scene_t *scene);
+
+void display_star_count(scene_t *scene);
