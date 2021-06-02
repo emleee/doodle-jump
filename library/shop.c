@@ -117,7 +117,6 @@ void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, doub
             char *exit_info = malloc(10*sizeof(char));
             strcpy(exit_info, "shop exit");
             scene_set_next_info(scene, exit_info);
-            // do something here that says thanks for shopping and takes you to the home screen
         }
     }
     if (x < (500 + button_x_radius) && x > (500 - button_x_radius)) {
