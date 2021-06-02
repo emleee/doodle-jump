@@ -129,6 +129,8 @@ body_t *make_immunity(scene_t *scene, vector_t center, bool collected) {
     char *info = malloc(sizeof(char)*9);
     strcpy(info, "immunity");
     body_t *immunity = body_init_with_info(shape, 10, IMMUNITY_COLOR, info, free);
+    sprite_t *sprite = create_sprite("PNGs/Immunity.png", 1405/8, 1398/8);
+    body_set_sprite(immunity, sprite);
     body_set_centroid(immunity, center);
     scene_add_body(scene, immunity);
     body_t *doodle = scene_get_body(scene, 0);
