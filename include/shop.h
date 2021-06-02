@@ -4,6 +4,7 @@
 #include "start.h"
 
 scene_t *make_shop_scene ();
+scene_t *make_shop_exit_scene();
 
 void shop_mouse_click();
 

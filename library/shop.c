@@ -1,4 +1,5 @@
 #include "shop.h"
+#include "color.h"
 
 const vector_t BOOST_CENTER = {.x = 160, .y = 500};
 const vector_t MAGNET_CENTER = {.x = 560, .y = 350};
@@ -13,6 +14,7 @@ const double SHOP_HEIGHT = 960.0;
 const int BOOST_PRICE = 100;
 const int MAGNET_PRICE = 75;
 const int IMMUNITY_PRICE = 50;
+const rgb_color_t MESSAGE_COLOR = {.r = 0, .g = 0, .b = 0};
 
 // do something to check if there is something already in the inventory and give refund
 
@@ -87,21 +89,51 @@ scene_t *make_shop_scene () {
     return scene;
 }
 
+scene_t *make_shop_exit_scene() {
+    char *scene_info = malloc(10*sizeof(char));
+    strcpy(scene_info, "shop exit");
+    scene_t *scene = scene_init_with_info(scene_info, free);
+    vector_t center = {.x = SHOP_WIDTH/2, .y = SHOP_HEIGHT/2};
+    list_t *shape = make_rectangle(center, 480, 237);
+    char *info = malloc(sizeof(char)*5);
+    strcpy(info, "exit");
+    body_t *thanks = body_init_with_info(shape, INFINITY, MESSAGE_COLOR, info, free);
+    sprite_t *sprite = create_sprite("PNGs/Shop_Exit.png", 480, 237);
+    body_set_sprite(thanks, sprite);
+    body_set_centroid(thanks, center);
+    scene_add_body(scene, thanks);
+    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*SHOP_HEIGHT});
+    scene_add_body(scene, background1);
+    scene_add_body(scene, background2);
+
+    return scene;
+}
+
 void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (310 + button_y_radius) && y > (310 - button_y_radius)) {
             buy_boost();
+            char *exit_info = malloc(10*sizeof(char));
+            strcpy(exit_info, "shop exit");
+            scene_set_next_info(scene, exit_info);
             // do something here that says thanks for shopping and takes you to the home screen
         }
     }
     if (x < (500 + button_x_radius) && x > (500 - button_x_radius)) {
         if (y < (450 + button_y_radius) && y > (450 - button_y_radius)) {
             buy_magnet();
+            char *exit_info = malloc(10*sizeof(char));
+            strcpy(exit_info, "shop exit");
+            scene_set_next_info(scene, exit_info);
         }
     }
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (550 + button_y_radius) && y > (550 - button_y_radius)) {
             buy_immunity();
+            char *exit_info = malloc(10*sizeof(char));
+            strcpy(exit_info, "shop exit");
+            scene_set_next_info(scene, exit_info);
         }
     }
 }

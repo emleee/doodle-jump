@@ -129,6 +129,7 @@ int main() {
     int star_score = 0;
 
     int start_timer = 0;
+    int shop_timer = 0;
 
     sdl_on_key(on_key);
     sdl_mouse(mouse_click);
@@ -196,6 +197,10 @@ int main() {
                 scene_free(scene);
                 scene = make_shop_scene();
             }
+            else if (strcmp(scene_get_next_info(scene), "shop exit") == 0) {
+                scene_free(scene);
+                scene = make_shop_exit_scene();
+            }
             else if (strcmp(scene_get_next_info(scene), "settings") == 0) {
                 star_score += scene_stars(scene);
                 scene_free(scene);
@@ -209,15 +214,20 @@ int main() {
             start_timer++;
             start_main(scene, start_timer);
             sdl_render_scene(scene);
-
-            // double dt = time_since_last_tick();
-            // scene_tick(scene,dt);
-            // sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "restart") == 0) {
             sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "shop") == 0) {
+            sdl_render_scene(scene);
+        }
+        else if (strcmp(scene_get_info(scene), "shop exit") == 0) {
+            if (shop_timer == 1000){
+                char *start_info = malloc(6*sizeof(char));
+                strcpy(start_info, "start");
+                scene_set_next_info(scene, start_info);
+            }
+            shop_timer++;
             sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "settings") == 0) {
