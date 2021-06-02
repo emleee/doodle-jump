@@ -41,14 +41,35 @@ typedef void (*key_handler_t)(char key, key_event_type_t type, double held_time,
 
 typedef void (*mouse_handler_t)(int key, int x, int y, void *scene);
 
+/**
+ * Loads sound-effects for jumping, shooting, and purchasing powerups.
+ *
+ * @return whether or not the loading for each of the sound-effects was successful
+ */
 bool loadMedia();
+
+/**
+ * Plays the jumping sound-effect.
+ */
 void play_jump();
+
+/**
+ * Plays the shooting sound-effect.
+ */
 void play_shoot();
+
+/**
+ * Plays the cash register sound-effect.
+ */
 void play_cha_ching();
+
+/**
+ * Closes the mixer and frees all sound-effect variables.
+ */
 void free_sounds();
 
 /**
- * Initializes the SDL window and renderer.
+ * Initializes the SDL window, renderer, and mixer.
  * Must be called once before any of the other SDL functions.
  *
  * @param min the x and y coordinates of the bottom left of the scene

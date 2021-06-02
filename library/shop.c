@@ -7,7 +7,7 @@ const vector_t MAGNET_CENTER = {.x = 200, .y = 575};
 const vector_t IMMUNITY_CENTER = {.x = 500, .y = 475};
 const double PRICE_OFFSET = 60;
 const double STAR_OFFSET = 60;
-// const vector_t HOME_CENTER = {.x = 360, .y = 650};
+const vector_t SHOP_HOME_CENTER = {.x = 360, .y = 800};
 
 const double SHOP_WIDTH = 720.0;
 const double SHOP_HEIGHT = 960.0;
@@ -56,6 +56,7 @@ scene_t *make_shop_scene () {
     body_t *magnet_star = body_init_with_info(get_points(magnet_starframe), INFINITY, STAR_COLOR, magnet_star_info, free);
     scene_add_body(scene, magnet_star);
 
+
     vector_t *point3 = malloc(sizeof(vector_t));
     point3->x = IMMUNITY_CENTER.x - 10; // remove magic numbers
     point3->y = SHOP_HEIGHT - IMMUNITY_CENTER.y + PRICE_OFFSET;
@@ -67,6 +68,12 @@ scene_t *make_shop_scene () {
     strcpy(immunity_star_info, "star");
     body_t *immunity_star = body_init_with_info(get_points(immunity_starframe), INFINITY, STAR_COLOR, immunity_star_info, free);
     scene_add_body(scene, immunity_star);
+
+    vector_t *home_point = malloc(sizeof(vector_t));
+    home_point->x = SHOP_HOME_CENTER.x; // remove magic numbers
+    home_point->y = SHOP_HOME_CENTER.y;
+    text_t *home_text = text_create("Back to Home", text_color, 22, home_point);
+    scene_add_text(scene, home_text);
 
     display_star_count(scene);
 
@@ -149,6 +156,13 @@ void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, doub
             char *exit_info = malloc(10*sizeof(char));
             strcpy(exit_info, "shop exit");
             scene_set_next_info(scene, exit_info);
+        }
+    }
+    if (x < (SHOP_HOME_CENTER.x + button_x_radius) && x > (SHOP_HOME_CENTER.x - button_x_radius)) {
+        if (y < (SHOP_HOME_CENTER.y + button_y_radius) && y > (SHOP_HOME_CENTER.y - button_y_radius)) {
+            char *start_info = malloc(6*sizeof(char));
+            strcpy(start_info, "start");
+            scene_set_next_info(scene, start_info);
         }
     }
 }

@@ -118,64 +118,49 @@ bool get_sound_preference() {
 
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Sound: ON\n") == 0) {
-            // printf("sound is true");
             SOUND_EFFECTS = true;
         }
         else if (strcmp(line, "Sound: OFF\n") == 0) {
-            // printf("sound is false");
             SOUND_EFFECTS = false;
         }
     }
-    // printf("sound is closed");
     fclose(file);
     return SOUND_EFFECTS;
 }
 
 bool get_score_preference() {
     FILE* file = fopen("preferences.txt", "r");
-
     if (!file) {
         return SCORE_MARKER;
     }
-
     char line[500];
-
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Score: ON\n") == 0) {
-            // printf("sound is true");
             SCORE_MARKER = true;
         }
         else if (strcmp(line, "Score: OFF\n") == 0) {
-            // printf("score is false");
             SCORE_MARKER = false;
         }
     }
     fclose(file);
-    // printf("score is closed");
     return SCORE_MARKER;
 }
 
 bool get_powerup_preference() {
     FILE* file = fopen("preferences.txt", "r");
-
     if (!file) {
         return POWERUPS;
     }
-
     char line[500];
-
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Powerup: ON\n") == 0) {
-            // printf("sound is true");
             POWERUPS = true;
         }
         else if (strcmp(line, "Powerup: OFF\n") == 0) {
-            // printf("score is false");
             POWERUPS = false;
         }
     }
     fclose(file);
-    // printf("score is closed");
     return POWERUPS;
 }
 
@@ -192,29 +177,29 @@ void switch_powerup_preferences() {
 }
 
 void update_preferences() {
-    FILE *fp = fopen("preferences.txt", "w"); // opening of file
-    if (!fp) {
+    FILE *file = fopen("preferences.txt", "w"); // opening of file
+    if (!file) {
         return;
     }
     if (SOUND_EFFECTS) {
-        fprintf(fp,"Sound: ON\n");
+        fprintf(file,"Sound: ON\n");
     }
     else {
-        fprintf(fp,"Sound: OFF\n");
+        fprintf(file,"Sound: OFF\n");
     }
     if (SCORE_MARKER) {
-        fprintf(fp,"Score: ON\n");
+        fprintf(file,"Score: ON\n");
     }
     else {
-        fprintf(fp,"Score: OFF\n");
+        fprintf(file,"Score: OFF\n");
     }
     if (POWERUPS) {
-        fprintf(fp,"Powerup: ON\n");
+        fprintf(file,"Powerup: ON\n");
     }
     else {
-        fprintf(fp,"Powerup: OFF\n");
+        fprintf(file,"Powerup: OFF\n");
     }
-    fclose(fp);
+    fclose(file);
 }
 
 void settings_mouse_click (scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
