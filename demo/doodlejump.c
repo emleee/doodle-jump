@@ -214,54 +214,6 @@ int main() {
         }
     }
 
-    // save the number of stars collected
-    FILE *star_file = fopen("stars.txt", "r+");
-    if (star_file == NULL) {
-        printf("NULL file.\n");
-    }
-    char *star_reading = malloc(10*sizeof(char));
-    char **throwaway = malloc(sizeof(char *));
-    *throwaway = malloc(10*sizeof(char));
-    if (fgets(star_reading, 5, star_file) == NULL) {
-        printf("Error.\n");
-    }
-    else {
-        star_reading[6] = '\0';
-        star_score += (int)strtod(star_reading, throwaway);
-    }
-    sprintf(star_reading, "%i", star_score);
-    fseek(star_file, 0, SEEK_SET);
-    fputs(star_reading, star_file);
-
-
-    // only save score if it's a high score
-    FILE *score_file = fopen("highscore.txt", "r+");
-    if (score_file == NULL) {
-        printf("NULL file.\n");
-    }
-    char *score_reading = malloc(100*sizeof(char));
-    if (fgets(score_reading, 5, score_file) == NULL) {
-        printf("Error.\n");
-        score+=7;
-        fseek(score_file, 0, SEEK_SET);
-        fputs(score, score_file);
-    }
-    else {
-        score_reading[6] = '\0';
-        double highscore = strtod(score_reading, throwaway);
-        score+=7;
-        curr = strtod(score, throwaway);
-        if (curr > highscore) {
-            fseek(score_file, 0, SEEK_SET);
-            fputs(score, score_file);
-        }
-    }
-
-    free(star_reading);
-    fclose(star_file);
-    fclose(score_file);
-    free(score_reading);
-    free(throwaway);
     scene_free(scene);
     return 0;
 }

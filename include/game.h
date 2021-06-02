@@ -30,6 +30,10 @@ void create_star(scene_t *scene);
 
 double calculate_score(vector_t center);
 
+void star_updating(int star_score);
+
+void high_score_updating(char *score);
+
 void game_mouse_click (scene_t *scene, int x, int y);
 
 void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, int *instructions_timer, vector_t *center, char *score);

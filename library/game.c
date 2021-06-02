@@ -423,6 +423,63 @@ void star_score(scene_t *scene) {
     }
 }
 
+void star_updating(int star_score) {
+    // save the number of stars collected
+    FILE *star_file = fopen("stars.txt", "r+");
+    if (star_file == NULL) {
+        printf("NULL file.\n");
+    }
+    char *star_reading = malloc(10*sizeof(char));
+    char **throwaway = malloc(sizeof(char *));
+    *throwaway = malloc(10*sizeof(char));
+    if (fgets(star_reading, 5, star_file) == NULL) {
+        printf("Error.\n");
+    }
+    else {
+        star_reading[6] = '\0';
+        star_score += (int)strtod(star_reading, throwaway);
+    }
+    sprintf(star_reading, "%i", star_score);
+    fseek(star_file, 0, SEEK_SET);
+    fputs(star_reading, star_file);
+    free(star_reading);
+    fclose(star_file);
+    free(throwaway);
+}
+
+void high_score_updating(char *score) {
+    // only save score if it's a high score
+    char **throwaway = malloc(sizeof(char *));
+    *throwaway = malloc(10*sizeof(char));
+
+    FILE *score_file = fopen("highscore.txt", "r+");
+    if (score_file == NULL) {
+        printf("NULL file.\n");
+    }
+    char *score_reading = malloc(100*sizeof(char));
+    if (fgets(score_reading, 5, score_file) == NULL) {
+        printf("Error.\n");
+        score+=7;
+        fseek(score_file, 0, SEEK_SET);
+        fputs(score, score_file);
+    }
+    else {
+        score_reading[6] = '\0';
+        double highscore = strtod(score_reading, throwaway);
+        score+=7;
+        double curr = strtod(score, throwaway);
+        if (curr > highscore) {
+            fseek(score_file, 0, SEEK_SET);
+            fputs(score, score_file);
+        }
+    }
+    fclose(score_file);
+    free(score_reading);
+    free(throwaway);
+}
+
+
+
 void instructions (scene_t *scene, int *instructions_timer) {
     printf("%d\n", *instructions_timer);
     body_t *first = NULL;
@@ -448,7 +505,7 @@ void instructions (scene_t *scene, int *instructions_timer) {
         sprite_t *sprite = create_sprite("PNGs/Game_Instructions_2.png", 500, 500);
         body_set_sprite(second, sprite);
         body_set_centroid(second, center);
-        scene_add_body(scene, second); 
+        scene_add_body(scene, second);
     }
     if (*instructions_timer == 3000){
         scene_remove_body(scene, scene_bodies(scene)-1);
