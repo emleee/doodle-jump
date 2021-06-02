@@ -30,7 +30,6 @@ vector_t *platform_center(scene_t *scene) {
     vector_t *center = malloc(sizeof(vector_t));
     do {
         if (counter == scene_bodies(scene)) {
-            // too many stars for now, just return
             return NULL;
         }
 
@@ -86,7 +85,7 @@ body_t *make_powerup(scene_t *scene) {
         else if (idx == MAGNET_IDX) {
             return make_magnet(scene, *center, false);
         }        
-        // return make_boost(scene, *center);
+        // return make_magnet(scene, *center, false);
         free(center);
     }
     return NULL;

@@ -23,9 +23,26 @@
 #include "powerups.h"
 #include "star.h"
 
+/**
+ * Creates the start screen, with options for starting the game and going to settings and the shop.
+ * Only called when the user selects the "Shop" option on the start screen.
+ *
+ * @return the start scene
+ */
 scene_t *make_start_scene();
 
-void start_main(scene_t *scene, int timer);
+/**
+ * Handles the mouse-clicking events in the start screen for selecting options for the game, settings, or shop. 
+ *
+ * @param scene a pointer to the current scene
+ * @param x the x-coordinate of the mouse-click
+ * @param y the y-coordinate of the mouse-click
+ * @param button_x_radius the width of the button
+ * @param button_y_radius the height of the button
+ */
 void start_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
+
+
+void start_main(scene_t *scene, int timer);
 
 #endif // #ifndef __START_H__

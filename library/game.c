@@ -118,15 +118,12 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
                     new_info1 = malloc(16*sizeof(char));
                     strcpy(new_info1, "normal platform");
                     new_platform = normal_platform(platform_center, new_info1);
-                    vector_t powerup_center = (vector_t) {.x = platform_center.x, .y = platform_center.y + 50};
-
                 }
                 char *new_info2 = malloc(15*sizeof(char));
                 strcpy(new_info2, "essential");
                 body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-
             }
         }
     }
@@ -173,9 +170,6 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
         body_set_second_info(new_platform, info2);
         scene_add_body(scene, new_platform);
         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-        // if (magnet_idx != -1) {
-        //     create_platform_collision(scene, 0, scene_get_body(scene, magnet_idx), new_platform);
-        // }
         i++;
     }
     return success;
@@ -298,37 +292,31 @@ body_t *make_pellet (vector_t center) {
 
 bool first_time_play () {
     FILE* file = fopen("first_time.txt", "r");
-
     if (!file) {
         return false;
     }
-
     char line[500];
-
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "YES\n") == 0) {
-            // printf("sound is true");
             fclose(file);
             return true;
         }
         else if (strcmp(line, "NO\n") == 0) {
-            // printf("sound is false");
             fclose(file);
             return false;
         }
     }
-    // printf("sound is closed");
     fclose(file);
     return false;
 }
 
 void set_first_time() {
-    FILE *fp = fopen("first_time.txt", "w"); // opening of file
-    if (!fp) {
+    FILE *file = fopen("first_time.txt", "w"); // opening of file
+    if (!file) {
         return;
     }
-    fprintf(fp, "NO\n");
-    fclose(fp);
+    fprintf(file, "NO\n");
+    fclose(file);
 }
 
 void create_star(scene_t *scene) {
@@ -370,18 +358,19 @@ void create_star(scene_t *scene) {
     body_t *platform = scene_get_body(scene, random);
     vector_t center = body_get_centroid(platform);
     center.y += 40; // magic number for offset
+    if (center.y > body_get_centroid(scene_get_body(scene, 0)).y) {
+        star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
+        rgb_color_t color = {.r = 1, .g = 1, .b = 0}; // make const for 'yellow' star color
+        char *star_info = malloc(5*sizeof(char));
+        strcpy(star_info, "star");
+        body_t *star = body_init_with_info(get_points(starframe), 0.001, color, star_info, free);
 
-    star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
-    rgb_color_t color = {.r = 1, .g = 1, .b = 0}; // make const for 'yellow' star color
-    char *star_info = malloc(5*sizeof(char));
-    strcpy(star_info, "star");
-    body_t *star = body_init_with_info(get_points(starframe), 0.001, color, star_info, free);
-
-    create_star_collision(scene, 0, scene_get_body(scene, 0), star);
-    if (magnet_idx != -1) {
-        create_magnetic_force(scene, 500000, scene_get_body(scene, magnet_idx), star);
+        create_star_collision(scene, 0, scene_get_body(scene, 0), star);
+        if (magnet_idx != -1) {
+            create_magnetic_force(scene, 5000000, scene_get_body(scene, magnet_idx), star);
+        }
+        scene_add_body(scene, star);
     }
-    scene_add_body(scene, star);
 }
 
 
@@ -401,7 +390,7 @@ void game_mouse_click (scene_t *scene, int x, int y) {
     vector_t mouth_window = get_window_position(mouth, get_window_center());
     body_t *pellet;
     pellet = make_pellet(mouth);
-    body_set_velocity(pellet, (vector_t){.x = x-mouth_window.x, .y = -y+mouth_window.y});
+    body_set_velocity(pellet, (vector_t){.x = 2*(x-mouth_window.x), .y = 2*(-y+mouth_window.y)});
     for (int i = 0; i < scene_bodies(scene); i++) {
         if (strcmp(body_get_info(scene_get_body(scene, i)), "enemy") == 0) {
             create_destructive_collision(scene, pellet, scene_get_body(scene, i));
@@ -495,7 +484,7 @@ void instructions (scene_t *scene, int *instructions_timer) {
         body_set_centroid(first, center);
         scene_add_body(scene, first);
     }
-    if (*instructions_timer == 1500) {
+    if (*instructions_timer == 2500) {
         scene_remove_body(scene, scene_bodies(scene)-1);
         vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
         list_t *shape = make_rectangle(center, 500, 500);
@@ -507,7 +496,20 @@ void instructions (scene_t *scene, int *instructions_timer) {
         body_set_centroid(second, center);
         scene_add_body(scene, second);
     }
-    if (*instructions_timer == 3000){
+    if (*instructions_timer == 3500) {
+        scene_remove_body(scene, scene_bodies(scene)-1);
+        vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+        list_t *shape = make_rectangle(center, 500, 500);
+        char *info = malloc(sizeof(char)*7);
+        strcpy(info, "second");
+        body_t *second = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+        sprite_t *sprite = create_sprite("PNGs/Ready.png", 500, 500);
+        body_set_sprite(second, sprite);
+        body_set_centroid(second, center);
+        scene_add_body(scene, second); 
+    }
+
+    if (*instructions_timer == 4000){
         scene_remove_body(scene, scene_bodies(scene)-1);
         free(instructions_timer);
         set_first_time();
