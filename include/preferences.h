@@ -63,7 +63,7 @@ void update_preferences();
 /**
  * Handles the mouse-clicking events in settings for switching options. 
  *
- * @param scene the current scene
+ * @param scene a pointer to the current scene
  * @param x the x-coordinate of the mouse-click
  * @param y the y-coordinate of the mouse-click
  * @param button_x_radius the width of the button

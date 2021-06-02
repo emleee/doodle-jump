@@ -27,9 +27,17 @@ typedef void (*force_creator_t)(void *aux);
  */
 scene_t *scene_init(void);
 
+/**
+ * Allocates memory for a scene with the given parameters.
+ *
+ * @param info information to associate with the scene
+ * @param info_freer if non-NULL, a function call on the info to free it
+ * @return a pointer to the newly allocated scene
+ */
 scene_t *scene_init_with_info(void *info, free_func_t info_freer);
 
 sprite_t *scene_get_sprite(scene_t *scene, size_t index);
+
 void scene_add_sprite(scene_t *scene, sprite_t *sprite);
 
 /**
@@ -66,12 +74,27 @@ body_t *scene_get_body(scene_t *scene, size_t index);
  */
 void scene_add_body(scene_t *scene, body_t *body);
 
+/**
+ * Gets the information associated with a scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init_with_info()
+ * @return the info passed to scene_init_with_info()
+ */
 void *scene_get_info(scene_t *scene);
 
+/**
+ * Gets the additional information associated with a scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init_with_info()
+ * @return the additional info passed to scene_init_with_info() or changed by scene_set_next_info()
+ */
 void *scene_get_next_info(scene_t *scene);
 
-void scene_set_info(scene_t *scene, void *info);
-
+/**
+ * Sets the additional information associated with a scene.
+ *
+ * @param scene a pointer to a scene returned from scene_init_with_info()
+ */
 void scene_set_next_info(scene_t *scene, void *next_info);
 
 /**

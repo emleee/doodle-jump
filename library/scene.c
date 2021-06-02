@@ -81,10 +81,6 @@ void *scene_get_next_info(scene_t *scene) {
     return scene->next_info;
 }
 
-void scene_set_info(scene_t *scene, void *info) { // might need to free old strings?
-    scene->info = info;
-}
-
 void scene_set_next_info(scene_t *scene, void *next_info) {
     scene->next_info = next_info;
 }

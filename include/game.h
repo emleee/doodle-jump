@@ -44,7 +44,7 @@ double calculate_score(vector_t center);
 /**
  * Handles the mouse-clicking events in the game for shooting enemies. 
  *
- * @param scene the current scene
+ * @param scene a pointer to the current scene
  * @param x the x-coordinate of the mouse-click
  * @param y the y-coordinate of the mouse-click
  */

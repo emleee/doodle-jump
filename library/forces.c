@@ -30,8 +30,8 @@ void magnet(void *a) {
     body_add_force(body2, force);
 }
 
-void create_magnetic_force(scene_t *scene, double k, body_t *body1, body_t *body2) {
-    force_aux_t *aux = force_aux_init(k);
+void create_magnetic_force(scene_t *scene, double M, body_t *body1, body_t *body2) {
+    force_aux_t *aux = force_aux_init(M);
     list_t *bodies1 = list_init(2, NULL);
     list_t *bodies2 = list_init(2, NULL);
     list_add(bodies1, body1);

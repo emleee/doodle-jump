@@ -10,7 +10,6 @@
  * Checks whether or not a body is a powerup (i.e. boost, magnet, or immunity).
  *
  * @param body the body in a scene
- * 
  * @return whether or not this body is a powerup
  */
 bool is_powerup(body_t *body);
@@ -28,7 +27,6 @@ body_t *make_powerup(scene_t *scene);
  *
  * @param scene the current scene
  * @param center the center of an upcoming empty platform
- * 
  * @return the powerup body
  */
 body_t *make_boost(scene_t *scene, vector_t center);
@@ -38,7 +36,6 @@ body_t *make_boost(scene_t *scene, vector_t center);
  *
  * @param scene the current scene
  * @param center the center of an upcoming empty platform
- * 
  * @return the powerup body
  */
 body_t *make_immunity(scene_t *scene, vector_t center, bool collected);
@@ -48,7 +45,6 @@ body_t *make_immunity(scene_t *scene, vector_t center, bool collected);
  *
  * @param scene the current scene
  * @param center the center of an upcoming empty platform
- * 
  * @return the powerup body
  */
 body_t *make_magnet(scene_t *scene, vector_t center, bool collected);

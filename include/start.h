@@ -32,9 +32,9 @@
 scene_t *make_start_scene();
 
 /**
- * Handles the mouse-clicking events in the start for selecting options for the game, settings, or shop. 
+ * Handles the mouse-clicking events in the start screen for selecting options for the game, settings, or shop. 
  *
- * @param scene the current scene
+ * @param scene a pointer to the current scene
  * @param x the x-coordinate of the mouse-click
  * @param y the y-coordinate of the mouse-click
  * @param button_x_radius the width of the button

@@ -15,6 +15,15 @@
 typedef void (*collision_handler_t)
     (body_t *body1, body_t *body2, vector_t axis, void *aux);
 
+    
+typedef struct collision_package {
+   void *aux;
+   collision_handler_t handler;
+   free_func_t freer;
+   list_t *bodies;
+   bool collided;
+} collision_package_t;
+
 /**
  * Adds a force creator to a scene that applies a gravitational force acting downward.
  * The force creator will be called each tick
@@ -25,6 +34,17 @@ typedef void (*collision_handler_t)
  * @param body2 the second body
  */
 void create_downward_gravity(scene_t *scene, double G, body_t *body);
+
+/**
+ * Adds a force creator to a scene that applies a magnetic force acting one one object.
+ * The force creator will be called each tick
+ *
+ * @param scene the scene containing the bodies
+ * @param M the magnetic acceleration constant
+ * @param body1 the first body
+ * @param body2 the second body
+ */
+void create_magnetic_force(scene_t *scene, double M, body_t *body1, body_t *body2);
 
 /**
  * Adds a force creator to a scene that calls a given collision handler
@@ -87,32 +107,38 @@ void create_platform_collision(
     body_t *body2
 );
 
-void collided(void *a);
-
-void platform_collided(void *a);
-
-
-void powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux);
-
+/**
+ * Adds a force creator to a scene that registers the collision between the character and a magnet or immunity 
+ * powerup and equips the powerup. The force creator will be called each tick
+ *
+ * @param scene the scene containing the bodies
+ * @param elacticity the elasticity of the collision between the two bodies
+ * @param body1 the first body
+ * @param body2 the second body
+ */
 void create_powerup_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
 
-void immunity_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux);
-
+/**
+ * Adds a force creator to a scene that gives the character immunity by killing all enemies that
+ * collide with the immunity shield. The force creator will be called each tick
+ *
+ * @param scene the scene containing the bodies
+ * @param elacticity the elasticity of the collision between the two bodies
+ * @param body1 the first body
+ * @param body2 the second body
+ */
 void create_immunity_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
 
-void boost_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux);
-
+/**
+ * Adds a force creator to a scene that registers the collision between the character and a boost powerup
+ * and equips the powerup. The force creator will be called each tick
+ *
+ * @param scene the scene containing the bodies
+ * @param elacticity the elasticity of the collision between the two bodies
+ * @param body1 the first body
+ * @param body2 the second body
+ */
 void create_boost_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
-
-typedef struct collision_package {
-   void *aux;
-   collision_handler_t handler;
-   free_func_t freer;
-   list_t *bodies;
-   bool collided;
-} collision_package_t;
-
-void star_collided(void *a);
 
 /**
  * Adds a force creator to a scene that removes the star when the player collides with it.
@@ -123,7 +149,5 @@ void star_collided(void *a);
  * @param body2 the second body
  */
 void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
-
-void create_magnetic_force(scene_t *scene, double k, body_t *body1, body_t *body2);
 
 #endif // #ifndef __FORCES_H__
