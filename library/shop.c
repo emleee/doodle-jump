@@ -1,5 +1,6 @@
 #include "shop.h"
 #include "color.h"
+#include "preferences.h"s
 
 const vector_t BOOST_CENTER = {.x = 500, .y = 700};
 const vector_t MAGNET_CENTER = {.x = 200, .y = 575};
@@ -119,6 +120,9 @@ scene_t *make_shop_exit_scene() {
 void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (310 + button_y_radius) && y > (310 - button_y_radius)) {
+            if (get_sound_preference()) {
+                play_cha_ching();
+            }
             buy_boost();
             char *exit_info = malloc(10*sizeof(char));
             strcpy(exit_info, "shop exit");
@@ -127,6 +131,9 @@ void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, doub
     }
     if (x < (500 + button_x_radius) && x > (500 - button_x_radius)) {
         if (y < (450 + button_y_radius) && y > (450 - button_y_radius)) {
+            if (get_sound_preference()) {
+                play_cha_ching();
+            }
             buy_magnet();
             char *exit_info = malloc(10*sizeof(char));
             strcpy(exit_info, "shop exit");
@@ -135,6 +142,9 @@ void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, doub
     }
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (550 + button_y_radius) && y > (550 - button_y_radius)) {
+            if (get_sound_preference()) {
+                play_cha_ching();
+            }
             buy_immunity();
             char *exit_info = malloc(10*sizeof(char));
             strcpy(exit_info, "shop exit");

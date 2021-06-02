@@ -51,6 +51,7 @@ clock_t last_clock = 0;
 //The sound effects that will be used
 Mix_Chunk *jump = NULL;
 Mix_Chunk *shoot = NULL;
+Mix_Chunk *cha_ching = NULL;
 
 /** Computes the center of the window in pixel coordinates */
 vector_t get_window_center(void) {
@@ -134,15 +135,14 @@ bool loadMedia()
 		success = false;
 	}
 
+    cha_ching = Mix_LoadWAV( "sound_effects/cha_ching.wav" );
+	if( cha_ching == NULL )
+	{
+		printf( "Failed to load cash register sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
 	return success;
-}
-
-Mix_Chunk *get_jump() {
-    return jump;
-}
-
-Mix_Chunk *get_shoot() {
-    return shoot;
 }
 
 void play_jump() {
@@ -154,6 +154,12 @@ void play_jump() {
 void play_shoot() {
     if (loadMedia()) {
         Mix_PlayChannel( -1, shoot, 0 );
+    }
+}
+
+void play_cha_ching() {
+    if (loadMedia()) {
+        Mix_PlayChannel( -1, cha_ching, 0 );
     }
 }
 
@@ -374,7 +380,9 @@ void free_sounds() {
     //Quit SDL subsystems
     Mix_FreeChunk(jump);
     Mix_FreeChunk(shoot);
+    Mix_FreeChunk(cha_ching);
     jump = NULL;
     shoot = NULL;
+    cha_ching = NULL;
     Mix_Quit();
 }

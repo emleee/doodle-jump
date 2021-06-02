@@ -42,10 +42,9 @@ typedef void (*key_handler_t)(char key, key_event_type_t type, double held_time,
 typedef void (*mouse_handler_t)(int key, int x, int y, void *scene);
 
 bool loadMedia();
-Mix_Chunk *get_jump();
-Mix_Chunk *get_shoot();
 void play_jump();
 void play_shoot();
+void play_cha_ching();
 void free_sounds();
 
 /**
