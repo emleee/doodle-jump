@@ -18,3 +18,4 @@ int get_star_count();
 void change_star_count(int new_count);
 void write_powerup(char *powerup);
 void use_inventory (scene_t *scene);
+void display_star_count(scene_t *scene);
