@@ -1,6 +1,6 @@
 #include "shop.h"
 #include "color.h"
-#include "preferences.h"s
+#include "preferences.h"
 
 const vector_t BOOST_CENTER = {.x = 500, .y = 700};
 const vector_t MAGNET_CENTER = {.x = 200, .y = 575};
@@ -229,13 +229,21 @@ void buy_boost(){
     if (num_stars < BOOST_PRICE) {
         printf("Sorry, you don't have enough stars to purchase this.\n");
     }
-    else {
+    else { 
         num_stars -= BOOST_PRICE;
         change_star_count(num_stars);
         char *boost = malloc(6*sizeof(char));
         boost = "boost";
         write_powerup(boost);
     }
+}
+
+bool check_currency (int price) {
+    int num_stars = get_star_count();
+    if (num_stars < BOOST_PRICE) {
+        return false;
+    }
+    return true;
 }
 
 void use_inventory (scene_t *scene) {

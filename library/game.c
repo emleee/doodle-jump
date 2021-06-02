@@ -438,7 +438,7 @@ void instructions (scene_t *scene, int *instructions_timer) {
         body_set_centroid(first, center);
         scene_add_body(scene, first);
     }
-    if (*instructions_timer == 1500) {
+    if (*instructions_timer == 2500) {
         scene_remove_body(scene, scene_bodies(scene)-1);
         vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
         list_t *shape = make_rectangle(center, 500, 500);
@@ -450,7 +450,20 @@ void instructions (scene_t *scene, int *instructions_timer) {
         body_set_centroid(second, center);
         scene_add_body(scene, second); 
     }
-    if (*instructions_timer == 3000){
+    if (*instructions_timer == 3500) {
+        scene_remove_body(scene, scene_bodies(scene)-1);
+        vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+        list_t *shape = make_rectangle(center, 500, 500);
+        char *info = malloc(sizeof(char)*7);
+        strcpy(info, "second");
+        body_t *second = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+        sprite_t *sprite = create_sprite("PNGs/Ready.png", 500, 500);
+        body_set_sprite(second, sprite);
+        body_set_centroid(second, center);
+        scene_add_body(scene, second); 
+    }
+
+    if (*instructions_timer == 4000){
         scene_remove_body(scene, scene_bodies(scene)-1);
         free(instructions_timer);
         set_first_time();

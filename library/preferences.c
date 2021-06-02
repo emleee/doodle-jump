@@ -104,7 +104,6 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
         text_t *powerup = text_create("OFF", color, 22, powerup_button_point);
         scene_add_text(scene, powerup);
     }
-    printf("%d\n", scene_textboxes(scene));
     return scene;
 }
 
