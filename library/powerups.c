@@ -77,9 +77,11 @@ body_t *make_powerup(scene_t *scene) {
             return NULL;
         }
         if (idx == BOOST_IDX) {
+            // return make_magnet(scene, *center, false);
             return make_boost(scene, *center);
         }
         else if (idx == IMMUNITY_IDX) {
+            // return make_magnet(scene, *center, false);
             return make_immunity(scene, *center, false);
         }
         else if (idx == MAGNET_IDX) {
@@ -159,6 +161,8 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     char *info = malloc(sizeof(char)*7);
     strcpy(info, "magnet");
     body_t *magnet = body_init_with_info(shape, INFINITY, MAGNET_COLOR, info, free);
+    sprite_t *sprite = create_sprite("PNGs/Magnet.png", 748/14, 845/14);
+    body_set_sprite(magnet, sprite);
     body_set_centroid(magnet, center);
     scene_add_body(scene, magnet);
     if (!collected && strcmp(scene_get_info(scene), "game") == 0) {
