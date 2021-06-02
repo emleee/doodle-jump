@@ -5,7 +5,7 @@
 
 scene_t *make_shop_scene ();
 
-void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
+void shop_mouse_click();
 
 void buy_immunity();
 

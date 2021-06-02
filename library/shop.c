@@ -88,9 +88,6 @@ scene_t *make_shop_scene () {
 }
 
 void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
-    // if immunity clicked
-    printf("%d\n", x);
-    printf("%d\n", y);
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (310 + button_y_radius) && y > (310 - button_y_radius)) {
             buy_boost();
