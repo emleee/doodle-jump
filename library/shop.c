@@ -14,6 +14,8 @@ const int BOOST_PRICE = 100;
 const int MAGNET_PRICE = 75;
 const int IMMUNITY_PRICE = 50;
 
+// do something to check if there is something already in the inventory and give refund
+
 scene_t *make_shop_scene () {
     char *scene_info = malloc(5*sizeof(char));
     strcpy(scene_info, "shop");
@@ -92,7 +94,7 @@ void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, doub
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (310 + button_y_radius) && y > (310 - button_y_radius)) {
             buy_boost();
-            
+            // do something here that says thanks for shopping and takes you to the home screen
         }
     }
     if (x < (500 + button_x_radius) && x > (500 - button_x_radius)) {
