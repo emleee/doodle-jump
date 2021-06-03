@@ -139,10 +139,6 @@ int main() {
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
                 scene_free(scene);
-                free(score);
-                free(timer);
-                free(powerup_timer);
-                free(star_timer); // what happens if we quit before it finished intructions
                 timer = malloc(sizeof(int));
                 *timer = 0;
                 powerup_timer = malloc(sizeof(int));
@@ -214,7 +210,8 @@ int main() {
             sdl_render_scene(scene);
         }
     }
-
+    free(center);
+    free(score);
     scene_free(scene);
     return 0;
 }
