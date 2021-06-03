@@ -109,13 +109,10 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
 
 bool get_sound_preference() {
     FILE* file = fopen("preferences.txt", "r");
-
     if (!file) {
         return SOUND_EFFECTS;
     }
-
     char line[500];
-
     while (fgets(line, sizeof(line), file)) {
         if (strcmp(line, "Sound: ON\n") == 0) {
             SOUND_EFFECTS = true;

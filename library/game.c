@@ -127,7 +127,6 @@ void more_platforms(scene_t *scene, vector_t center) {
         }
     }
 
-
     int i = num_platforms;
     int difficulty = 0;
     if (center.y == -1 * GAME_HEIGHT/2) {
@@ -470,8 +469,6 @@ void high_score_updating(char *score) {
     free(throwaway);
 }
 
-
-
 void instructions (scene_t *scene, int *instructions_timer) {
     printf("%d\n", *instructions_timer);
     body_t *first = NULL;
@@ -562,6 +559,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         (*powerup_timer)++;
 
         if (!in_screen(*center, doodle)) {
+            high_score_updating(score);
             free(timer);
             free(powerup_timer);
             free(star_timer); // what happens if we quit before it finished intructions

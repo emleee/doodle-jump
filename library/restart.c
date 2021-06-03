@@ -6,6 +6,20 @@ const double VELOCITY_X = 600;
 const vector_t RESTART_BUTTON = {.x = 250, .y = 400};
 const vector_t HOME_BUTTON = {.x = 250, .y = 425};
 
+char *get_high_score(char *highscore) {
+    FILE* file = fopen("highscore.txt", "r");
+    if (!file) {
+        return NULL;
+    }
+    char *buffer = malloc(100*sizeof(char));
+    strcpy(highscore, "High Score: ");
+    fgets(buffer, 6, file);
+    strcat(highscore, buffer);
+    fclose(file);
+    free(buffer);
+    return highscore;
+}
+
 void restart_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
     if (x < (RESTART_BUTTON.x + button_x_radius) && x > (RESTART_BUTTON.x - button_x_radius)) {
         if (y < (RESTART_BUTTON.y + button_y_radius) && y > (RESTART_BUTTON.y - button_y_radius)) {
@@ -23,7 +37,7 @@ void restart_mouse_click(scene_t *scene, int x, int y, double button_x_radius, d
     }
 }
 
-scene_t *make_restart_scene(char *score) { // add something to keep track score vs high score and the falling/sad doodle
+scene_t *make_restart_scene(char *score, char *highscore) { // add something to keep track score vs high score and the falling/sad doodle
     char *scene_info = malloc(8*sizeof(char));
     strcpy(scene_info, "restart");
     scene_t *scene = scene_init_with_info(scene_info, free);
@@ -34,6 +48,13 @@ scene_t *make_restart_scene(char *score) { // add something to keep track score 
     point1->y = 200;
     text_t *text1 = text_create(score, color, 22, point1);
     scene_add_text(scene, text1);
+
+    vector_t *highscore_point = malloc(sizeof(vector_t));
+    highscore_point->x = 250; // remove magic numbers
+    highscore_point->y = 300;
+    get_high_score(highscore);
+    text_t *highscore_text = text_create(highscore, color, 22, highscore_point);
+    scene_add_text(scene, highscore_text);
 
     vector_t *point = malloc(sizeof(vector_t));
     point->x = 250; // remove magic numbers

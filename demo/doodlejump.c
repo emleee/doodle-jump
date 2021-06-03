@@ -124,6 +124,7 @@ int main() {
     double curr = 0.0;
 
     char *score = malloc(100*sizeof(char));
+    char *highscore = malloc(100*sizeof(char));
 
     body_t *doodle;
 
@@ -164,7 +165,7 @@ int main() {
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
                 scene_free(scene);
-                scene = make_restart_scene(score);
+                scene = make_restart_scene(score, highscore);
             }
             else if (strcmp(scene_get_next_info(scene), "shop") == 0) {
                 center->x = WIDTH2/2;
@@ -212,6 +213,7 @@ int main() {
     }
     free(center);
     free(score);
+    free(highscore);
     scene_free(scene);
     return 0;
 }
