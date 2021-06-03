@@ -1,5 +1,6 @@
 #include "powerups.h"
 #include "game.h"
+#include "game_sprites.h"
 
 const rgb_color_t BOOST_COLOR = {.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
 const rgb_color_t IMMUNITY_COLOR = {.r = 0.54, .g = 0.54, .b = 0.54};
@@ -78,23 +79,23 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
             return NULL;
         }
 
-        // if (enemy_present) {
-        //     idx = (rand() % (3 - 2 + 1)) + 2;
-        // }
-        // else {
-        //     idx = (rand() % (3 - 1 + 1)) + 1;
-        // }
+        if (enemy_present) {
+            idx = (rand() % (3 - 2 + 1)) + 2;
+        }
+        else {
+            idx = (rand() % (3 - 1 + 1)) + 1;
+        }
 
-        // if (idx == BOOST_IDX) {
-        //     return make_boost(scene, *center);
-        // }
-        // else if (idx == IMMUNITY_IDX) {
-        //     return make_immunity(scene, *center, false);
-        // }
-        // else if (idx == MAGNET_IDX) {
-        //     return make_magnet(scene, *center, false);
-        // }        
-        return make_boost(scene, *center);
+        if (idx == BOOST_IDX) {
+            return make_boost(scene, *center);
+        }
+        else if (idx == IMMUNITY_IDX) {
+            return make_immunity(scene, *center, false);
+        }
+        else if (idx == MAGNET_IDX) {
+            return make_magnet(scene, *center, false);
+        }        
+        // return make_magnet(scene, *center, false);
         free(center);
     }
     return NULL;
@@ -145,7 +146,7 @@ body_t *make_immunity(scene_t *scene, vector_t center, bool collected) {
 
 body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     body_t *doodle = scene_get_body(scene, 0);
-    list_t *shape = list_init(4, free);
+    list_t *shape = list_init(4, free); //make rectangle
     vector_t *v = malloc(sizeof(*v));
     *v = (vector_t) {0, 0};
     list_add(shape, v);
@@ -162,7 +163,7 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     char *info = malloc(sizeof(char)*7);
     strcpy(info, "magnet");
     body_t *magnet = body_init_with_info(shape, INFINITY, MAGNET_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Magnet.png", 748/14, 845/14);
+    sprite_t *sprite = create_sprite("PNGs/Magnet.png", 748/21, 845/21);
     body_set_sprite(magnet, sprite);
     body_set_centroid(magnet, center);
     scene_add_body(scene, magnet);
@@ -171,37 +172,6 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     }
     return magnet;
 }
-
-// void boost_powerup(scene_t *scene, int *powerup_timer) {
-//     body_t *doodle = scene_get_body(scene, 0);
-//     size_t boost_idx = -1;
-//     for (size_t i = 0; i < scene_bodies(scene); i++) {
-//         body_t *body = scene_get_body(scene, i);
-//         if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
-//             boost_idx = i;
-//         }
-//         if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
-//             body_set_centroid(body, body_get_centroid(doodle));
-//         }
-//     }
-//     //move this to inner for loop
-//     if (boost_idx != -1) {
-//         body_t *boost = scene_get_body(scene, boost_idx);
-//         scene_remove_body(scene, boost_idx);
-//         boost = make_immunity(scene, body_get_centroid(doodle), true);
-//         char *info = malloc(sizeof(char)*9);
-//         strcpy(info, "equipped");
-//         body_set_second_info(boost, info);
-//         *powerup_timer = 0;
-//         body_set_mass(boost, 100);
-//         for (size_t j = 0; j < scene_bodies(scene); j++) {
-//             body_t *body = scene_get_body(scene, j);
-//             if (strcmp(body_get_info(body), "enemy") == 0) {
-//                 create_immunity_collision(scene, 0, boost, body);
-//             }
-//         }
-//     }
-// }
 
 void immunity_powerup(scene_t *scene, int *powerup_timer) {
     body_t *doodle = scene_get_body(scene, 0);
@@ -243,7 +213,8 @@ void magnet_powerup(scene_t *scene, int *powerup_timer) {
             magnet_idx = i;
         }
         if (strcmp(body_get_info(body), "magnet") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
-            body_set_centroid(body, body_get_centroid(doodle));
+            vector_t hand = find_hand(scene, doodle, body);
+            body_set_centroid(body, hand);
         }
     }
     if (magnet_idx != -1) {

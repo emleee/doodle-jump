@@ -60,7 +60,7 @@ void scene_add_sprite(scene_t *scene, sprite_t *sprite) {
 }
 
 sprite_t *scene_get_sprite(scene_t *scene, size_t index) {
-    assert(index < 4);
+    assert(index < 6);
     return list_get(scene->sprites, index);
 }
 

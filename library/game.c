@@ -217,6 +217,11 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_wing);
     scene_add_sprite(scene, left_wing);
 
+    sprite_t *right_magnet = create_sprite("PNGs/Magnet.png", 748/21, 845/21);
+    sprite_t *left_magnet = create_sprite("PNGs/Magnet_Flipped.png", 748/21, 845/21);
+    scene_add_sprite(scene, right_magnet);
+    scene_add_sprite(scene, left_magnet);
+
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, GAME_G, doodle);
@@ -383,8 +388,8 @@ double calculate_score(vector_t center) {
 }
 
 void game_mouse_click (scene_t *scene, int x, int y) {
-    body_t *player = scene_get_body((scene_t *)scene, 0);
-    vector_t mouth = find_mouth(player);
+    body_t *doodle = scene_get_body((scene_t *)scene, 0);
+    vector_t mouth = find_mouth(doodle);
     vector_t mouth_window = get_window_position(mouth, get_window_center());
     body_t *pellet;
     pellet = make_pellet(mouth);
@@ -598,8 +603,18 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 else {
                     body_set_sprite(doodle, scene_get_sprite(scene, 3));
                 }
-                // add stuff for magnet doodle!
             }
+            // if (strcmp(body_get_info(body), "magnet") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+            //     char *new_info = malloc(sizeof(char) * 7);
+            //     strcpy(new_info, "magnetic");
+            //     body_set_second_info(doodle, new_info);
+            //     if (body_get_direction(doodle) == 0) {
+            //         body_set_sprite(doodle, scene_get_sprite(scene, 4));
+            //     }
+            //     else {
+            //         body_set_sprite(doodle, scene_get_sprite(scene, 5));
+            //     }
+            // }
         }
 
         if (body_get_second_info(doodle) != NULL && strcmp(body_get_second_info(doodle), "winged") == 0 && within(1, body_get_velocity(doodle).y, 0)) {

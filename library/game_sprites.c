@@ -135,3 +135,19 @@ vector_t find_mouth(body_t *body) {
     }
     return mouth;
 }
+
+vector_t find_hand(scene_t *scene, body_t *body, body_t *powerup) {
+    vector_t centroid = body_get_centroid(body);
+    vector_t hand;
+    if (body_get_direction(body) == 0) {
+        sprite_t *new_sprite = scene_get_sprite(scene, 4);
+        body_set_sprite(powerup, new_sprite);
+        hand = (vector_t){.x = centroid.x + 70, .y = centroid.y - 15};
+    }
+    else {
+        sprite_t *new_sprite = scene_get_sprite(scene, 5);
+        body_set_sprite(powerup, new_sprite);
+        hand = (vector_t){.x = centroid.x - 70, .y = centroid.y - 15};
+    }
+    return hand;
+}
