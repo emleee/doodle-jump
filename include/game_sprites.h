@@ -3,6 +3,7 @@
 
 #include "vector.h"
 #include "body.h"
+#include "scene.h"
 
 const vector_t RIGHT_OFFSET;
 const vector_t LEFT_OFFSET;
