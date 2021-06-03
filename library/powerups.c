@@ -151,13 +151,13 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {96, 0};
+    *v = (vector_t) {748/21, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {96, 148};
+    *v = (vector_t) {748/21, 845/21};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 148};
+    *v = (vector_t) {0, 845/21};
     list_add(shape, v);
 
     char *info = malloc(sizeof(char)*7);
