@@ -85,10 +85,9 @@ body_t *make_button(vector_t center) {
 //     return (fabs(centroid1.x - centroid2.x) <= PLATFORM_WIDTH2 || fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2);
 // }
 
-bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
+void more_platforms(scene_t *scene, vector_t center) {
     int num_platforms = 0;
     int magnet_idx = -1;
-    bool success = false;
     for (int i = 0; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);
@@ -172,7 +171,6 @@ bool more_platforms(scene_t *scene, vector_t center, int powerup_timer) {
         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         i++;
     }
-    return success;
 }
 
 void more_enemies(scene_t *scene, vector_t center) {
@@ -248,7 +246,7 @@ scene_t *make_game_scene() {
     create_platform_collision(scene, 0, doodle, safety_platform);
 
     vector_t center = {.x = GAME_WIDTH/2, .y = -1 * GAME_HEIGHT/2};
-    more_platforms(scene, center, 0);
+    more_platforms(scene, center);
     return scene;
 }
 
@@ -525,7 +523,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         instructions(scene, instructions_timer);
     }
     else {
-        use_inventory(scene);
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         bool enemy_present = false;
         vector_t *scoring = malloc(sizeof(vector_t));
@@ -533,6 +530,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         scoring->y = 20;
         double curr = 0.0;
         char *buffer = malloc(100*sizeof(char));
+        double dt = time_since_last_tick();        
         // generate a star once in a while
         if (*star_timer == 200) {
             create_star(scene);
@@ -540,18 +538,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         }
         (*star_timer)++;
         star_score(scene);
-        bool success = false;
-        body_t *powerup = NULL;
-        magnet_powerup(scene, powerup_timer);
-        immunity_powerup(scene, powerup_timer);
-        if (*powerup_timer == 1200) {
-            bool powerup_pref = get_powerup_preference();
-            if (powerup_pref) {
-                powerup = make_powerup(scene);
-            }
-            *powerup_timer = 0;
-        }
-
+        
         // calculate and display score
         if (scene_textboxes(scene) >= 1) {
             for (size_t i = 0; i < scene_textboxes(scene); i++) {
@@ -567,9 +554,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             text_t *scorebox = text_create(score, color, 30, scoring);
             scene_add_text(scene, scorebox);
         }
-
-        double dt = time_since_last_tick();
-        *powerup_timer += 1;
+        (*powerup_timer)++;
         if (!in_screen(*center, doodle)) {
             char *restart_info = malloc(8*sizeof(char));
             strcpy(restart_info, "restart");
@@ -588,6 +573,16 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 sliding_bounce(body);
             }
         }
+        
+        magnet_powerup(scene, powerup_timer);
+        immunity_powerup(scene, powerup_timer);
+        if (*powerup_timer == 1200) {
+            bool powerup_pref = get_powerup_preference();
+            if (powerup_pref) {
+                make_powerup(scene, enemy_present);
+            }
+            *powerup_timer = 0;
+        }
 
         for (int i = 0; i < scene_bodies(scene); i++) {
             body_t *body = scene_get_body(scene, i);
@@ -602,6 +597,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 else {
                     body_set_sprite(doodle, scene_get_sprite(scene, 3));
                 }
+                // add stuff for magnet doodle!
             }
         }
 
@@ -616,17 +612,13 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                     body_set_sprite(doodle, scene_get_sprite(scene, 1));
                 }
         }
-
+        if (!enemy_present) {
+            more_enemies(scene, *center);
+        }
         // shifting the viewing window if the doodle goes higher than the center
         if (body_get_centroid(doodle).y > center->y) {
             // generates more platforms
-
-            if (more_platforms(scene, *center, *powerup_timer)) {
-                *powerup_timer = 0;
-            }
-            if (!enemy_present) {
-                more_enemies(scene, *center);
-            }
+            more_platforms(scene, *center);
             center->y = body_get_centroid(doodle).y;
             sdl_set_center(*center);
             for (int i = 1; i < 3; i++) {

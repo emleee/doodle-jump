@@ -48,4 +48,6 @@ void polygon_rotate(list_t *polygon, double angle, vector_t point);
 
 list_t *make_rectangle(vector_t bottom_left, double width, double height);
 
+list_t *make_circle(double radius);
+
 #endif // #ifndef __POLYGON_H__

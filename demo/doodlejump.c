@@ -151,6 +151,7 @@ int main() {
                 *star_timer = 0;
                 score = malloc(100*sizeof(char));
                 scene = make_game_scene();
+                use_inventory(scene);
                 doodle = scene_get_body(scene, 0);
             }
             else if (strcmp(scene_get_next_info(scene), "start") == 0) {

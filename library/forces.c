@@ -232,9 +232,6 @@ void create_powerup_collision(scene_t *scene, double elasticity, body_t *body1, 
     create_collision(scene, body1, body2, (collision_handler_t)powerup_collision, aux, (free_func_t)force_aux_free, collided);
 }
 
-
-
-
 void immunity_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
     force_aux_t *a = (force_aux_t *)aux;
     double c = force_aux_get_constant(a);

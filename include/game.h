@@ -8,7 +8,7 @@ body_t *make_enemy(vector_t center);
 
 body_t *make_button(vector_t center);
 
-bool more_platforms(scene_t *scene, vector_t center, int powerup_timer);
+void more_platforms(scene_t *scene, vector_t center);
 
 void more_enemies(scene_t *scene, vector_t center);
 

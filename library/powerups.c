@@ -4,8 +4,9 @@
 const rgb_color_t BOOST_COLOR = {.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
 const rgb_color_t IMMUNITY_COLOR = {.r = 0.54, .g = 0.54, .b = 0.54};
 const rgb_color_t MAGNET_COLOR = {.r = 1, .g = 1, .b = 0.2};
-const double RADIUS = 200.0; //152.0
+const double RADIUS = 176.0; //152.0
 const double RADIUS2 = 20.0; //152.0
+const double POWERUP_OFFSET = 50.0;
 
 const int BOOST_IDX = 1;
 const int IMMUNITY_IDX = 2;
@@ -55,14 +56,14 @@ vector_t *platform_center(scene_t *scene) {
 
     body_t *platform = scene_get_body(scene, random);
     center->x = body_get_centroid(platform).x;
-    center->y = body_get_centroid(platform).y + 40; // magic number for offset
+    center->y = body_get_centroid(platform).y + POWERUP_OFFSET; // magic number for offset
     if ((*center).y <= body_get_centroid(scene_get_body(scene,0)).y) {
         return NULL;
     }
     return center;
 }
 
-body_t *make_powerup(scene_t *scene) {
+body_t *make_powerup(scene_t *scene, bool enemy_present) {
     int num_powerups = 0;
     for (int i = 0; i < scene_bodies(scene); i++) {
         body_t *body = scene_get_body(scene, i);
@@ -77,17 +78,15 @@ body_t *make_powerup(scene_t *scene) {
             return NULL;
         }
         if (idx == BOOST_IDX) {
-            // return make_magnet(scene, *center, false);
             return make_boost(scene, *center);
         }
         else if (idx == IMMUNITY_IDX) {
-            // return make_magnet(scene, *center, false);
             return make_immunity(scene, *center, false);
         }
         else if (idx == MAGNET_IDX) {
             return make_magnet(scene, *center, false);
         }        
-        // return make_magnet(scene, *center, false);
+        // return make_immunity(scene, *center, false);
         free(center);
     }
     return NULL;
@@ -110,29 +109,22 @@ body_t *make_boost(scene_t *scene, vector_t center){
 }
 
 body_t *make_immunity(scene_t *scene, vector_t center, bool collected) {
-    list_t *shape = list_init(20, free); // 13/16 + 1
+    list_t *shape = NULL;
+    sprite_t *sprite = NULL;
     if (collected) {
-        for (int i = 0; i < 20; i++) {
-            vector_t *pt = malloc(sizeof(vector_t));
-            pt->x = RADIUS * cos(2 * M_PI * i / 20 + M_PI / 2);
-            pt->y = RADIUS * sin(2 * M_PI * i / 20 + M_PI / 2);
-            list_add(shape, pt);
-        }
+        shape = make_circle(RADIUS);
+        sprite = create_sprite("PNGs/Immunity.png", 1405/8, 1398/8);
     }
     else {
-        for (int i = 0; i < 20; i++) {
-            vector_t *pt = malloc(sizeof(vector_t));
-            pt->x = RADIUS2 * cos(2 * M_PI * i / 20 + M_PI / 2);
-            pt->y = RADIUS2 * sin(2 * M_PI * i / 20 + M_PI / 2);
-            list_add(shape, pt);
-        }
+        shape = make_circle(RADIUS2);
+        sprite = create_sprite("PNGs/Immunity.png", 2*RADIUS2, 2*RADIUS2);
     }
-    
     char *info = malloc(sizeof(char)*9);
     strcpy(info, "immunity");
     body_t *immunity = body_init_with_info(shape, 10, IMMUNITY_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Immunity.png", 1405/8, 1398/8);
-    body_set_sprite(immunity, sprite);
+    if (sprite != NULL) {
+        body_set_sprite(immunity, sprite);
+    }
     body_set_centroid(immunity, center);
     scene_add_body(scene, immunity);
     body_t *doodle = scene_get_body(scene, 0);

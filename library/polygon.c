@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+const double CIRCLE_POINTS = 20;
+
 double polygon_area(list_t *polygon) {
     size_t num_sides = list_size(polygon);
     double area = 0.0;
@@ -84,4 +86,15 @@ list_t *make_rectangle(vector_t bottom_left, double width, double height) {
     list_add(rectangle, v);
 
     return rectangle;
+}
+
+list_t *make_circle(double radius) {
+    list_t *circle = list_init(CIRCLE_POINTS, free);
+    for (int i = 0; i < CIRCLE_POINTS; i++) {
+        vector_t *pt = malloc(sizeof(vector_t));
+        pt->x = radius * cos(2 * M_PI * i / CIRCLE_POINTS + M_PI / 2);
+        pt->y = radius * sin(2 * M_PI * i / CIRCLE_POINTS + M_PI / 2);
+        list_add(circle, pt);
+    }
+    return circle;
 }

@@ -18,9 +18,10 @@ bool is_powerup(body_t *body);
  * Generates a random powerup (i.e. boost, magnet, or immunity).
  *
  * @param scene the current scene
+ * @param enemy_present whether or not an enemy is present in the current scene
  * @return the powerup body
  */
-body_t *make_powerup(scene_t *scene);
+body_t *make_powerup(scene_t *scene, bool enemy_present);
 
 /**
  * Generates a boost powerup and adds this to the current scene.
