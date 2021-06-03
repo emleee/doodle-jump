@@ -520,7 +520,7 @@ void instructions (scene_t *scene, int *instructions_timer) {
 }
 
 void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, int *instructions_timer, vector_t *center, char *score) {
-    bool first_time = first_time_play();]
+    bool first_time = first_time_play();
     if (first_time) {
         instructions(scene, instructions_timer);
     }
