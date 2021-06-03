@@ -41,10 +41,36 @@ body_t *body_init_with_info(
     free_func_t info_freer
 );
 
+/**
+ * Allocates memory for a body with the given parameters.
+ * The body is initially at rest.
+ * Asserts that the mass is positive and that the required memory is allocated.
+ *
+ * @param shape a list of vectors describing the initial shape of the body
+ * @param mass the mass of the body (if INFINITY, stops the body from moving)
+ * @param color the color of the body, used to draw it on the screen
+ * @param info additional information to associate with the body,
+ *   e.g. its type if the scene has multiple types of bodies
+ * @param info_freer if non-NULL, a function call on the info to free it
+ * @param sprite the sprite associated with the body
+ * @return a pointer to the newly allocated body
+ */
 body_t *body_init_with_sprite(list_t *shape, double mass, rgb_color_t color, void *info, free_func_t info_freer, sprite_t *sprite);
 
+/**
+ * Sets the sprite of a body to a sprite.
+ * 
+ * @param body the body whose sprite is being changed
+ * @param sprite the sprite being set as the body's sprite
+ */
 void body_set_sprite(body_t *body, sprite_t *sprite);
 
+/**
+ * Returns the sprite of a body.
+ * 
+ * @param body a pointer to a body returned from body_init()
+ * @return the sprite being returned
+ */
 sprite_t *body_get_sprite(body_t *body);
 
 /**
@@ -90,6 +116,12 @@ vector_t body_get_velocity(body_t *body);
  */
 double body_get_mass(body_t *body);
 
+/**
+ * Returns the current orientation of the body.
+ * 
+ * @param body a pointer to a body returned from body_init()
+ * @return the body's orientation in radians
+ */
 double body_get_direction(body_t *body);
 
 /**
@@ -108,6 +140,12 @@ rgb_color_t body_get_color(body_t *body);
  */
 void *body_get_info(body_t *body);
 
+/**
+ * Gets the second information associated with a body.
+ *
+ * @param body a pointer to a body returned from body_init()
+ * @return the second info passed to body_init()
+ */
 void *body_get_second_info(body_t *body);
 
 /**
@@ -181,8 +219,20 @@ void body_tick(body_t *body, double dt);
  */
 void body_remove(body_t *body);
 
+/**
+ * Sets the mass of a body to a specified value.
+ *
+ * @param body a pointer to a body returned from body_init()
+ * @param mass the body's new mass
+ */
 void body_set_mass(body_t *body, double mass);
 
+/**
+ * Sets the second information associated with a body.
+ *
+ * @param body a pointer to a body returned from body_init()
+ * @param info the new value of the body's second info
+ */
 void body_set_second_info(body_t *body, void *info);
 
 /**

@@ -89,23 +89,13 @@ void create_destructive_collision(scene_t *scene, body_t *body1, body_t *body2);
  * This should be represented as an on-collision callback
  * registered with create_collision().
  *
- * You may remember from project01 that you should avoid applying impulses
- * multiple times while the bodies are still colliding.
- * You should also have a special case that allows either body1 or body2
- * to have mass INFINITY, as this is useful for simulating walls.
- *
  * @param scene the scene containing the bodies
  * @param elasticity the "coefficient of restitution" of the collision;
  * 0 is a perfectly inelastic collision and 1 is a perfectly elastic collision
  * @param body1 the first body
  * @param body2 the second body
  */
-void create_platform_collision(
-    scene_t *scene,
-    double elasticity,
-    body_t *body1,
-    body_t *body2
-);
+void create_platform_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2);
 
 /**
  * Adds a force creator to a scene that registers the collision between the character and a magnet or immunity 

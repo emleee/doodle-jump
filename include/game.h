@@ -1,12 +1,8 @@
 #ifndef __GAME_H__
 #define __GAME_H__
-
-
 #include "platforms.h"
 #include "preferences.h"
 #include "powerups.h"
-
-// CHANGE INCLUDE STATEMENTS AND ONLY PUT FUNCTIONS CALLED IN MAIN FILE
 
 body_t *make_enemy(vector_t center);
 
