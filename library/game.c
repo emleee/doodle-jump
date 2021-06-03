@@ -588,6 +588,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             body_t *body = scene_get_body(scene, i);
             body_t *doodle = scene_get_body(scene, 0);
             if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+                scene_remove_body(scene, i);
                 char *new_info = malloc(sizeof(char) * 7);
                 strcpy(new_info, "winged");
                 body_set_second_info(doodle, new_info);
@@ -641,9 +642,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                     scene_remove_body(scene, i);
                 }
                 if (strcmp(body_get_info(scene_get_body(scene, i)), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
-                    scene_remove_body(scene, i);
-                }
-                if (strcmp(body_get_info(scene_get_body(scene, i)), "boost") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "equipped") == 0) {
                     scene_remove_body(scene, i);
                 }
             }

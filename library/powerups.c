@@ -71,28 +71,37 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
             num_powerups++;
         }
     }
-    int idx = (rand() % (3 - 1 + 1)) + 1;
+    int idx = -1;
     if (num_powerups == 0) {
         vector_t *center = platform_center(scene);
         if (center == NULL) {
             return NULL;
         }
-        if (idx == BOOST_IDX) {
-            return make_boost(scene, *center);
-        }
-        else if (idx == IMMUNITY_IDX) {
-            return make_immunity(scene, *center, false);
-        }
-        else if (idx == MAGNET_IDX) {
-            return make_magnet(scene, *center, false);
-        }        
-        // return make_immunity(scene, *center, false);
+
+        // if (enemy_present) {
+        //     idx = (rand() % (3 - 2 + 1)) + 2;
+        // }
+        // else {
+        //     idx = (rand() % (3 - 1 + 1)) + 1;
+        // }
+
+        // if (idx == BOOST_IDX) {
+        //     return make_boost(scene, *center);
+        // }
+        // else if (idx == IMMUNITY_IDX) {
+        //     return make_immunity(scene, *center, false);
+        // }
+        // else if (idx == MAGNET_IDX) {
+        //     return make_magnet(scene, *center, false);
+        // }        
+        return make_boost(scene, *center);
         free(center);
     }
     return NULL;
 }
 
 body_t *make_boost(scene_t *scene, vector_t center){
+    printf("made boost\n");
     list_t *shape = make_rectangle(VEC_ZERO, 1075/13, 843/13);
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "boost");
