@@ -520,7 +520,7 @@ void instructions (scene_t *scene, int *instructions_timer) {
 }
 
 void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, int *instructions_timer, vector_t *center, char *score) {
-    bool first_time = first_time_play();
+    bool first_time = first_time_play();]
     if (first_time) {
         instructions(scene, instructions_timer);
     }
@@ -556,7 +556,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             text_t *scorebox = text_create(score, color, 30, scoring);
             scene_add_text(scene, scorebox);
         }
-        (*powerup_timer)++;
 
         if (!in_screen(*center, doodle)) {
             high_score_updating(score);
@@ -590,6 +589,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 }
                 *powerup_timer = 0;
             }
+            (*powerup_timer)++;
 
             for (int i = 0; i < scene_bodies(scene); i++) {
                 body_t *body = scene_get_body(scene, i);
