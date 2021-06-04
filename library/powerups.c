@@ -5,7 +5,7 @@
 const rgb_color_t BOOST_COLOR = {.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
 const rgb_color_t IMMUNITY_COLOR = {.r = 0.54, .g = 0.54, .b = 0.54};
 const rgb_color_t MAGNET_COLOR = {.r = 1, .g = 1, .b = 0.2};
-const double RADIUS = 176.0; //152.0
+const double RADIUS = 176.0/2; //152.0
 const double RADIUS2 = 20.0; //152.0
 const double POWERUP_OFFSET = 50.0;
 
@@ -79,23 +79,23 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
             return NULL;
         }
 
-        if (enemy_present) {
-            idx = (rand() % (3 - 2 + 1)) + 2;
-        }
-        else {
-            idx = (rand() % (3 - 1 + 1)) + 1;
-        }
+        // if (enemy_present) {
+        //     idx = (rand() % (3 - 2 + 1)) + 2;
+        // }
+        // else {
+        //     idx = (rand() % (3 - 1 + 1)) + 1;
+        // }
 
-        if (idx == BOOST_IDX) {
-            return make_boost(scene, *center);
-        }
-        else if (idx == IMMUNITY_IDX) {
-            return make_immunity(scene, *center, false);
-        }
-        else if (idx == MAGNET_IDX) {
-            return make_magnet(scene, *center, false);
-        }        
-        // return make_magnet(scene, *center, false);
+        // if (idx == BOOST_IDX) {
+        //     return make_boost(scene, *center);
+        // }
+        // else if (idx == IMMUNITY_IDX) {
+        //     return make_immunity(scene, *center, false);
+        // }
+        // else if (idx == MAGNET_IDX) {
+        //     return make_magnet(scene, *center, false);
+        // }        
+        return make_immunity(scene, *center, false);
         free(center);
     }
     return NULL;
@@ -151,13 +151,13 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     *v = (vector_t) {0, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {96, 0};
+    *v = (vector_t) {748/21, 0};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {96, 148};
+    *v = (vector_t) {748/21, 845/21};
     list_add(shape, v);
     v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 148};
+    *v = (vector_t) {0, 845/21};
     list_add(shape, v);
 
     char *info = malloc(sizeof(char)*7);
