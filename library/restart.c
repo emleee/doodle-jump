@@ -3,8 +3,8 @@
 const double RESTART_HEIGHT = 960.0;
 const double VELOCITY_X = 600;
 
-const vector_t RESTART_BUTTON = {.x = 250, .y = 400};
-const vector_t HOME_BUTTON = {.x = 250, .y = 425};
+const vector_t RESTART_BUTTON = {.x = 250, .y = 465};
+const vector_t HOME_BUTTON = {.x = 250, .y = 480};
 
 char *get_high_score(char *highscore) {
     FILE* file = fopen("highscore.txt", "r");
