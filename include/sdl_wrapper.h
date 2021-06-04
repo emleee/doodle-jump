@@ -30,8 +30,7 @@ typedef enum {
 /**
  * A keypress handler.
  * When a key is pressed or released, the handler is passed its char value.
- * Most keys are passed as their char value, e.g. 'a', '1', or '\r'.
- * Arrow keys have the special values listed above.
+ * The 'a' and 'd' keys function as left and right arrows respectively.
  *
  * @param key a character indicating which key was pressed
  * @param type the type of key event (KEY_PRESSED or KEY_RELEASED)
@@ -39,6 +38,15 @@ typedef enum {
  */
 typedef void (*key_handler_t)(char key, key_event_type_t type, double held_time, void *scene);
 
+/**
+ * A mouseclick handler.
+ * When the mouse is left-clicked, the handler is passed the click coordinate.
+ *
+ * @param key an integer indicating which key was pressed
+ * @param x the x coordinate of the click
+ * @param y the y coordinate of the click
+ * @param scene the pointer to the scene where the clicking occurs
+ */
 typedef void (*mouse_handler_t)(int key, int x, int y, void *scene);
 
 /**
@@ -89,6 +97,14 @@ vector_t get_window_center(void);
  */
 void sdl_set_center(vector_t new_center);
 
+/**
+ * Creates and renders the a sprite from a file.
+ * 
+ * @param file the file where the sprite's image is found
+ * @param width the width of the sprite
+ * @param height the height of the sprite
+ * @return a newly allocated sprite_t 
+ */
 sprite_t *create_sprite(char *file, int width, int height);
 
 /**
@@ -155,6 +171,11 @@ void sdl_render_scene(scene_t *scene);
  */
 void sdl_on_key(key_handler_t handler);
 
+/**
+ * Registers a function to be called every time the mouse is clicked.
+ * 
+ * @param handler the function to call with every mouse click
+ */
 void sdl_mouse(mouse_handler_t handler);
 
 /**
@@ -172,6 +193,12 @@ double time_since_last_tick(void);
  */
 SDL_Renderer *get_renderer(void);
 
+/**
+ * Converts and returns scene coordinates to window coordinates.
+ * 
+ * @param scene_pos the position of the object in the scene's coordinates
+ * @param window_center the window's center in scene coordinates
+ */
 vector_t get_window_position(vector_t scene_pos, vector_t window_center);
 
 /**

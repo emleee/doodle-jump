@@ -12,4 +12,11 @@
  */
 void restart_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
 
+/** 
+ * Creates a scene for the restart screen.
+ * 
+ * @param score the score from the last run
+ * @param highscore the high score
+ * @return a newly allocated scene
+ */
 scene_t *make_restart_scene(char *score, char *highscore);

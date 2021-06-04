@@ -36,8 +36,20 @@ scene_t *scene_init(void);
  */
 scene_t *scene_init_with_info(void *info, free_func_t info_freer);
 
+/**
+ * Retuns the sprite of a scene at the given position.
+ * 
+ * @param scene a pointer to the scene
+ * @param index the index of the sprite
+ */
 sprite_t *scene_get_sprite(scene_t *scene, size_t index);
 
+/**
+ * Adds a sprite to a scene
+ * 
+ * @param scene the pointer to a scene
+ * @param sprite the sprite to be added
+ */
 void scene_add_sprite(scene_t *scene, sprite_t *sprite);
 
 /**
@@ -108,6 +120,12 @@ void scene_set_next_info(scene_t *scene, void *next_info);
  */
 void scene_remove_body(scene_t *scene, size_t index);
 
+/**
+ * Returns the list of forces being applied to the bodies in a scene.
+ * 
+ * @param scene the pointer to the scene
+ * @return the list of force packages
+ */
 list_t *scene_get_forces(scene_t *scene);
 
 /**

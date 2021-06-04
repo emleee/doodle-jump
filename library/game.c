@@ -265,7 +265,7 @@ bool in_screen(vector_t center, body_t *body) {
     return false;
 }
 
-body_t *wrap(body_t *doodle) {
+void wrap(body_t *doodle) {
     if (body_get_centroid(doodle).x >= GAME_WIDTH + GAME_DOODLE_WIDTH/2) {
         vector_t shift = {.x = 0, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
@@ -274,7 +274,6 @@ body_t *wrap(body_t *doodle) {
         vector_t shift = {.x = GAME_WIDTH, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
-    return doodle;
 }
 
 body_t *make_pellet (vector_t center) {

@@ -11,7 +11,13 @@
  */
 typedef struct text text_t;
 
-
+/**
+ * Initializes a text_t object containing textbox properties.
+ * 
+ * @param surface the SDL surface
+ * @param texture the SDL texture
+ * @param textbox the SDL rectangle
+ */
 text_t *text_init(SDL_Surface *surface, SDL_Texture *texture, SDL_Rect *textbox);
 
 
