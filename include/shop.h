@@ -31,16 +31,43 @@ scene_t *make_failed_purchase_scene();
  */
 void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
 
+/**
+ * Handles action when the player attempts to buy immunity. Will either buy the powerup and add
+ * it to their inventory or inform the player that they can't buy the powerup.
+ */
 void buy_immunity(scene_t *scene);
 
+/**
+ * Handles action when the player attempts to buy a magnet. Will either buy the powerup and add
+ * it to their inventory or inform the player that they can't buy the powerup.
+ */
 void buy_magnet(scene_t *scene);
 
+/**
+ * Handles action when the player attempts to buy a boost. Will either buy the powerup and add
+ * it to their inventory or inform the player that they can't buy the powerup.
+ */
 void buy_boost(scene_t *scene);
 
+/**
+ * Returns the number of stars the player has.
+ * 
+ * @return the number of stars
+ */
 int get_star_count();
 
+/**
+ * Changes the numebr of stars to the given count.
+ * 
+ * @param new_count the number of stars to be changed to
+ */
 void change_star_count(int new_count);
 
+/**
+ * Saves the purchased powerup to a file.
+ * 
+ * @param powerup the purchased powerup
+ */
 void write_powerup(char *powerup);
 
 /**
@@ -55,4 +82,9 @@ void write_powerup(char *powerup);
  */
 void use_inventory (scene_t *scene);
 
+/**
+ * Displays the number of stars the user has with a star in front.
+ * 
+ * @param scene the pointer to the shop scene
+ */
 void display_star_count(scene_t *scene);

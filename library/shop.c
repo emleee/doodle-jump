@@ -35,7 +35,7 @@ scene_t *make_shop_scene () {
     vector_t *point1 = malloc(sizeof(vector_t));
     point1->x = BOOST_CENTER.x - 10; // remove magic numbers
     point1->y = SHOP_HEIGHT - BOOST_CENTER.y + PRICE_OFFSET;
-    text_t *text1 = text_create("Buy for 50", text_color, 22, point1);
+    text_t *text1 = text_create("Buy for 100", text_color, 22, point1);
     scene_add_text(scene, text1);
     vector_t boost_star_center = {.x = BOOST_CENTER.x + STAR_OFFSET, .y = SHOP_HEIGHT - point1->y};
     star_t *boost_starframe = make_star(boost_star_center, 5, 13); // magic number for num points, radius
@@ -60,7 +60,7 @@ scene_t *make_shop_scene () {
     vector_t *point3 = malloc(sizeof(vector_t));
     point3->x = IMMUNITY_CENTER.x - 10; // remove magic numbers
     point3->y = SHOP_HEIGHT - IMMUNITY_CENTER.y + PRICE_OFFSET;
-    text_t *text3 = text_create("Buy for 100", text_color, 22, point3);
+    text_t *text3 = text_create("Buy for 50", text_color, 22, point3);
     scene_add_text(scene, text3);
     vector_t immunity_star_center = {.x = IMMUNITY_CENTER.x + STAR_OFFSET + 5, .y = SHOP_HEIGHT - point3->y};
     star_t *immunity_starframe = make_star(immunity_star_center, 5, 13); // magic number for num points, radius

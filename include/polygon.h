@@ -46,8 +46,22 @@ void polygon_translate(list_t *polygon, vector_t translation);
  */
 void polygon_rotate(list_t *polygon, double angle, vector_t point);
 
+/**
+ * Makes a rectangle.
+ * 
+ * @param bottom_left the bottom left corner's coordinates
+ * @param width the width
+ * @param height the height
+ * @return a newly allocated list_t of points representing the rectangle
+ */
 list_t *make_rectangle(vector_t bottom_left, double width, double height);
 
+/**
+ * Makes a circle.
+ * 
+ * @param radius the radius of the circle
+ * @return a newly allocated list_t of points representing the circle
+ */
 list_t *make_circle(double radius);
 
 #endif // #ifndef __POLYGON_H__

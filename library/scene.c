@@ -46,12 +46,12 @@ scene_t *scene_init_with_info(void *info, free_func_t info_freer) {
 void scene_free(scene_t *scene) {
     list_free(scene->bodies);
     list_free(scene->text);
-    // if (scene->next_info != NULL && scene->next_info != scene->info) {
-    //     scene->info_freer(scene->next_info);
-    // }
-    // if (scene->info != NULL) {
-    //     scene->info_freer(scene->info);
-    // } 
+    if (scene->next_info != NULL && scene->next_info != scene->info) {
+        scene->info_freer(scene->next_info);
+    }
+    if (scene->info != NULL) {
+        scene->info_freer(scene->info);
+    } 
     free(scene);
 }
 
@@ -96,6 +96,10 @@ void scene_remove_body(scene_t *scene, size_t index) {
 
 list_t *scene_get_forces(scene_t *scene) {
     return scene->forces;
+}
+
+list_t *scene_get_sprites(scene_t *scene) {
+    return scene->sprites;
 }
 
 void scene_add_force_creator(scene_t *scene, force_creator_t forcer, void *aux, free_func_t freer) {

@@ -42,7 +42,12 @@ scene_t *make_start_scene();
  */
 void start_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
 
-
+/**
+ * Calls the above two methods to create the start screen interface.
+ * 
+ * @param scene a pointer to the start screen scene
+ * @param timer the timer for displaying graphics
+ */
 void start_main(scene_t *scene, int timer);
 
 #endif // #ifndef __START_H__

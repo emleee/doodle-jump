@@ -88,6 +88,9 @@ void mouse_click(int key, int x, int y, void *scene) {
             else if (strcmp(scene_get_info(scene), "shop") == 0) {
                 shop_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
             }
+            else if (strcmp(scene_get_info(scene), "instructions") == 0) {
+                instructions_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
+            }
     }
 }
 
@@ -103,8 +106,8 @@ int main() {
     *powerup_timer = 0;
     int *star_timer = malloc(sizeof(int));
     *star_timer = 0;
-    int *instructions_timer = malloc(sizeof(int));
-    *instructions_timer = 0;
+    // int *instructions_timer = malloc(sizeof(int));
+    // *instructions_timer = 0;
     int star_score = 0;
 
     int start_timer = 0;
@@ -187,9 +190,16 @@ int main() {
                 scene_free(scene);
                 scene = make_settings_scene();
             }
+            else if (strcmp(scene_get_next_info(scene), "instructions") == 0) {
+                scene_free(scene);
+                scene = make_instructions_scene();
+            }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-            game_main(scene, doodle, star_timer, powerup_timer, timer, instructions_timer, center, score);
+            game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
+        }
+        if (strcmp(scene_get_info(scene), "instructions") == 0) {
+            sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "start") == 0) {
             start_timer++;
@@ -207,6 +217,7 @@ int main() {
                 char *start_info = malloc(6*sizeof(char));
                 strcpy(start_info, "start");
                 scene_set_next_info(scene, start_info);
+                shop_timer = 0;
             }
             shop_timer++;
             sdl_render_scene(scene);
@@ -216,6 +227,7 @@ int main() {
                 char *shop_info = malloc(5*sizeof(char));
                 strcpy(shop_info, "shop");
                 scene_set_next_info(scene, shop_info);
+                shop_timer = 0;
             }
             shop_timer++;
             sdl_render_scene(scene);

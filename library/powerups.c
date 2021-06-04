@@ -95,14 +95,13 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
         else if (idx == MAGNET_IDX) {
             return make_magnet(scene, *center, false);
         }        
-        // return make_immunity(scene, *center, false);
+        // return make_magnet(scene, *center, false);
         free(center);
     }
     return NULL;
 }
 
 body_t *make_boost(scene_t *scene, vector_t center){
-    printf("made boost\n");
     list_t *shape = make_rectangle(VEC_ZERO, 1075/13, 843/13);
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "boost");
@@ -146,20 +145,7 @@ body_t *make_immunity(scene_t *scene, vector_t center, bool collected) {
 
 body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
     body_t *doodle = scene_get_body(scene, 0);
-    list_t *shape = list_init(4, free); //make rectangle
-    vector_t *v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {748/21, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {748/21, 845/21};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 845/21};
-    list_add(shape, v);
-
+    list_t *shape = make_rectangle(VEC_ZERO, 748/21, 845/21);
     char *info = malloc(sizeof(char)*7);
     strcpy(info, "magnet");
     body_t *magnet = body_init_with_info(shape, INFINITY, MAGNET_COLOR, info, free);
