@@ -659,7 +659,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         else {
             for(int i = 3; i < scene_bodies(scene); i++) {
                 body_t *body = scene_get_body(scene, i);
-                if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
+                if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
                     enemy_present = true;
                 }
                 if (!in_screen(*center, body)) {
