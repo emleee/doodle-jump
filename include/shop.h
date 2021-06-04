@@ -18,6 +18,8 @@ scene_t *make_shop_scene ();
  */
 scene_t *make_shop_exit_scene();
 
+scene_t *make_failed_purchase_scene();
+
 /**
  * Handles the mouse-clicking events in the shop for selecting powerups to purchase. 
  *
@@ -29,11 +31,11 @@ scene_t *make_shop_exit_scene();
  */
 void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
 
-void buy_immunity();
+void buy_immunity(scene_t *scene);
 
-void buy_magnet();
+void buy_magnet(scene_t *scene);
 
-void buy_boost();
+void buy_boost(scene_t *scene);
 
 int get_star_count();
 

@@ -178,6 +178,10 @@ int main() {
                 scene_free(scene);
                 scene = make_shop_exit_scene();
             }
+            else if (strcmp(scene_get_next_info(scene), "shop fail") == 0) {
+                scene_free(scene);
+                scene = make_failed_purchase_scene();
+            }
             else if (strcmp(scene_get_next_info(scene), "settings") == 0) {
                 star_score += scene_stars(scene);
                 scene_free(scene);
@@ -203,6 +207,15 @@ int main() {
                 char *start_info = malloc(6*sizeof(char));
                 strcpy(start_info, "start");
                 scene_set_next_info(scene, start_info);
+            }
+            shop_timer++;
+            sdl_render_scene(scene);
+        }
+        else if (strcmp(scene_get_info(scene), "shop fail") == 0) {
+            if (shop_timer == 1000){
+                char *shop_info = malloc(5*sizeof(char));
+                strcpy(shop_info, "shop");
+                scene_set_next_info(scene, shop_info);
             }
             shop_timer++;
             sdl_render_scene(scene);

@@ -133,7 +133,7 @@ scene_t *make_failed_purchase_scene() {
     char *info = malloc(sizeof(char)*5);
     strcpy(info, "fail");
     body_t *thanks = body_init_with_info(shape, INFINITY, MESSAGE_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Shop_Exit.png", 480, 237);
+    sprite_t *sprite = create_sprite("PNGs/Shop_Exit.png", 480, 237); //replace this with new sprite
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
@@ -145,38 +145,41 @@ scene_t *make_failed_purchase_scene() {
     return scene;
 }
 
+// scene_t *make_overwrite_boost_scene() {
+//     char *scene_info = malloc(10*sizeof(char));
+//     strcpy(scene_info, "shop fail");
+//     scene_t *scene = scene_init_with_info(scene_info, free);
+//     vector_t center = {.x = SHOP_WIDTH/2, .y = SHOP_HEIGHT/2};
+//     list_t *shape = make_rectangle(center, 480, 237);
+//     char *info = malloc(sizeof(char)*5);
+//     strcpy(info, "fail");
+//     body_t *thanks = body_init_with_info(shape, INFINITY, MESSAGE_COLOR, info, free);
+//     sprite_t *sprite = create_sprite("PNGs/Shop_Exit.png", 480, 237); //replace this with new sprite
+//     body_set_sprite(thanks, sprite);
+//     body_set_centroid(thanks, center);
+//     scene_add_body(scene, thanks);
+//     body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+//     body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*SHOP_HEIGHT});
+//     scene_add_body(scene, background1);
+//     scene_add_body(scene, background2);
+
+//     return scene;
+// }
+
 void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (310 + button_y_radius) && y > (310 - button_y_radius)) {
-            if (get_sound_preference()) {
-                play_cha_ching();
-            }
-            buy_boost();
-            char *exit_info = malloc(10*sizeof(char));
-            strcpy(exit_info, "shop exit");
-            scene_set_next_info(scene, exit_info);
+            buy_boost(scene);
         }
     }
     if (x < (500 + button_x_radius) && x > (500 - button_x_radius)) {
         if (y < (450 + button_y_radius) && y > (450 - button_y_radius)) {
-            if (get_sound_preference()) {
-                play_cha_ching();
-            }
-            buy_magnet();
-            char *exit_info = malloc(10*sizeof(char));
-            strcpy(exit_info, "shop exit");
-            scene_set_next_info(scene, exit_info);
+            buy_magnet(scene);
         }
     }
     if (x < (220 + button_x_radius) && x > (220 - button_x_radius)) {
         if (y < (550 + button_y_radius) && y > (550 - button_y_radius)) {
-            if (get_sound_preference()) {
-                play_cha_ching();
-            }
-            buy_immunity();
-            char *exit_info = malloc(10*sizeof(char));
-            strcpy(exit_info, "shop exit");
-            scene_set_next_info(scene, exit_info);
+            buy_immunity(scene);
         }
     }
     if (x < (SHOP_HOME_CENTER.x + button_x_radius) && x > (SHOP_HOME_CENTER.x - button_x_radius)) {
@@ -231,45 +234,72 @@ void write_powerup(char *powerup) {
     fclose(powerup_file);
 }
 
-void buy_immunity() {
+void buy_immunity(scene_t *scene) {
     int num_stars = get_star_count();
     if (num_stars < IMMUNITY_PRICE) {
-        printf("Sorry, you don't have enough stars to purchase this.\n");
+        char *fail_info = malloc(10*sizeof(char));
+        strcpy(fail_info, "shop fail");
+        scene_set_next_info(scene, fail_info);
+        printf("Sorry, you don't have enough stars to purchase the shield.\n");
     }
     else {
+        if (get_sound_preference()) {
+            play_cha_ching();
+        }
         num_stars -= IMMUNITY_PRICE;
         change_star_count(num_stars);
         char *immunity = malloc(9*sizeof(char));
         immunity = "immunity";
         write_powerup(immunity);
+        char *exit_info = malloc(10*sizeof(char));
+        strcpy(exit_info, "shop exit");
+        scene_set_next_info(scene, exit_info);
     }
 }
 
-void buy_magnet(){
+void buy_magnet(scene_t *scene){
     int num_stars = get_star_count();
     if (num_stars < MAGNET_PRICE) {
-        printf("Sorry, you don't have enough stars to purchase this.\n");
+        char *fail_info = malloc(10*sizeof(char));
+        strcpy(fail_info, "shop fail");
+        scene_set_next_info(scene, fail_info);
+        printf("Sorry, you don't have enough stars to purchase the magnet.\n");
     }
     else {
+        if (get_sound_preference()) {
+            play_cha_ching();
+        }
         num_stars -= MAGNET_PRICE;
         change_star_count(num_stars);
         char *magnet = malloc(7*sizeof(char));
         magnet = "magnet";
         write_powerup(magnet);
+        char *exit_info = malloc(10*sizeof(char));
+        strcpy(exit_info, "shop exit");
+        scene_set_next_info(scene, exit_info);
     }
 }
 
-void buy_boost(){
+void buy_boost(scene_t *scene){
     int num_stars = get_star_count();
     if (num_stars < BOOST_PRICE) {
-        printf("Sorry, you don't have enough stars to purchase this.\n");
+        char *fail_info = malloc(10*sizeof(char));
+        strcpy(fail_info, "shop fail");
+        scene_set_next_info(scene, fail_info);
+        printf("Sorry, you don't have enough stars to purchase the boost.\n"); // display sorry scene
     }
     else { 
+        if (get_sound_preference()) {
+            play_cha_ching();
+        }
         num_stars -= BOOST_PRICE;
         change_star_count(num_stars);
         char *boost = malloc(6*sizeof(char));
         boost = "boost";
         write_powerup(boost);
+        char *exit_info = malloc(10*sizeof(char));
+        strcpy(exit_info, "shop exit");
+        scene_set_next_info(scene, exit_info);
     }
 }
 
