@@ -415,7 +415,7 @@ int get_current_panel(scene_t *scene) {
         }
     }
     return -1;
-} 
+}
 
 void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
     body_t *panel = scene_get_body(scene, 0);
@@ -427,7 +427,7 @@ void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_rad
                 body_set_sprite(panel, scene_get_sprite(scene, i-1));
                 body_set_centroid(panel, center);
             }
-            
+
         }
     }
     if (x < (NEXT_BUTTON.x + button_x_radius) && x > (NEXT_BUTTON.x - button_x_radius)) {
@@ -443,9 +443,9 @@ void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_rad
                 scene_set_next_info(scene, game_info);
                 set_first_time();
             }
-            
+
         }
-    } 
+    }
 }
 
 void star_score(scene_t *scene) {
@@ -591,7 +591,7 @@ scene_t *make_instructions_scene() {
 //         sprite_t *sprite = scene_get_sprite(scene, 3);
 //         body_set_sprite(second, sprite);
 //         body_set_centroid(second, center);
-//         scene_add_body(scene, second); 
+//         scene_add_body(scene, second);
 //     }
 //     if (*instructions_timer == 5000){
 //         scene_remove_body(scene, scene_bodies(scene)-1);
@@ -617,11 +617,11 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         bool enemy_present = false;
         vector_t *scoring = malloc(sizeof(vector_t));
-        scoring->x = 80; // magic numbers
+        scoring->x = 90; // magic numbers
         scoring->y = 20;
         double curr = 0.0;
         char *buffer = malloc(100*sizeof(char));
-        double dt = time_since_last_tick();        
+        double dt = time_since_last_tick();
         // generate a star once in a while
         if (*star_timer == 200) {
             create_star(scene);
@@ -629,7 +629,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         }
         (*star_timer)++;
         star_score(scene);
-        
+
         // calculate and display score
         if (scene_textboxes(scene) >= 1) {
             for (size_t i = 0; i < scene_textboxes(scene); i++) {
@@ -659,7 +659,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         else {
             for(int i = 3; i < scene_bodies(scene); i++) {
                 body_t *body = scene_get_body(scene, i);
-                if (!enemy_present && strcmp(body_get_info(body), "enemy") == 0) {
+                if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
                     enemy_present = true;
                 }
                 if (!in_screen(*center, body)) {
@@ -669,7 +669,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                     sliding_bounce(body);
                 }
             }
-            
+
             magnet_powerup(scene, powerup_timer);
             immunity_powerup(scene, powerup_timer);
             if (*powerup_timer == 1200) {
@@ -770,7 +770,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             scene_tick(scene, dt);
         }
         free(buffer);
-        
+
     }
     sdl_render_scene(scene);
 }
