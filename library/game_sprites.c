@@ -16,6 +16,12 @@ const rgb_color_t COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
 const double DOODLE_WIDTH = 96.0;
 const double DOODLE_HEIGHT = 148.0;
 
+const int RIGHT_MAGNET_IDX = 4;
+const int LEFT_MAGNET_IDX = 5;
+const vector_t HAND_OFFSET = {.x = 70, .y = 15};
+const vector_t MOUTH_OFFSET = {.x = 13, .y = 24};
+
+
 // sprite_t *make_jump_left() {
 //     sprite_t *sprite = create_sprite("PNGs/Jump_Left.png", 117, 207);
 //     sprite_set_parameters(sprite, VEC_ZERO, 117, 207);
@@ -89,19 +95,6 @@ body_t *make_background_body(char *file, vector_t center) {
     strcpy(info, "background");
 
     list_t *shape = make_rectangle((vector_t){.x=-1, .y=-1}, 2, 2);
-    // list_t *shape = list_init(4, free);
-    // vector_t *v = malloc(sizeof(*v));
-    // *v = (vector_t) {-1, 1};
-    // list_add(shape, v);
-    // v = malloc(sizeof(*v));
-    // *v = (vector_t) {1, 1};   // magic numbers
-    // list_add(shape, v);
-    // v = malloc(sizeof(*v));
-    // *v = (vector_t) {1, -1};
-    // list_add(shape, v);
-    // v = malloc(sizeof(*v));
-    // *v = (vector_t) {-1, -1};
-    // list_add(shape, v);
 
     sprite_t *sprite = create_sprite(file, 720, 960);
     body_t *background = body_init_with_sprite(shape, 1, COLOR, info, free, sprite);
@@ -128,10 +121,10 @@ vector_t find_mouth(body_t *body) {
     vector_t centroid = body_get_centroid(body);
     vector_t mouth;
     if (body_get_direction(body) == 0) {
-        mouth = (vector_t){.x = centroid.x + 13, .y = centroid.y + 24};
+        mouth = (vector_t){.x = centroid.x + MOUTH_OFFSET.x, .y = centroid.y + MOUTH_OFFSET.y};
     }
     else {
-        mouth = (vector_t){.x = centroid.x - 13, .y = centroid.y + 24};
+        mouth = (vector_t){.x = centroid.x - MOUTH_OFFSET.x, .y = centroid.y + MOUTH_OFFSET.y};
     }
     return mouth;
 }
@@ -140,14 +133,14 @@ vector_t find_hand(scene_t *scene, body_t *body, body_t *powerup) {
     vector_t centroid = body_get_centroid(body);
     vector_t hand;
     if (body_get_direction(body) == 0) {
-        sprite_t *new_sprite = scene_get_sprite(scene, 4);
+        sprite_t *new_sprite = scene_get_sprite(scene, RIGHT_MAGNET_IDX);
         body_set_sprite(powerup, new_sprite);
-        hand = (vector_t){.x = centroid.x + 70, .y = centroid.y - 15};
+        hand = (vector_t){.x = centroid.x + HAND_OFFSET.x, .y = centroid.y - HAND_OFFSET.y};
     }
     else {
-        sprite_t *new_sprite = scene_get_sprite(scene, 5);
+        sprite_t *new_sprite = scene_get_sprite(scene, LEFT_MAGNET_IDX);
         body_set_sprite(powerup, new_sprite);
-        hand = (vector_t){.x = centroid.x - 70, .y = centroid.y - 15};
+        hand = (vector_t){.x = centroid.x - HAND_OFFSET.x, .y = centroid.y - HAND_OFFSET.y};
     }
     return hand;
 }

@@ -12,8 +12,7 @@ const double BUTTON_Y_RADIUS = 75;
 
 const double PLAYER_X_VELOCITY = 600;
 
-
-// const double G = -150.0;
+const int SHOP_TIMER = 1000;
 
 void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     body_t *player = scene_get_body((scene_t *)scene, 0);
@@ -215,7 +214,7 @@ int main() {
             sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "shop exit") == 0) {
-            if (shop_timer == 1000){
+            if (shop_timer == SHOP_TIMER){
                 char *start_info = malloc(6*sizeof(char));
                 strcpy(start_info, "start");
                 scene_set_next_info(scene, start_info);
@@ -225,7 +224,7 @@ int main() {
             sdl_render_scene(scene);
         }
         else if (strcmp(scene_get_info(scene), "shop fail") == 0) {
-            if (shop_timer == 1000){
+            if (shop_timer == SHOP_TIMER){
                 char *shop_info = malloc(5*sizeof(char));
                 strcpy(shop_info, "shop");
                 scene_set_next_info(scene, shop_info);

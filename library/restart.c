@@ -3,8 +3,10 @@
 const double RESTART_HEIGHT = 960.0;
 const double RESTART_WIDTH = 720.0;
 
-const vector_t RESTART_BUTTON = {.x = 250, .y = 465};
-const vector_t HOME_BUTTON = {.x = 250, .y = 480};
+const vector_t SCORE_CENTER = {.x = 480, .y = 200};
+const vector_t HIGHSCORE_CENTER = {.x = 480, .y = 300};
+const vector_t RESTART_BUTTON = {.x = 480, .y = 400};
+const vector_t HOME_BUTTON = {.x = 480, .y = 500};
 
 char *get_high_score(char *highscore) {
     FILE* file = fopen("highscore.txt", "r");
@@ -13,7 +15,7 @@ char *get_high_score(char *highscore) {
     }
     char *buffer = malloc(100*sizeof(char));
     strcpy(highscore, "High Score: ");
-    fgets(buffer, 6, file);
+    fgets(buffer, sizeof(buffer), file);
     strcat(highscore, buffer);
     fclose(file);
     free(buffer);
@@ -37,35 +39,35 @@ void restart_mouse_click(scene_t *scene, int x, int y, double button_x_radius, d
     }
 }
 
-scene_t *make_restart_scene(char *score, char *highscore) { // add something to keep track score vs high score and the falling/sad doodle
+scene_t *make_restart_scene(char *score, char *highscore) {
     char *scene_info = malloc(8*sizeof(char));
     strcpy(scene_info, "restart");
     scene_t *scene = scene_init_with_info(scene_info, free);
 
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
-    vector_t *point1 = malloc(sizeof(vector_t));
-    point1->x = RESTART_WIDTH/2; // remove magic numbers
-    point1->y = 200;
-    text_t *text1 = text_create(score, color, 22, point1);
-    scene_add_text(scene, text1);
+    vector_t *score_point = malloc(sizeof(vector_t));
+    score_point->x = SCORE_CENTER.x;
+    score_point->y = SCORE_CENTER.y;
+    text_t *score_text = text_create(score, color, 22, score_point);
+    scene_add_text(scene, score_text);
 
     vector_t *highscore_point = malloc(sizeof(vector_t));
-    highscore_point->x = RESTART_WIDTH/2; // remove magic numbers
-    highscore_point->y = 300;
+    highscore_point->x = HIGHSCORE_CENTER.x;
+    highscore_point->y = HIGHSCORE_CENTER.y;
     get_high_score(highscore);
     text_t *highscore_text = text_create(highscore, color, 22, highscore_point);
     scene_add_text(scene, highscore_text);
 
-    vector_t *point = malloc(sizeof(vector_t));
-    point->x = RESTART_WIDTH/2; // remove magic numbers
-    point->y = 400;
-    text_t *text = text_create("Restart", color, 22, point);
-    scene_add_text(scene, text);
+    vector_t *restart_point = malloc(sizeof(vector_t));
+    restart_point->x = RESTART_BUTTON.x;
+    restart_point->y = RESTART_BUTTON.y;
+    text_t *restart_text = text_create("Restart", color, 22, restart_point);
+    scene_add_text(scene, restart_text);
 
-    vector_t *point2 = malloc(sizeof(vector_t));
-    point2->x = RESTART_WIDTH/2; // remove magic numbers
-    point2->y = 500;
-    text_t *text2 = text_create("Home", color, 22, point2);
+    vector_t *home_point = malloc(sizeof(vector_t));
+    home_point->x = HOME_BUTTON.x;
+    home_point->y = HOME_BUTTON.y;
+    text_t *text2 = text_create("Home", color, 22, home_point);
     scene_add_text(scene, text2);
 
     body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = RESTART_HEIGHT});

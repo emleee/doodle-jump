@@ -44,8 +44,6 @@ scene_t *scene_init_with_info(void *info, free_func_t info_freer);
  */
 sprite_t *scene_get_sprite(scene_t *scene, size_t index);
 
-list_t *scene_get_sprites(scene_t *scene, size_t index);
-
 /**
  * Adds a sprite to a scene
  * 

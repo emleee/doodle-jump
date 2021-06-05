@@ -47,9 +47,9 @@ void scene_free(scene_t *scene) {
     for (int i = 0; i < scene_bodies(scene); i++) {
         body_set_sprite(scene_get_body(scene, i), NULL);
     }
+    list_free(scene->sprites);
     list_free(scene->bodies);
     list_free(scene->text);
-    list_free(scene->sprites);
     list_free(scene->forces);
     if (scene->next_info != NULL && scene->next_info != scene->info) {
         scene->info_freer(scene->next_info);
@@ -65,7 +65,6 @@ void scene_add_sprite(scene_t *scene, sprite_t *sprite) {
 }
 
 sprite_t *scene_get_sprite(scene_t *scene, size_t index) {
-    assert(index < 6);
     return list_get(scene->sprites, index);
 }
 
@@ -101,10 +100,6 @@ void scene_remove_body(scene_t *scene, size_t index) {
 
 list_t *scene_get_forces(scene_t *scene) {
     return scene->forces;
-}
-
-list_t *scene_get_sprites(scene_t *scene) {
-    return scene->sprites;
 }
 
 void scene_add_force_creator(scene_t *scene, force_creator_t forcer, void *aux, free_func_t freer) {

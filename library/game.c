@@ -13,6 +13,8 @@ const double GAME_BUTTON_Y_RADIUS = 75;
 const double MAX_PLATFORMS = 12;
 const double PLATFORM_WIDTH2 = 146;
 const double PLATFORM_HEIGHT2 = 35;
+const vector_t PANEL_DIMENSTIONS = {.x = 500, .y = 500};
+const int NUM_PANELS = 4;
 
 const vector_t GAME_START_VELOCITY = {.x = 0, .y = 300};
 // const double PLAYER_X_VELOCITY = 600;
@@ -31,8 +33,7 @@ const double BUTTON_OFFSET = 100;
 const vector_t PREVIOUS_BUTTON = {.x = 260.0, .y = 630.0};
 const vector_t NEXT_BUTTON = {.x = 450.0, .y = 630.0};
 
-
-const double MAGNET_TIMER = 1200;
+const double POWERUP_TIMER = 1200;
 
 body_t *make_enemy(vector_t center) {
     int idx = (rand() % (3 - 1 + 1)) + 1;
@@ -280,13 +281,7 @@ void wrap(body_t *doodle) {
 }
 
 body_t *make_pellet (vector_t center) {
-    list_t *points = list_init(20, free); // 13/16 + 1
-    for (int i = 0; i < 20; i++) {
-        vector_t *pt = malloc(sizeof(vector_t));
-        pt->x = 7 * cos(2 * M_PI * i / 20 + M_PI / 2);
-        pt->y = 7 * sin(2 * M_PI * i / 20 + M_PI / 2);
-        list_add(points, pt);
-    }
+    list_t *points = make_circle(7);
     char *info = malloc(7*sizeof(char));
     strcpy(info, "pellet");
     polygon_translate(points, center);
@@ -409,7 +404,7 @@ void game_mouse_click (scene_t *scene, int x, int y) {
 int get_current_panel(scene_t *scene) {
     body_t *panel = scene_get_body(scene, 0);
     sprite_t *sprite = body_get_sprite(panel);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NUM_PANELS; i++) {
         if (scene_get_sprite(scene, i) == sprite) {
             return i;
         }
@@ -427,7 +422,6 @@ void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_rad
                 body_set_sprite(panel, scene_get_sprite(scene, i-1));
                 body_set_centroid(panel, center);
             }
-
         }
     }
     if (x < (NEXT_BUTTON.x + button_x_radius) && x > (NEXT_BUTTON.x - button_x_radius)) {
@@ -443,13 +437,11 @@ void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_rad
                 scene_set_next_info(scene, game_info);
                 set_first_time();
             }
-
         }
     }
 }
 
 void star_score(scene_t *scene) {
-    // update star count
     for (size_t i = 0; i < scene_bodies(scene); i++) {
         if (body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0 && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
             scene_increase_stars(scene);
@@ -459,7 +451,6 @@ void star_score(scene_t *scene) {
 }
 
 void star_updating(int star_score) {
-    // save the number of stars collected
     FILE *star_file = fopen("stars.txt", "r+");
     if (star_file == NULL) {
         printf("NULL file.\n");
@@ -467,7 +458,7 @@ void star_updating(int star_score) {
     char *star_reading = malloc(10*sizeof(char));
     char **throwaway = malloc(sizeof(char *));
     *throwaway = malloc(10*sizeof(char));
-    if (fgets(star_reading, 5, star_file) == NULL) {
+    if (fgets(star_reading, sizeof(star_reading), star_file) == NULL) {
         printf("Error.\n");
     }
     else {
@@ -492,7 +483,7 @@ void high_score_updating(char *score) {
         printf("NULL file.\n");
     }
     char *score_reading = malloc(100*sizeof(char));
-    if (fgets(score_reading, 5, score_file) == NULL) {
+    if (fgets(score_reading, sizeof(score_reading), score_file) == NULL) {
         printf("Error.\n");
         score+=7;
         fseek(score_file, 0, SEEK_SET);
@@ -519,16 +510,16 @@ scene_t *make_instructions_scene() {
     scene_t *scene = scene_init_with_info(game_info, free);
 
 
-    sprite_t *first = create_sprite("PNGs/Game_Instructions_1.png", 500, 500);
+    sprite_t *first = create_sprite("PNGs/Game_Instructions_1.png", PANEL_DIMENSTIONS.x, PANEL_DIMENSTIONS.y);
     scene_add_sprite(scene, first);
-    sprite_t *second = create_sprite("PNGs/Game_Instructions_2.png", 500, 500);
+    sprite_t *second = create_sprite("PNGs/Game_Instructions_2.png", PANEL_DIMENSTIONS.x, PANEL_DIMENSTIONS.y);
     scene_add_sprite(scene, second);
-    sprite_t *third = create_sprite("PNGs/Game_Instructions_3.png", 500, 500);
+    sprite_t *third = create_sprite("PNGs/Game_Instructions_3.png", PANEL_DIMENSTIONS.x, PANEL_DIMENSTIONS.y);
     scene_add_sprite(scene, third);
-    sprite_t *ready = create_sprite("PNGs/Game_Instructions_4.png", 500, 500);
+    sprite_t *ready = create_sprite("PNGs/Game_Instructions_4.png", PANEL_DIMENSTIONS.x, PANEL_DIMENSTIONS.y);
     scene_add_sprite(scene, ready);
     vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
-    list_t *shape = make_rectangle(center, 500, 500);
+    list_t *shape = make_rectangle(center, PANEL_DIMENSTIONS.x, PANEL_DIMENSTIONS.y);
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "panel");
     body_t *panel = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
@@ -542,68 +533,6 @@ scene_t *make_instructions_scene() {
     scene_add_body(scene, background2);
     return scene;
 }
-
-// void instructions (scene_t *scene, int *instructions_timer) {
-//     body_t *first = NULL;
-//     body_t *second = NULL;
-//     if (*instructions_timer == 0) {
-//         vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
-        // list_t *shape = make_rectangle(center, 500, 500);
-        // char *info = malloc(sizeof(char)*6);
-        // strcpy(info, "first");
-        // body_t *first = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
-        // sprite_t *sprite = scene_get_sprite(scene, 0);
-        // body_set_sprite(first, sprite);
-        // body_set_centroid(first, center);
-        // scene_add_body(scene, first);
-//     }
-//     else if (*instructions_timer == 2500) {
-//         scene_remove_body(scene, scene_bodies(scene)-1);
-//         vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
-//         list_t *shape = make_rectangle(center, 500, 500);
-//         char *info = malloc(sizeof(char)*7);
-//         strcpy(info, "second");
-//         body_t *second = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
-//         sprite_t *sprite = scene_get_sprite(scene, 1);
-//         body_set_sprite(second, sprite);
-//         body_set_centroid(second, center);
-//         scene_add_body(scene, second);
-//     }
-//     else if (*instructions_timer == 3500) {
-//         scene_remove_body(scene, scene_bodies(scene)-1);
-//         vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
-//         list_t *shape = make_rectangle(center, 500, 500);
-//         char *info = malloc(sizeof(char)*6);
-//         strcpy(info, "third");
-//         body_t *third = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
-//         sprite_t *sprite = scene_get_sprite(scene, 2);
-//         body_set_sprite(third, sprite);
-//         body_set_centroid(third, center);
-//         scene_add_body(scene, third);
-//     }
-//     else if (*instructions_timer == 4500) {
-//         scene_remove_body(scene, scene_bodies(scene)-1);
-//         vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
-//         list_t *shape = make_rectangle(center, 500, 500);
-//         char *info = malloc(sizeof(char)*7);
-//         strcpy(info, "second");
-//         body_t *second = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
-//         sprite_t *sprite = scene_get_sprite(scene, 3);
-//         body_set_sprite(second, sprite);
-//         body_set_centroid(second, center);
-//         scene_add_body(scene, second);
-//     }
-//     if (*instructions_timer == 5000){
-//         scene_remove_body(scene, scene_bodies(scene)-1);
-//         free(instructions_timer);
-//         set_first_time();
-//     }
-//     else {
-//         (*instructions_timer)++;
-//     }
-// }
-
-
 
 void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score) {
     bool first_time = first_time_play();
@@ -672,7 +601,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
 
             magnet_powerup(scene, powerup_timer);
             immunity_powerup(scene, powerup_timer);
-            if (*powerup_timer == 1200) {
+            if (*powerup_timer == POWERUP_TIMER) {
                 bool powerup_pref = get_powerup_preference();
                 if (powerup_pref) {
                     make_powerup(scene, enemy_present);
@@ -729,7 +658,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             }
             enemy_present = false;
 
-            if (*powerup_timer == MAGNET_TIMER) {
+            if (*powerup_timer == POWERUP_TIMER) {
                 for (int i = 0; i < scene_bodies(scene); i++) {
                     body_t *body = scene_get_body(scene, i);
                     if (strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0) {
@@ -744,28 +673,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                     }
                 }
             }
-
-            // if (body_get_sprite(doodle) == scene_get_sprite(scene, 2) || body_get_sprite(doodle) == scene_get_sprite(scene, 3)) {
-            //     (*timer)++;
-            // }
-            // if (within(1, body_get_velocity(doodle).y, 299.1) && body_get_centroid(doodle).y > 75) { // magic numbers yikes
-            //     if (body_get_direction(doodle) == 0) {
-            //         change_motion(doodle, scene_get_sprite(scene, 2));
-            //     }
-            //     else {
-            //         change_motion(doodle, scene_get_sprite(scene, 3));
-            //     }
-            // }
-            // else if (*timer == 25) {
-            //     if (body_get_direction(doodle) == 0) {
-            //         change_motion(doodle, scene_get_sprite(scene, 0));
-            //     }
-            //     else {
-            //         change_motion(doodle, scene_get_sprite(scene, 1));
-            //     }
-
-            //     *timer = 0;
-            // }
             wrap(doodle);
             scene_tick(scene, dt);
         }
