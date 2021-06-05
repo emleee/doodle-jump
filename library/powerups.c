@@ -164,13 +164,11 @@ body_t *make_magnet(scene_t *scene, vector_t center, bool collected) {
 
 void immunity_powerup(scene_t *scene, int *powerup_timer) {
     body_t *doodle = scene_get_body(scene, 0);
-    size_t immunity_idx = -1;
     for (size_t i = 0; i < scene_bodies(scene); i++) {
         body_t *body = scene_get_body(scene, i);
         if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
-            immunity_idx = i;
-            body_t *immunity = scene_get_body(scene, immunity_idx);
-            scene_remove_body(scene, immunity_idx);
+            body_t *immunity = scene_get_body(scene, i);
+            scene_remove_body(scene, i);
             immunity = make_immunity(scene, body_get_centroid(doodle), true);
             char *info = malloc(sizeof(char)*9);
             strcpy(info, "equipped");
@@ -191,12 +189,11 @@ void immunity_powerup(scene_t *scene, int *powerup_timer) {
 
 void magnet_powerup(scene_t *scene, int *powerup_timer) {
     body_t *doodle = scene_get_body(scene, 0);
-    size_t magnet_idx = -1;
     for (size_t i = 0; i < scene_bodies(scene); i++) {
         body_t *body = scene_get_body(scene, i);
         if (strcmp(body_get_info(body), "magnet") == 0 && body_get_second_info(scene_get_body(scene, i)) != NULL && strcmp(body_get_second_info(scene_get_body(scene, i)), "collected") == 0) {
-            body_t *magnet = scene_get_body(scene, magnet_idx);
-            scene_remove_body(scene, magnet_idx);
+            body_t *magnet = scene_get_body(scene, i);
+            scene_remove_body(scene, i);
             magnet = make_magnet(scene, body_get_centroid(doodle), true);
             char *info = malloc(sizeof(char)*9);
             strcpy(info, "equipped");
