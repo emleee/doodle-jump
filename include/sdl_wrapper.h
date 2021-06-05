@@ -187,6 +187,11 @@ void sdl_mouse(mouse_handler_t handler);
 double time_since_last_tick(void);
 
 /**
+ * Sets the clock back to 0.
+ */
+void reset_clock(void);
+
+/**
  * Returns the renderer to use with text implementation.
  *
  * @return the renderer

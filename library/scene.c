@@ -46,6 +46,7 @@ scene_t *scene_init_with_info(void *info, free_func_t info_freer) {
 void scene_free(scene_t *scene) {
     list_free(scene->bodies);
     list_free(scene->text);
+    list_free(scene->forces);
     if (scene->next_info != NULL && scene->next_info != scene->info) {
         scene->info_freer(scene->next_info);
     }
