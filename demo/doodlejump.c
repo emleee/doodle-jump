@@ -134,7 +134,9 @@ int main() {
     bool enemy_present = false;
     while (!sdl_is_done(scene)) {
         if (strcmp(scene_get_info(scene), "game") == 0 && strcmp(body_get_info(scene_get_body(scene, 0)), "doodle") != 0) {
-            scene_set_next_info(scene, "restart");
+            char *restart_info = malloc(10*sizeof(char));
+            strcpy(restart_info, "restart");
+            scene_set_next_info(scene, restart_info);
         }
         if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
             if (strcmp(scene_get_next_info(scene), "game") == 0) {

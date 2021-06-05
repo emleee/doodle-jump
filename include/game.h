@@ -44,9 +44,13 @@ void more_enemies(scene_t *scene, vector_t center);
  */
 scene_t *make_game_scene();
 
-scene_t *make_instructions_scene();
 
-void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
+/**
+ * Initializes a scene for the game instructions with different panels.
+ * 
+ * @return a pointer to a newly allocated scene
+ */
+scene_t *make_instructions_scene();
 
 /**
  * Checks if a body has gone below the scene.
@@ -123,6 +127,15 @@ void high_score_updating(char *score);
  * @param y the y-coordinate of the mouse-click
  */
 void game_mouse_click (scene_t *scene, int x, int y);
+
+/**
+ * Handles the mouse-clicking events in the game instructions for toggling panels.
+ *
+ * @param scene a pointer to the current scene
+ * @param x the x-coordinate of the mouse-click
+ * @param y the y-coordinate of the mouse-click
+ */
+void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_radius, double button_y_radius);
 
 /*s*
  * Does the game.

@@ -146,8 +146,8 @@ scene_t *make_failed_purchase_scene() {
 }
 
 // scene_t *make_overwrite_boost_scene() {
-//     char *scene_info = malloc(10*sizeof(char));
-//     strcpy(scene_info, "shop fail");
+//     char *scene_info = malloc(15*sizeof(char));
+//     strcpy(scene_info, "shop overwrite");
 //     scene_t *scene = scene_init_with_info(scene_info, free);
 //     vector_t center = {.x = SHOP_WIDTH/2, .y = SHOP_HEIGHT/2};
 //     list_t *shape = make_rectangle(center, 480, 237);
@@ -242,6 +242,9 @@ void buy_immunity(scene_t *scene) {
         scene_set_next_info(scene, fail_info);
         printf("Sorry, you don't have enough stars to purchase the shield.\n");
     }
+    // else if (check_inventory()) {
+    //     // include something about overwrite
+    // }
     else {
         if (get_sound_preference()) {
             play_cha_ching();
@@ -265,6 +268,12 @@ void buy_magnet(scene_t *scene){
         scene_set_next_info(scene, fail_info);
         printf("Sorry, you don't have enough stars to purchase the magnet.\n");
     }
+    // else if (check_inventory()) {
+    //     char *fail_info = malloc(10*sizeof(char));
+    //     strcpy(fail_info, "shop overwrite");
+    //     scene_set_next_info(scene, fail_info);
+    //     // printf("Sorry, you don't have enough stars to purchase the boost.\n"); // display sorry scene
+    // }
     else {
         if (get_sound_preference()) {
             play_cha_ching();
@@ -288,6 +297,9 @@ void buy_boost(scene_t *scene){
         scene_set_next_info(scene, fail_info);
         printf("Sorry, you don't have enough stars to purchase the boost.\n"); // display sorry scene
     }
+    // else if (check_inventory()) {
+    //     // include something about overwrite
+    // }
     else { 
         if (get_sound_preference()) {
             play_cha_ching();
@@ -309,6 +321,21 @@ bool check_currency (int price) {
         return false;
     }
     return true;
+}
+
+bool check_inventory () {
+    FILE* file = fopen("inventory.txt", "r");
+    if (!file) {
+        return false;
+    }
+    char line[500];
+    while (fgets(line, sizeof(line), file)) {
+        if (strcmp(line, "boost") == 0 || strcmp(line, "magnet") == 0 || strcmp(line, "immunity") == 0) {
+            return true;
+        }
+    }
+    fclose(file);
+    return false;
 }
 
 void use_inventory (scene_t *scene) {
