@@ -15,6 +15,7 @@ const rgb_color_t COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
 
 const double DOODLE_WIDTH = 96.0;
 const double DOODLE_HEIGHT = 148.0;
+const double DOODLE_MASS = 10;
 
 const int RIGHT_MAGNET_IDX = 4;
 const int LEFT_MAGNET_IDX = 5;
@@ -47,22 +48,10 @@ const vector_t MOUTH_OFFSET = {.x = 13, .y = 24};
 // }
 
 body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
-    list_t *shape = list_init(4, free);
-    vector_t *v = malloc(sizeof(*v));
-    *v = (vector_t) {0, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {DOODLE_WIDTH, 0};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {DOODLE_WIDTH, DOODLE_HEIGHT};
-    list_add(shape, v);
-    v = malloc(sizeof(*v));
-    *v = (vector_t) {0, DOODLE_HEIGHT};
-    list_add(shape, v);
+    list_t *shape = make_rectangle(VEC_ZERO, DOODLE_WIDTH, DOODLE_HEIGHT);
 
     sprite_t *doodle_sprite = create_sprite("PNGs/Jump_Right.png", 117, 207);
-    body_t *doodle = body_init_with_sprite(shape, 10, color, info, free, doodle_sprite);
+    body_t *doodle = body_init_with_sprite(shape, DOODLE_MASS, color, info, free, doodle_sprite);
     body_set_centroid(doodle, center);
 
     char *second_info = malloc(sizeof(char) * 5);
@@ -94,7 +83,7 @@ body_t *make_background_body(char *file, vector_t center) {
     char *info = malloc(11*sizeof(char));
     strcpy(info, "background");
 
-    list_t *shape = make_rectangle((vector_t){.x=-1, .y=-1}, 2, 2);
+    list_t *shape = make_rectangle((vector_t){.x=-1, .y=-1}, 2, 2); // come back to this to make constants
 
     sprite_t *sprite = create_sprite(file, 720, 960);
     body_t *background = body_init_with_sprite(shape, 1, COLOR, info, free, sprite);
