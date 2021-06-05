@@ -25,10 +25,10 @@ scene_t *make_shop_scene () {
     strcpy(scene_info, "shop");
     scene_t *scene = scene_init_with_info(scene_info, free);
     // display the number of stars
-    body_t *boost = make_boost(scene, BOOST_CENTER);
+    // body_t *boost = make_boost(scene, BOOST_CENTER);
 
-    body_t *immunity = make_immunity(scene, IMMUNITY_CENTER, false);
-    body_t *magnet = make_magnet(scene, MAGNET_CENTER, false);
+    // body_t *immunity = make_immunity(scene, IMMUNITY_CENTER, false);
+    // body_t *magnet = make_magnet(scene, MAGNET_CENTER, false);
 
     rgb_color_t text_color = {.r = 0, .g = 0, .b = 0};
 
@@ -77,10 +77,8 @@ scene_t *make_shop_scene () {
 
     display_star_count(scene);
 
-    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
-    body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*SHOP_HEIGHT});
-    scene_add_body(scene, background1);
-    scene_add_body(scene, background2);
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    scene_add_body(scene, background);
 
     return scene;
 }
