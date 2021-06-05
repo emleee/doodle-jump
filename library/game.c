@@ -23,7 +23,7 @@ const double SCORE_FACTOR = 20;
 
 const rgb_color_t GAME_DOODLE_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
 const rgb_color_t BUTTON_COLOR = {.r = 255.0/255, .g = 255.0/255, .b = 255.0/255};
-const double DOODLE_MASS = 5.0;
+const double GAME_DOODLE_MASS = 5.0;
 const double BUTTON_MASS = INFINITY;
 const double GAME_MAX_JUMP = 295.0;
 
