@@ -151,6 +151,7 @@ int main() {
                 star_timer = malloc(sizeof(int));
                 *star_timer = 0;
                 score = malloc(100*sizeof(char));
+                reset_clock();
                 scene = make_game_scene();
                 use_inventory(scene);
                 doodle = scene_get_body(scene, 0);

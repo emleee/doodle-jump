@@ -365,6 +365,10 @@ double time_since_last_tick(void) {
     return difference;
 }
 
+void reset_clock(void) {
+    last_clock = 0;
+}
+
 SDL_Renderer *get_renderer(void) {
     return renderer;
 }

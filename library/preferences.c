@@ -13,12 +13,12 @@ const size_t SOUND_IDX = 6;
 const size_t SCORE_IDX = 7;
 const size_t POWERUP_IDX = 8;
 
-const vector_t PREF_TITLE = {.x = 360, .y = 50};
-const vector_t PREF_DESCRIPTION = {.x = 360, .y = 80};
-const vector_t SOUND = {.x = 290, .y = 300};
-const vector_t SCORE = {.x = 290, .y = 400};
-const vector_t POWERUP = {.x = 290, .y = 500};
-const vector_t PREF_HOME_BUTTON = {.x = 360, .y = 600};
+const vector_t PREF_TITLE = {.x = 360, .y = 220};
+const vector_t PREF_DESCRIPTION = {.x = 360, .y = 250};
+const vector_t SOUND = {.x = 290, .y = 350};
+const vector_t SCORE = {.x = 290, .y = 450};
+const vector_t POWERUP = {.x = 290, .y = 550};
+const vector_t PREF_HOME_BUTTON = {.x = 360, .y = 650};
 const double PREF_BUTTON_OFFSET = 180.0;
 
 scene_t *make_settings_scene() { // add something to keep track score vs high score and the falling/sad doodle
