@@ -73,7 +73,7 @@ size_t scene_bodies(scene_t *scene) {
 }
 
 body_t *scene_get_body(scene_t *scene, size_t index) {
-    // assert(index < scene_bodies(scene));
+    assert(index < scene_bodies(scene));
     return list_get(scene->bodies, index);
 }
 
@@ -86,6 +86,9 @@ void *scene_get_next_info(scene_t *scene) {
 }
 
 void scene_set_next_info(scene_t *scene, void *next_info) {
+    if (scene->next_info != scene->info) {
+        scene->info_freer(scene->next_info);
+    }
     scene->next_info = next_info;
 }
 
