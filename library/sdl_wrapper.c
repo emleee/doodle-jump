@@ -9,7 +9,7 @@
 #include <SDL2/SDL_mouse.h>
 #include "sdl_wrapper.h"
 
-const char WINDOW_TITLE[] = "CS 3";
+const char WINDOW_TITLE[] = "Doodle Jump 3: Fairy Tail";
 const int WINDOW_WIDTH = 720;
 const int WINDOW_HEIGHT = 960;
 const double MS_PER_S = 1e3;
