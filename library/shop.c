@@ -2,7 +2,7 @@
 #include "color.h"
 #include "preferences.h"
 
-const vector_t BOOST_CENTER = {.x = 315, .y = 605};
+const vector_t BOOST_CENTER = {.x = 270, .y = 605};
 const vector_t IMMUNITY_CENTER = {.x = 470, .y = 605};
 const vector_t MAGNET_CENTER = {.x = 625, .y = 605};
 
@@ -106,12 +106,12 @@ scene_t *make_shop_exit_scene() {
     char *scene_info = malloc(10*sizeof(char));
     strcpy(scene_info, "shop exit");
     scene_t *scene = scene_init_with_info(scene_info, free);
-    vector_t center = {.x = 480, .y = 530};
+    vector_t center = {.x = 424, .y = 590};
     list_t *shape = make_rectangle(center, 390, 150);
     char *info = malloc(sizeof(char)*5);
     strcpy(info, "exit");
     body_t *thanks = body_init_with_info(shape, INFINITY, MESSAGE_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Shop_Exit.png", 390, 150);
+    sprite_t *sprite = create_sprite("PNGs/Thank_You_Sign.png", 361, 152);
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
@@ -124,12 +124,12 @@ scene_t *make_failed_purchase_scene() {
     char *scene_info = malloc(10*sizeof(char));
     strcpy(scene_info, "shop fail");
     scene_t *scene = scene_init_with_info(scene_info, free);
-    vector_t center = {.x = 480, .y = 530};
+    vector_t center = {.x = 424, .y = 590};
     list_t *shape = make_rectangle(center, 390, 150);
     char *info = malloc(sizeof(char)*5);
     strcpy(info, "exit");
     body_t *thanks = body_init_with_info(shape, INFINITY, MESSAGE_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Shop_Fail.png", 390, 150); //change to sorry you're broke sprite
+    sprite_t *sprite = create_sprite("PNGs/Sorry_Sign.png", 361, 152); //change to sorry you're broke sprite
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
