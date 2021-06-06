@@ -5,13 +5,6 @@
 #include "list.h"
 #include "sprite.h"
 #include "color.h"
-// #include "polygon.h"
-
-// extern const vector_t RIGHT_OFFSET;
-// extern const vector_t LEFT_OFFSET;
-
-// extern const vector_t FACE_RIGHT;
-// extern const vector_t FACE_LEFT;
 
 /**
  * A rigid body constrained to the plane.

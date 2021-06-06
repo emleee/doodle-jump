@@ -103,8 +103,6 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
         else if (idx == MAGNET_IDX) {
             return make_magnet(scene, *center, false);
         }
-        // return make_boost(scene, *center);
-
         free(center);
     }
     return NULL;

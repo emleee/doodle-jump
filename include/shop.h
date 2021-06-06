@@ -1,6 +1,6 @@
-// #include "game.h"
-// #include "restart.h"
-// #include "start.h"
+#ifndef __SHOP_H__
+#define __SHOP_H__
+
 #include "scene.h"
 
 /**
@@ -89,3 +89,5 @@ void use_inventory (scene_t *scene);
  * @param scene the pointer to the shop scene
  */
 void display_star_count(scene_t *scene);
+
+#endif // #ifndef __SHOP_H__

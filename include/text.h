@@ -1,8 +1,6 @@
 #ifndef __TEXT_H__
 #define __TEXT_H__
 
-// #include "vector.h"
-// #include "color.h"
 #include "SDL2/SDL.h"
 
 /**
