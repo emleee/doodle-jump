@@ -20,8 +20,10 @@ const int LEFT_MAGNET_IDX = 5;
 const vector_t HAND_OFFSET = {.x = 70, .y = 15};
 const vector_t MOUTH_OFFSET = {.x = 13, .y = 24};
 
-// background dimensions
+// background stuff
 const vector_t BACKGROUND_DIMENSIONS = {.x = 720, .y = 960};
+const vector_t BACKGROUND_CORNER = {.x = -1, .y = -1};
+const double BACKGROUND_BODY_LENGTH = 2;
 
 body_t *make_doodle(vector_t center, rgb_color_t color, char *info, sprite_t *sprite) {
     list_t *shape = make_rectangle(VEC_ZERO, DOODLE_WIDTH, DOODLE_HEIGHT);
@@ -37,7 +39,7 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info, sprite_t *sp
 }
 
 body_t *make_background_body(char *file, vector_t center) {
-    list_t *shape = make_rectangle((vector_t){.x = -1, .y = -1}, 2, 2); // come back to this to make constants
+    list_t *shape = make_rectangle(BACKGROUND_CORNER, BACKGROUND_BODY_LENGTH, BACKGROUND_BODY_LENGTH);
     
     char *info = malloc(11*sizeof(char));
     strcpy(info, "background");
