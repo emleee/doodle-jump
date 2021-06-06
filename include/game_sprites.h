@@ -3,7 +3,7 @@
 
 #include "scene.h"
 
-body_t *make_doodle(vector_t center, rgb_color_t color, char *info);
+body_t *make_doodle(vector_t center, rgb_color_t color, char *info, sprite_t *sprite);
 
 sprite_t *make_grass_platform();
 
