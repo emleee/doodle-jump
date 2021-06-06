@@ -200,22 +200,14 @@ void create_platform_collision(scene_t *scene, double elasticity, body_t *body1,
 
 void powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
     if (strcmp(body_get_info(body1), "magnet") == 0 ||strcmp(body_get_info(body1), "immunity") == 0) {
-        // body_remove(body1);
-        // body_set_centroid(body1, body_get_centroid(body2));
-        // body_set_velocity(body1, body_get_velocity(body2));
         char *info = malloc(10*sizeof(char));
         strcpy(info, "collected");
         body_set_second_info(body1, info);
-        // body_set_mass(body1, body_get_mass(body2));
     }
     else if (strcmp(body_get_info(body2), "magnet") == 0||strcmp(body_get_info(body2), "immunity") == 0) {
-        // body_remove(body2);
-        // body_set_centroid(body2, body_get_centroid(body1));
-        // body_set_velocity(body2, body_get_velocity(body1));
         char *info = malloc(10*sizeof(char));
         strcpy(info, "collected");
         body_set_second_info(body2, info);
-        // body_set_mass(body2, body_get_mass(body1));
     }
 }
 
@@ -232,10 +224,6 @@ void create_powerup_collision(scene_t *scene, double elasticity, body_t *body1, 
 }
 
 void immunity_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    // force_aux_t *a = (force_aux_t *)aux;
-    // double c = force_aux_get_constant(a);
-    // double mass1 = body_get_mass(body1);
-    // double mass2 = body_get_mass(body2);
     if (strcmp(body_get_info(body1), "enemy") == 0) {
         body_remove(body1);
     }

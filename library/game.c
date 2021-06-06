@@ -34,6 +34,10 @@ const double GAME_MAX_JUMP = 295.0;
 
 const double GAME_G = -150.0;
 
+const int NUM_STAR_POINTS = 5;
+const int STAR_RADIUS = 17;
+const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
+
 const double BUTTON_OFFSET = 100;
 const vector_t PREVIOUS_BUTTON = {.x = 260.0, .y = 630.0};
 const vector_t NEXT_BUTTON = {.x = 450.0, .y = 630.0};
@@ -88,15 +92,8 @@ body_t *make_button(vector_t center) {
     return button;
 }
 
-// bool platform_overlap(scene_t *scene, body_t *body1, body_t *body2) { // can't remove without having their ints???
-//     vector_t centroid1 = body_get_centroid(body1);
-//     vector_t centorid2 = body_get_centroid(body2);
-//     return (fabs(centroid1.x - centroid2.x) <= PLATFORM_WIDTH2 || fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2);
-// }
-
 void more_platforms(scene_t *scene, vector_t center) {
     int num_platforms = 0;
-    // int magnet_idx = -1;
     for (int i = 0; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);
@@ -264,7 +261,6 @@ scene_t *make_game_scene() {
 
 bool in_screen(vector_t center, body_t *body) {
     list_t *points = body_get_shape(body);
-    // printf("%f\n", center.y);
     for (int i = 0; i < list_size(points); i++) {
         if (((vector_t *)list_get(points, i))->y > center.y - GAME_HEIGHT/2) {
             return true;
@@ -362,11 +358,10 @@ void create_star(scene_t *scene) {
     vector_t center = body_get_centroid(platform);
     center.y += 40; // magic number for offset
     if (center.y > body_get_centroid(scene_get_body(scene, 0)).y) {
-        star_t *starframe = make_star(center, 5, 17); // magic number for num points, radius
-        rgb_color_t color = {.r = 1, .g = 1, .b = 0}; // make const for 'yellow' star color
+        star_t *starframe = make_star(center, NUM_STAR_POINTS, STAR_RADIUS); // magic number for num points, radius
         char *star_info = malloc(5*sizeof(char));
         strcpy(star_info, "star");
-        body_t *star = body_init_with_info(get_points(starframe), 0.001, color, star_info, free);
+        body_t *star = body_init_with_info(get_points(starframe), 0.001, STAR_COLOR, star_info, free);
 
         create_star_collision(scene, 0, scene_get_body(scene, 0), star);
         if (magnet_idx != -1) {
@@ -544,7 +539,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         char *game_info = malloc(13*sizeof(char));
         strcpy(game_info, "instructions");
         scene_set_next_info(scene, game_info);
-        // instructions(scene, instructions_timer);
     }
     else {
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
@@ -584,7 +578,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             high_score_updating(score);
             free(timer);
             free(powerup_timer);
-            free(star_timer); // what happens if we quit before it finished intructions
+            free(star_timer);
             char *restart_info = malloc(8*sizeof(char));
             strcpy(restart_info, "restart");
             scene_set_next_info(scene, restart_info);
@@ -684,6 +678,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             scene_tick(scene, dt);
         }
         free(buffer);
+        free(scoring);
 
     }
     sdl_render_scene(scene);

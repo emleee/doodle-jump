@@ -14,6 +14,8 @@ const double PLAYER_X_VELOCITY = 600;
 
 const int SHOP_TIMER = 750;
 
+const vector_t SCOREBOX_CENTER = {.x = 80, .y = 20};
+
 void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     body_t *player = scene_get_body((scene_t *)scene, 0);
     body_t *magnet = NULL;
@@ -23,7 +25,6 @@ void on_key(char key, key_event_type_t type, double held_time, void *scene) {
         }
     }
     vector_t body_velocity = body_get_velocity(player);
-    // double mass = body_get_mass(player);
     if (type == KEY_PRESSED) {
         switch (key) {
             case RIGHT_ARROW:
@@ -105,8 +106,6 @@ int main() {
     *powerup_timer = 0;
     int *star_timer = malloc(sizeof(int));
     *star_timer = 0;
-    // int *instructions_timer = malloc(sizeof(int));
-    // *instructions_timer = 0;
     int star_score = 0;
 
     int start_timer = 0;
@@ -118,19 +117,16 @@ int main() {
     vector_t *center = malloc(sizeof(vector_t));
     center->x = WIDTH2/2;
     center->y = HEIGHT2/2;
-    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
 
     vector_t *scoring = malloc(sizeof(vector_t));
-    scoring->x = 80; // magic numbers
-    scoring->y = 20;
-    // double curr = 0.0;
+    scoring->x = SCOREBOX_CENTER.x;
+    scoring->y = SCOREBOX_CENTER.y;
 
     char *score = malloc(100*sizeof(char));
     char *highscore = malloc(100*sizeof(char));
 
     body_t *doodle;
 
-    // bool enemy_present = false;
     while (!sdl_is_done(scene)) {
         if (strcmp(scene_get_info(scene), "game") == 0 && strcmp(body_get_info(scene_get_body(scene, 0)), "doodle") != 0) {
             char *restart_info = malloc(10*sizeof(char));
@@ -241,6 +237,7 @@ int main() {
     free(center);
     free(score);
     free(highscore);
+    free(scoring);
     scene_free(scene);
     return 0;
 }

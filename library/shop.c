@@ -24,7 +24,7 @@ const vector_t SHOP_HOME_BUTTON_SIZE = {.x = 85, .y = 20};
 // star parameters
 const double STAR_OFFSET = 40;
 const double STAR_NUM_POINTS = 5;
-const double STAR_RADIUS = 25;
+const double SHOP_STAR_RADIUS = 25;
 
 // powerup prices
 const int BOOST_PRICE = 100;
@@ -33,7 +33,7 @@ const int MAGNET_PRICE = 80;
 
 // colors
 const rgb_color_t TEXT_COLOR = {.r = 0, .g = 0, .b = 0};
-const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
+const rgb_color_t SHOP_STAR_COLOR = {.r = 1, .g = 1, .b = 0};
 
 scene_t *make_shop_scene () {
     char *scene_info = malloc(5 * sizeof(char));
@@ -60,10 +60,10 @@ void display_star_count(scene_t *scene) {
 
     // star body
     vector_t star_pos = {.x = STAR_OFFSET, .y = SHOP_HEIGHT - STAR_OFFSET};
-    star_t *star_frame = make_star(star_pos, STAR_NUM_POINTS, STAR_RADIUS);
+    star_t *star_frame = make_star(star_pos, STAR_NUM_POINTS, SHOP_STAR_RADIUS);
     char *star_info = malloc(5 * sizeof(char));
     strcpy(star_info, "star");
-    body_t *star = body_init_with_info(get_points(star_frame), 0.001, STAR_COLOR, star_info, free);
+    body_t *star = body_init_with_info(get_points(star_frame), 0.001, SHOP_STAR_COLOR, star_info, free);
     scene_add_body(scene, star);
 }
 

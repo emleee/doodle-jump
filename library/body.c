@@ -72,7 +72,6 @@ sprite_t *body_get_sprite(body_t *body) {
 
 void body_set_sprite(body_t *body, sprite_t *sprite) {
     body->sprite = sprite;
-    // sprite_set_center(body->sprite, body_get_centroid(body));
 }
 
 void body_dont_free_sprite(body_t* body) {
