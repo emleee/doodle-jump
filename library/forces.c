@@ -237,10 +237,10 @@ void immunity_powerup_collision(body_t *body1, body_t *body2, vector_t axis, voi
     double c = force_aux_get_constant(a);
     double mass1 = body_get_mass(body1);
     double mass2 = body_get_mass(body2);
-    if (mass1 == INFINITY) {
+    if (strcmp(body_get_info(body1), "enemy") == 0) {
         body_remove(body1);
     }
-    else if (mass2 == INFINITY) {
+    else if (strcmp(body_get_info(body2), "enemy") == 0) {
         body_remove(body2);
     }
 }

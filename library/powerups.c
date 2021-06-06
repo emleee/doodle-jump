@@ -83,22 +83,24 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
             return NULL;
         }
 
-        if (enemy_present) {
-            idx = (rand() % (MAGNET_IDX - IMMUNITY_IDX + 1)) + IMMUNITY_IDX;
-        }
-        else {
-            idx = (rand() % (MAGNET_IDX - BOOST_IDX + 1)) + BOOST_IDX;
-        }
+        // if (enemy_present) {
+        //     idx = (rand() % (MAGNET_IDX - IMMUNITY_IDX + 1)) + IMMUNITY_IDX;
+        // }
+        // else {
+        //     idx = (rand() % (MAGNET_IDX - BOOST_IDX + 1)) + BOOST_IDX;
+        // }
 
-        if (idx == BOOST_IDX) {
-            return make_boost(scene, *center);
-        }
-        else if (idx == IMMUNITY_IDX) {
-            return make_immunity(scene, *center, false);
-        }
-        else if (idx == MAGNET_IDX) {
-            return make_magnet(scene, *center, false);
-        }
+        // if (idx == BOOST_IDX) {
+        //     return make_boost(scene, *center);
+        // }
+        // else if (idx == IMMUNITY_IDX) {
+        //     return make_immunity(scene, *center, false);
+        // }
+        // else if (idx == MAGNET_IDX) {
+        //     return make_magnet(scene, *center, false);
+        // }
+        return make_immunity(scene, *center, false);
+
         free(center);
     }
     return NULL;

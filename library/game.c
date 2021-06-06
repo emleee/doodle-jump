@@ -638,9 +638,10 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                         body_set_sprite(doodle, scene_get_sprite(scene, 1));
                     }
             }
-            if (!enemy_present) {
-                more_enemies(scene, *center);
-            }
+            // if (!enemy_present) {
+            //     more_enemies(scene, *center);
+            // }
+            more_enemies(scene, *center);
             // shifting the viewing window if the doodle goes higher than the center
             if (body_get_centroid(doodle).y > center->y) {
                 // generates more platforms
