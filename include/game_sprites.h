@@ -7,7 +7,7 @@
 // const vector_t RIGHT_OFFSET;
 // const vector_t LEFT_OFFSET;
 
-body_t *make_doodle(vector_t center, rgb_color_t color, char *info);
+body_t *make_doodle(vector_t center, rgb_color_t color, char *info, sprite_t *sprite);
 
 sprite_t *make_grass_platform();
 
