@@ -1,6 +1,11 @@
 #include "game.h"
 #include "star.h"
 #include "shop.h"
+#include "sdl_wrapper.h"
+#include "game_sprites.h"
+#include "test_util.h"
+#include "polygon.h"
+#include "forces.h"
 
 const double GAME_WIDTH = 720.0;
 const double GAME_HEIGHT = 960.0;
@@ -91,7 +96,7 @@ body_t *make_button(vector_t center) {
 
 void more_platforms(scene_t *scene, vector_t center) {
     int num_platforms = 0;
-    int magnet_idx = -1;
+    // int magnet_idx = -1;
     for (int i = 0; i < scene_bodies(scene); i++) {
         body_t *platform = scene_get_body(scene, i);
         char *info = body_get_info(platform);

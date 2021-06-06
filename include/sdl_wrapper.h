@@ -5,6 +5,7 @@
 #include "scene.h"
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include "list.h"
 
 // Values passed to a key handler when the given arrow key is pressed
 typedef enum {

@@ -1,4 +1,6 @@
 #include "restart.h"
+#include "sdl_wrapper.h"
+#include "game_sprites.h"
 
 const double RESTART_HEIGHT = 960.0;
 const double RESTART_WIDTH = 720.0;

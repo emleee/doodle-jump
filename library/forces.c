@@ -1,16 +1,16 @@
-#include "forces.h"
 #include "force_aux.h"
-#include <math.h>
-#include <stdlib.h>
+// #include <math.h>
+// #include <stdlib.h>
 #include "collision.h"
-#include "force_package.h"
+// #include "force_package.h"
 #include "sdl_wrapper.h"
 #include "preferences.h"
+#include "forces.h"
 
 const double BOOST = -300;
 const double BOOST_POWERUP = 1000;
 const double DOODLE_HEIGHT2 = 148.0;
-const double SCREEN_HEIGHT = 960.0;
+const double SCREEN_HEIGHT2 = 960.0;
 
 void magnet(void *a) {
     force_aux_t *aux = (force_aux_t *)a;
@@ -20,8 +20,7 @@ void magnet(void *a) {
     body_t *body2 = list_get(bodies, 1);
     vector_t centroid1 = body_get_centroid(body1);
     vector_t centroid2 = body_get_centroid(body2);
-    // printf("%f %f %f\n", centroid2.y, centroid1.y, SCREEN_HEIGHT/2);
-    if (fabs(centroid2.y - centroid1.y) > SCREEN_HEIGHT/2) {
+    if (fabs(centroid2.y - centroid1.y) > SCREEN_HEIGHT2/2) {
         return;
     }
     vector_t between = vec_subtract(centroid2, centroid1);
@@ -233,10 +232,10 @@ void create_powerup_collision(scene_t *scene, double elasticity, body_t *body1, 
 }
 
 void immunity_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    force_aux_t *a = (force_aux_t *)aux;
-    double c = force_aux_get_constant(a);
-    double mass1 = body_get_mass(body1);
-    double mass2 = body_get_mass(body2);
+    // force_aux_t *a = (force_aux_t *)aux;
+    // double c = force_aux_get_constant(a);
+    // double mass1 = body_get_mass(body1);
+    // double mass2 = body_get_mass(body2);
     if (strcmp(body_get_info(body1), "enemy") == 0) {
         body_remove(body1);
     }
@@ -305,8 +304,8 @@ void create_boost_collision(scene_t *scene, double elasticity, body_t *body1, bo
 }
 
 void star_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    double mass1 = body_get_mass(body1);
-    double mass2 = body_get_mass(body2);
+    // double mass1 = body_get_mass(body1);
+    // double mass2 = body_get_mass(body2);
     char *info = malloc(10*sizeof(char));
     strcpy(info, "collected");
 

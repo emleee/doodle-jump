@@ -1,20 +1,7 @@
 #ifndef __GAME_SPRITES_H__
 #define __GAME_SPRITES_H__
 
-#include "vector.h"
-#include "body.h"
 #include "scene.h"
-
-const vector_t RIGHT_OFFSET;
-const vector_t LEFT_OFFSET;
-
-sprite_t *make_jump_left();
-
-sprite_t *make_jump_right();
-
-sprite_t *make_crouch_left();
-
-sprite_t *make_crouch_right();
 
 body_t *make_doodle(vector_t center, rgb_color_t color, char *info);
 

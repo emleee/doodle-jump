@@ -2,9 +2,9 @@
 #define __BODY_H__
 
 #include <stdbool.h>
-#include "color.h"
 #include "list.h"
 #include "sprite.h"
+#include "color.h"
 
 /**
  * A rigid body constrained to the plane.

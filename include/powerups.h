@@ -1,10 +1,7 @@
 #ifndef __POWERUPS_H__
 #define __POWERUPS_H__
 
-#include "platforms.h"
-#include "sdl_wrapper.h"
-#include "game_sprites.h"
-#include "test_util.h"
+#include "scene.h"
 
 /**
  * Checks whether or not a body is a powerup (i.e. boost, magnet, or immunity).

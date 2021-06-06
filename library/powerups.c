@@ -1,6 +1,10 @@
 #include "powerups.h"
 #include "game.h"
 #include "game_sprites.h"
+#include "sdl_wrapper.h"
+#include "test_util.h"
+#include "polygon.h"
+#include "forces.h"
 
 const rgb_color_t BOOST_COLOR = {.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
 const rgb_color_t IMMUNITY_COLOR = {.r = 0.54, .g = 0.54, .b = 0.54};
@@ -83,12 +87,12 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
             return NULL;
         }
 
-        // if (enemy_present) {
-        //     idx = (rand() % (MAGNET_IDX - IMMUNITY_IDX + 1)) + IMMUNITY_IDX;
-        // }
-        // else {
-        //     idx = (rand() % (MAGNET_IDX - BOOST_IDX + 1)) + BOOST_IDX;
-        // }
+        if (enemy_present) {
+            idx = (rand() % (MAGNET_IDX - IMMUNITY_IDX + 1)) + IMMUNITY_IDX;
+        }
+        else {
+            idx = (rand() % (MAGNET_IDX - BOOST_IDX + 1)) + BOOST_IDX;
+        }
 
         if (idx == BOOST_IDX) {
             return make_boost(scene, *center);
@@ -99,8 +103,6 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
         else if (idx == MAGNET_IDX) {
             return make_magnet(scene, *center, false);
         }
-        // return make_boost(scene, *center);
-
         free(center);
     }
     return NULL;

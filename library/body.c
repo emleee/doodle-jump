@@ -1,11 +1,19 @@
-#include "body.h"
-#include "polygon.h"
 #include <assert.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <math.h>
-#include "game_sprites.h"
+// #include <stddef.h>
+// #include <stdlib.h>
+// #include <math.h>
+// #include "game_sprites.h"
+// #include "color.h"
+// #include "list.h"
+#include "polygon.h"
 #include "sdl_wrapper.h"
+#include "body.h"
+
+const vector_t RIGHT_OFFSET = {.x = 10.5, .y = 29.5};
+const vector_t LEFT_OFFSET = {.x = -10.5, .y = 29.5};
+
+// const vector_t FACE_RIGHT = {.x = -21, .y = 0};
+// const vector_t FACE_LEFT = {.x = 21, .y = 0};
 
 typedef struct body {
     list_t *shape;

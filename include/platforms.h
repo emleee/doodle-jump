@@ -1,6 +1,7 @@
-#include "polygon.h"
-#include "forces.h"
-#include "collision.h"
+#ifndef __PLATFORMS_H__
+#define __PLATFORMS_H__
+
+#include "scene.h"
 
 /**
  * Creates a platform with the given characteristics.
@@ -54,3 +55,5 @@ body_t *disappearing_platform(vector_t center, char *info);
  * @param info the platform's info, whihc is "trick platform"
  */
 body_t *trick_platform(vector_t center, char *info);
+
+#endif // #ifndef __PLATFORMS_H__

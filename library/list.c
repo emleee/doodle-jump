@@ -1,8 +1,8 @@
-#include <stddef.h>
+// #include <stddef.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "vector.h"
-#include "star.h"
+// #include "vector.h"
+// #include "star.h"
 #include "list.h"
 
 typedef struct list {
