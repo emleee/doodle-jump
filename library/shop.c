@@ -2,115 +2,77 @@
 #include "color.h"
 #include "preferences.h"
 
-const vector_t BOOST_CENTER = {.x = 270, .y = 605};
-const vector_t IMMUNITY_CENTER = {.x = 470, .y = 605};
-const vector_t MAGNET_CENTER = {.x = 625, .y = 605};
-
-const double PRICE_OFFSET = 60;
-const double STAR_OFFSET = 60;
-const vector_t SHOP_HOME_CENTER = {.x = 470, .y = 800};
-
+// screen dimensions
 const double SHOP_WIDTH = 720.0;
 const double SHOP_HEIGHT = 960.0;
 
+// locations
+const vector_t BOOST_CENTER = {.x = 275, .y = 605};
+const vector_t IMMUNITY_CENTER = {.x = 425, .y = 605};
+const vector_t MAGNET_CENTER = {.x = 605, .y = 605};
+const vector_t SHOP_HOME_CENTER = {.x = 425, .y = 765};
+const vector_t STAR_COUNT_CENTER = {.x = 125, .y = 40};
+const vector_t SIGN_LOCATION = {.x = 425, .y = 590};
+
+// button dimenstions
+const vector_t BUY_BUTTON_SIZE = {.x = 50, .y = 15};
+const vector_t SHOP_HOME_BUTTON_SIZE = {.x = 85, .y = 20};
+
+// star parameters
+const double STAR_OFFSET = 40;
+const double STAR_NUM_POINTS = 5;
+const double STAR_RADIUS = 25;
+
+// powerup prices
 const int BOOST_PRICE = 100;
 const int IMMUNITY_PRICE = 50;
 const int MAGNET_PRICE = 80;
-const rgb_color_t MESSAGE_COLOR = {.r = 0, .g = 0, .b = 0};
+
+// colors
+const rgb_color_t TEXT_COLOR = {.r = 0, .g = 0, .b = 0};
 const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
 
-// do something to check if there is something already in the inventory and give refund
-
 scene_t *make_shop_scene () {
-    char *scene_info = malloc(5*sizeof(char));
+    char *scene_info = malloc(5 * sizeof(char));
     strcpy(scene_info, "shop");
     scene_t *scene = scene_init_with_info(scene_info, free);
-    // display the number of stars
-    // body_t *boost = make_boost(scene, BOOST_CENTER);
-
-    // body_t *immunity = make_immunity(scene, IMMUNITY_CENTER, false);
-    // body_t *magnet = make_magnet(scene, MAGNET_CENTER, false);
-
-    // rgb_color_t text_color = {.r = 0, .g = 0, .b = 0};
-
-    // vector_t *point1 = malloc(sizeof(vector_t));
-    // point1->x = BOOST_CENTER.x - 10; // remove magic numbers
-    // point1->y = SHOP_HEIGHT - BOOST_CENTER.y + PRICE_OFFSET;
-    // text_t *text1 = text_create("Buy for 100", text_color, 22, point1);
-    // scene_add_text(scene, text1);
-    // vector_t boost_star_center = {.x = BOOST_CENTER.x + STAR_OFFSET, .y = SHOP_HEIGHT - point1->y};
-    // star_t *boost_starframe = make_star(boost_star_center, 5, 13); // magic number for num points, radius
-    // char *boost_star_info = malloc(5*sizeof(char));
-    // strcpy(boost_star_info, "star");
-    // body_t *boost_star = body_init_with_info(get_points(boost_starframe), INFINITY, STAR_COLOR, boost_star_info, free);
-    // scene_add_body(scene, boost_star);
-
-    // vector_t *point2 = malloc(sizeof(vector_t));
-    // point2->x = MAGNET_CENTER.x - 10; // remove magic numbers
-    // point2->y = SHOP_HEIGHT - MAGNET_CENTER.y + PRICE_OFFSET * 2;
-    // text_t *text2 = text_create("Buy for 75", text_color, 22, point2);
-    // scene_add_text(scene, text2);
-    // vector_t magnet_star_center = {.x = MAGNET_CENTER.x + STAR_OFFSET, .y = SHOP_HEIGHT - point2->y};
-    // star_t *magnet_starframe = make_star(magnet_star_center, 5, 13); // magic number for num points, radius
-    // char *magnet_star_info = malloc(5*sizeof(char));
-    // strcpy(magnet_star_info, "star");
-    // body_t *magnet_star = body_init_with_info(get_points(magnet_starframe), INFINITY, STAR_COLOR, magnet_star_info, free);
-    // scene_add_body(scene, magnet_star);
-
-
-    // vector_t *point3 = malloc(sizeof(vector_t));
-    // point3->x = IMMUNITY_CENTER.x - 10; // remove magic numbers
-    // point3->y = SHOP_HEIGHT - IMMUNITY_CENTER.y + PRICE_OFFSET;
-    // text_t *text3 = text_create("Buy for 50", text_color, 22, point3);
-    // scene_add_text(scene, text3);
-    // vector_t immunity_star_center = {.x = IMMUNITY_CENTER.x + STAR_OFFSET + 5, .y = SHOP_HEIGHT - point3->y};
-    // star_t *immunity_starframe = make_star(immunity_star_center, 5, 13); // magic number for num points, radius
-    // char *immunity_star_info = malloc(5*sizeof(char));
-    // strcpy(immunity_star_info, "star");
-    // body_t *immunity_star = body_init_with_info(get_points(immunity_starframe), INFINITY, STAR_COLOR, immunity_star_info, free);
-    // scene_add_body(scene, immunity_star);
-
-    // vector_t *home_point = malloc(sizeof(vector_t));
-    // home_point->x = SHOP_HOME_CENTER.x; // remove magic numbers
-    // home_point->y = SHOP_HOME_CENTER.y;
-    // text_t *home_text = text_create("Back to Home", text_color, 22, home_point);
-    // scene_add_text(scene, home_text);
-
-    display_star_count(scene);
 
     body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
     scene_add_body(scene, background);
+
+    display_star_count(scene);
 
     return scene;
 }
 
 void display_star_count(scene_t *scene) {
-    // display a star and the amount of stars the user has
+    // star count text
     char *stars = malloc(10*sizeof(char));
     sprintf(stars, "%i", get_star_count());
     vector_t *position = malloc(sizeof(vector_t));
-    position->x = 125; // remove magic numbers
-    position->y = 40;
-    text_t *star_count = text_create(stars, MESSAGE_COLOR, 50, position);
+    position->x = STAR_COUNT_CENTER.x;
+    position->y = STAR_COUNT_CENTER.y;
+    text_t *star_count = text_create(stars, TEXT_COLOR, 50, position);
     scene_add_text(scene, star_count);
 
-    vector_t star_pos = {.x = 40, .y = SHOP_HEIGHT - 40};
-    star_t *starframe = make_star(star_pos, 5, 25); // magic number for num points, radius
-    char *star_info = malloc(5*sizeof(char));
+    // star body
+    vector_t star_pos = {.x = STAR_OFFSET, .y = SHOP_HEIGHT - STAR_OFFSET};
+    star_t *star_frame = make_star(star_pos, STAR_NUM_POINTS, STAR_RADIUS);
+    char *star_info = malloc(5 * sizeof(char));
     strcpy(star_info, "star");
-    body_t *star = body_init_with_info(get_points(starframe), 0.001, STAR_COLOR, star_info, free);
+    body_t *star = body_init_with_info(get_points(star_frame), 0.001, STAR_COLOR, star_info, free);
     scene_add_body(scene, star);
 }
 
 scene_t *make_shop_exit_scene() {
-    char *scene_info = malloc(10*sizeof(char));
+    char *scene_info = malloc(10 * sizeof(char));
     strcpy(scene_info, "shop exit");
     scene_t *scene = scene_init_with_info(scene_info, free);
     vector_t center = {.x = 424, .y = 590};
     list_t *shape = make_rectangle(center, 390, 150);
     char *info = malloc(sizeof(char)*5);
     strcpy(info, "exit");
-    body_t *thanks = body_init_with_info(shape, INFINITY, MESSAGE_COLOR, info, free);
+    body_t *thanks = body_init_with_info(shape, INFINITY, TEXT_COLOR, info, free);
     sprite_t *sprite = create_sprite("PNGs/Thank_You_Sign.png", 361, 152);
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
@@ -121,15 +83,15 @@ scene_t *make_shop_exit_scene() {
 }
 
 scene_t *make_failed_purchase_scene() {
-    char *scene_info = malloc(10*sizeof(char));
+    char *scene_info = malloc(10 * sizeof(char));
     strcpy(scene_info, "shop fail");
     scene_t *scene = scene_init_with_info(scene_info, free);
     vector_t center = {.x = 424, .y = 590};
     list_t *shape = make_rectangle(center, 390, 150);
     char *info = malloc(sizeof(char)*5);
     strcpy(info, "exit");
-    body_t *thanks = body_init_with_info(shape, INFINITY, MESSAGE_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Sorry_Sign.png", 361, 152); //change to sorry you're broke sprite
+    body_t *thanks = body_init_with_info(shape, INFINITY, TEXT_COLOR, info, free);
+    sprite_t *sprite = create_sprite("PNGs/Sorry_Sign.png", 361, 152);
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
@@ -138,24 +100,24 @@ scene_t *make_failed_purchase_scene() {
     return scene;
 }
 
-void shop_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
-    if (x < (BOOST_CENTER.x + button_x_radius) && x > (BOOST_CENTER.x - button_x_radius)) {
-        if (y < (BOOST_CENTER.x + button_y_radius) && y > (BOOST_CENTER.y - button_y_radius)) {
+void shop_mouse_click(scene_t *scene, int x, int y) {
+    if (x < (BOOST_CENTER.x + BUY_BUTTON_SIZE.x) && x > (BOOST_CENTER.x - BUY_BUTTON_SIZE.x)) {
+        if (y < (BOOST_CENTER.y + BUY_BUTTON_SIZE.y) && y > (BOOST_CENTER.y - BUY_BUTTON_SIZE.y)) {
             buy_boost(scene);
         }
     }
-    if (x < (MAGNET_CENTER.x + button_x_radius) && x > (MAGNET_CENTER.x - button_x_radius)) {
-        if (y < (MAGNET_CENTER.y + button_y_radius) && y > (MAGNET_CENTER.y - button_y_radius)) {
+    if (x < (MAGNET_CENTER.x + BUY_BUTTON_SIZE.x) && x > (MAGNET_CENTER.x - BUY_BUTTON_SIZE.x)) {
+        if (y < (MAGNET_CENTER.y + BUY_BUTTON_SIZE.y) && y > (MAGNET_CENTER.y - BUY_BUTTON_SIZE.y)) {
             buy_magnet(scene);
         }
     }
-    if (x < (IMMUNITY_CENTER.x + button_x_radius) && x > (IMMUNITY_CENTER.x - button_x_radius)) {
-        if (y < (IMMUNITY_CENTER.y + button_y_radius) && y > (IMMUNITY_CENTER.y - button_y_radius)) {
+    if (x < (IMMUNITY_CENTER.x + BUY_BUTTON_SIZE.x) && x > (IMMUNITY_CENTER.x - BUY_BUTTON_SIZE.x)) {
+        if (y < (IMMUNITY_CENTER.y + BUY_BUTTON_SIZE.y) && y > (IMMUNITY_CENTER.y - BUY_BUTTON_SIZE.y)) {
             buy_immunity(scene);
         }
     }
-    if (x < (SHOP_HOME_CENTER.x + button_x_radius) && x > (SHOP_HOME_CENTER.x - button_x_radius)) {
-        if (y < (SHOP_HOME_CENTER.y + button_y_radius) && y > (SHOP_HOME_CENTER.y - button_y_radius)) {
+    if (x < (SHOP_HOME_CENTER.x + SHOP_HOME_BUTTON_SIZE.x) && x > (SHOP_HOME_CENTER.x - SHOP_HOME_BUTTON_SIZE.x)) {
+        if (y < (SHOP_HOME_CENTER.y + SHOP_HOME_BUTTON_SIZE.y) && y > (SHOP_HOME_CENTER.y - SHOP_HOME_BUTTON_SIZE.y)) {
             char *start_info = malloc(6*sizeof(char));
             strcpy(start_info, "start");
             scene_set_next_info(scene, start_info);

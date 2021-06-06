@@ -12,7 +12,7 @@ const double BUTTON_Y_RADIUS = 75;
 
 const double PLAYER_X_VELOCITY = 600;
 
-const int SHOP_TIMER = 1000;
+const int SHOP_TIMER = 750;
 
 void on_key(char key, key_event_type_t type, double held_time, void *scene) {
     body_t *player = scene_get_body((scene_t *)scene, 0);
@@ -85,7 +85,7 @@ void mouse_click(int key, int x, int y, void *scene) {
                 settings_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
             }
             else if (strcmp(scene_get_info(scene), "shop") == 0) {
-                shop_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
+                shop_mouse_click(scene, x, y);
             }
             else if (strcmp(scene_get_info(scene), "instructions") == 0) {
                 instructions_mouse_click(scene, x, y, BUTTON_X_RADIUS, BUTTON_Y_RADIUS);
