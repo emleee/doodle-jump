@@ -70,9 +70,7 @@ scene_t *make_restart_scene(char *score, char *highscore) {
     text_t *text2 = text_create("Home", color, 22, home_point);
     scene_add_text(scene, text2);
 
-    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = RESTART_HEIGHT});
-    body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*RESTART_HEIGHT});
-    scene_add_body(scene, background1);
-    scene_add_body(scene, background2);
+    body_t *background = make_background_body("PNGs/Restart_Background.png",(vector_t){.x = 0, .y = RESTART_HEIGHT});
+    scene_add_body(scene, background);
     return scene;
 }
