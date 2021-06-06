@@ -594,6 +594,9 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 if (!in_screen(*center, body)) {
                     scene_remove_body(scene, i);
                 }
+                if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + GAME_HEIGHT/2) {
+                    scene_remove_body(scene, i);
+                }
                 if (strcmp(body_get_info(body), "sliding platform") == 0) {
                     sliding_bounce(body);
                 }
@@ -638,10 +641,9 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                         body_set_sprite(doodle, scene_get_sprite(scene, 1));
                     }
             }
-            // if (!enemy_present) {
-            //     more_enemies(scene, *center);
-            // }
-            more_enemies(scene, *center);
+            if (!enemy_present) {
+                more_enemies(scene, *center);
+            }
             // shifting the viewing window if the doodle goes higher than the center
             if (body_get_centroid(doodle).y > center->y) {
                 // generates more platforms
