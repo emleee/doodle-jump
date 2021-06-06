@@ -20,6 +20,8 @@ typedef struct body body_t;
  */
 body_t *body_init(list_t *shape, double mass, rgb_color_t color);
 
+void body_dont_free_sprite(body_t* body);
+
 /**
  * Allocates memory for a body with the given parameters.
  * The body is initially at rest.

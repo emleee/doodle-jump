@@ -21,6 +21,7 @@ typedef struct body {
     free_func_t info_freer;
     bool remove;
     sprite_t *sprite;
+    bool free_sprite;
 } body_t;
 
 body_t *body_init(list_t *shape, double mass, rgb_color_t color) {
@@ -40,6 +41,7 @@ body_t *body_init(list_t *shape, double mass, rgb_color_t color) {
     body->info_freer = NULL;
     body->remove = false;
     body->sprite = NULL;
+    body->free_sprite = true;
     return body;
 }
 
@@ -65,9 +67,13 @@ void body_set_sprite(body_t *body, sprite_t *sprite) {
     // sprite_set_center(body->sprite, body_get_centroid(body));
 }
 
+void body_dont_free_sprite(body_t* body) {
+    body->free_sprite = false;
+}
+
 void body_free(body_t *body) {
     list_free(body->shape);
-    if (body->sprite != NULL) {
+    if (body->sprite != NULL && body->free_sprite) {
         sprite_free(body->sprite);
     }
     body->info_freer(body->info);

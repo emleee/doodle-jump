@@ -170,6 +170,7 @@ void scene_tick(scene_t *scene, double dt) {
                 }
             }
             body_t *body = list_remove(scene->bodies, i);
+            body_dont_free_sprite(body);
             body_free(body);
             i--;
         }
