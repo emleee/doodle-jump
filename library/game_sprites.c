@@ -41,12 +41,13 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info, sprite_t *sp
 body_t *make_background_body(char *file, vector_t center) {
     list_t *shape = make_rectangle(BACKGROUND_CORNER, BACKGROUND_BODY_LENGTH, BACKGROUND_BODY_LENGTH);
     
-    char *info = malloc(11*sizeof(char));
+    char *info = malloc(11 * sizeof(char));
     strcpy(info, "background");
 
     sprite_t *sprite = create_sprite(file, BACKGROUND_DIMENSIONS.x, BACKGROUND_DIMENSIONS.y);
     body_t *background = body_init_with_sprite(shape, 1, COLOR, info, free, sprite);
     body_set_centroid(background, center);
+    
     return background;
 }
 
