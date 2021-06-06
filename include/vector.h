@@ -1,7 +1,7 @@
 #ifndef __VECTOR_H__
 #define __VECTOR_H__
 
-#include <stdbool.h>
+// #include <stdbool.h>
 
 /**
  * A real-valued 2-dimensional vector.
@@ -101,7 +101,7 @@ vector_t vec_rotate(vector_t v, double angle);
  * @param v2 second vector
  * @return close or not
  */
-bool vec_is_close(vector_t v1, vector_t v2);
+// bool vec_is_close(vector_t v1, vector_t v2);
 
 /**
  * Checks if two values are close.
@@ -110,6 +110,6 @@ bool vec_is_close(vector_t v1, vector_t v2);
  * @param d2 second double
  * @return close or not
  */
-bool is_close(double d1, double d2);
+// bool is_close(double d1, double d2);
 
 #endif // #ifndef __VECTOR_H__

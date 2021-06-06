@@ -1,8 +1,8 @@
 #ifndef __POLYGON_H__
 #define __POLYGON_H__
 
-#include "list.h"
 #include "vector.h"
+#include "list.h"
 
 /**
  * Computes the area of a polygon.

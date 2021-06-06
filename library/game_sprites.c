@@ -1,12 +1,9 @@
-#include "sprite.h"
-#include "body.h"
-#include "vector.h"
-#include "sdl_wrapper.h"
-#include "math.h"
 #include "polygon.h"
+#include "sdl_wrapper.h"
+#include "game_sprites.h"
 
-const vector_t RIGHT_OFFSET = {.x = 10.5, .y = 29.5};
-const vector_t LEFT_OFFSET = {.x = -10.5, .y = 29.5};
+// const vector_t RIGHT_OFFSET = {.x = 10.5, .y = 29.5};
+// const vector_t LEFT_OFFSET = {.x = -10.5, .y = 29.5};
 
 const vector_t FACE_RIGHT = {.x = -21, .y = 0};
 const vector_t FACE_LEFT = {.x = 21, .y = 0};
@@ -22,31 +19,6 @@ const int LEFT_MAGNET_IDX = 5;
 const vector_t HAND_OFFSET = {.x = 70, .y = 15};
 const vector_t MOUTH_OFFSET = {.x = 13, .y = 24};
 
-
-// sprite_t *make_jump_left() {
-//     sprite_t *sprite = create_sprite("PNGs/Jump_Left.png", 117, 207);
-//     sprite_set_parameters(sprite, VEC_ZERO, 117, 207);
-//     return sprite;
-// }
-
-// sprite_t *make_jump_right() {
-//     sprite_t *sprite = create_sprite("PNGs/Jump_Right.png", 117, 207);
-//     sprite_set_parameters(sprite, VEC_ZERO, 117, 207);
-//     return sprite;
-// }
-
-// sprite_t *make_crouch_left() {
-//     sprite_t *sprite = create_sprite("PNGs/Crouch_Left.png", 165, 140);
-//     sprite_set_parameters(sprite, VEC_ZERO, 165, 140);
-//     return sprite;
-// }
-
-// sprite_t *make_crouch_right() {
-//     sprite_t *sprite = create_sprite("PNGs/Crouch_Right.png", 165, 140);
-//     sprite_set_parameters(sprite, VEC_ZERO, 165, 140);
-//     return sprite;
-// }
-
 body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
     list_t *shape = make_rectangle(VEC_ZERO, DOODLE_WIDTH, DOODLE_HEIGHT);
 
@@ -60,24 +32,6 @@ body_t *make_doodle(vector_t center, rgb_color_t color, char *info) {
 
     return doodle;
 }
-
-// sprite_t *make_grass_platform() {
-    // sprite_t *sprite = create_sprite("PNGs/Grass_Platform.png", 146, 35);
-    // sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
-    // return sprite;
-// }
-
-// sprite_t *make_flower_platform() {
-//     sprite_t *sprite = create_sprite("PNGs/Flower_Platform.png", 146, 35);
-//     sprite_set_parameters(sprite, VEC_ZERO, 146, 35);
-//     return sprite;
-// }
-
-// sprite_t *make_background() {
-//     sprite_t *sprite = create_sprite("PNGs/Background.png", 720, 960);
-//     sprite_set_parameters(sprite, VEC_ZERO, 720, 960);
-//     return sprite;
-// }
 
 body_t *make_background_body(char *file, vector_t center) {
     char *info = malloc(11*sizeof(char));

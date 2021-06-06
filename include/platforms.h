@@ -1,6 +1,7 @@
-#include "polygon.h"
-#include "forces.h"
-#include "collision.h"
+// #include "polygon.h"
+// #include "forces.h"
+#include "scene.h"
+// #include "collision.h"
 
 /**
  * Creates a platform with the given characteristics.

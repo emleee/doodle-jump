@@ -1,5 +1,6 @@
-#include "platforms.h"
+#include "polygon.h"
 #include "sdl_wrapper.h"
+#include "platforms.h"
 
 const double WINDOW_LENGTH = 720.0;
 

@@ -1,8 +1,10 @@
-#include <stddef.h>
+// #include <stddef.h>
 #include <math.h>
-#include "polygon.h"
-#include <assert.h>
+// #include <assert.h>
 #include <stdlib.h>
+// #include "vector.h"
+// #include "list.h"
+#include "polygon.h"
 
 const double CIRCLE_POINTS = 20;
 

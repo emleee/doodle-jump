@@ -1,6 +1,7 @@
-#include "game.h"
-#include "restart.h"
-#include "start.h"
+// #include "game.h"
+// #include "restart.h"
+// #include "start.h"
+#include "scene.h"
 
 /**
  * Creates the shop screen, with text for prices and star count, and images of the powerups.

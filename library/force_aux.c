@@ -1,10 +1,10 @@
-#include "force_aux.h"
-#include "list.h"
-#include "body.h"
-#include <stdlib.h>
+// #include "list.h"
+// #include "body.h"
+// #include <stdlib.h>
 #include <assert.h>
-#include <stdio.h>
-#include <stdbool.h>
+// #include <stdio.h>
+// #include <stdbool.h>
+#include "force_aux.h"
 
 const int DEFAULT_BODIES = 2;
 

@@ -118,19 +118,19 @@ int main() {
     vector_t *center = malloc(sizeof(vector_t));
     center->x = WIDTH2/2;
     center->y = HEIGHT2/2;
-    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
+    // rgb_color_t color = {.r = 0, .g = 0, .b = 0};
 
     vector_t *scoring = malloc(sizeof(vector_t));
     scoring->x = 80; // magic numbers
     scoring->y = 20;
-    double curr = 0.0;
+    // double curr = 0.0;
 
     char *score = malloc(100*sizeof(char));
     char *highscore = malloc(100*sizeof(char));
 
     body_t *doodle;
 
-    bool enemy_present = false;
+    // bool enemy_present = false;
     while (!sdl_is_done(scene)) {
         if (strcmp(scene_get_info(scene), "game") == 0 && strcmp(body_get_info(scene_get_body(scene, 0)), "doodle") != 0) {
             char *restart_info = malloc(10*sizeof(char));

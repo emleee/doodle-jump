@@ -1,11 +1,11 @@
-#include "forces.h"
 #include "force_aux.h"
-#include <math.h>
-#include <stdlib.h>
+// #include <math.h>
+// #include <stdlib.h>
 #include "collision.h"
-#include "force_package.h"
+// #include "force_package.h"
 #include "sdl_wrapper.h"
 #include "preferences.h"
+#include "forces.h"
 
 const double BOOST = -300;
 const double BOOST_POWERUP = 1000;
@@ -232,10 +232,10 @@ void create_powerup_collision(scene_t *scene, double elasticity, body_t *body1, 
 }
 
 void immunity_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    force_aux_t *a = (force_aux_t *)aux;
-    double c = force_aux_get_constant(a);
-    double mass1 = body_get_mass(body1);
-    double mass2 = body_get_mass(body2);
+    // force_aux_t *a = (force_aux_t *)aux;
+    // double c = force_aux_get_constant(a);
+    // double mass1 = body_get_mass(body1);
+    // double mass2 = body_get_mass(body2);
     if (strcmp(body_get_info(body1), "enemy") == 0) {
         body_remove(body1);
     }
@@ -304,8 +304,8 @@ void create_boost_collision(scene_t *scene, double elasticity, body_t *body1, bo
 }
 
 void star_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    double mass1 = body_get_mass(body1);
-    double mass2 = body_get_mass(body2);
+    // double mass1 = body_get_mass(body1);
+    // double mass2 = body_get_mass(body2);
     char *info = malloc(10*sizeof(char));
     strcpy(info, "collected");
 

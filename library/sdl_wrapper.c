@@ -8,6 +8,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mouse.h>
 #include "sdl_wrapper.h"
+#include "list.h"
+#include "body.h"
 
 const char WINDOW_TITLE[] = "Doodle Jump 3: Fairy Tail";
 const int WINDOW_WIDTH = 720;

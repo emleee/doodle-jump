@@ -1,8 +1,8 @@
-#include "scene.h"
+// #include <stdlib.h>
+#include <assert.h>
 #include "force_aux.h"
 #include "force_package.h"
-#include <stdlib.h>
-#include <assert.h>
+#include "scene.h"
 
 typedef struct scene {
     list_t *bodies;
