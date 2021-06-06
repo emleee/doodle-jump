@@ -1,10 +1,6 @@
 #ifndef __POWERUPS_H__
 #define __POWERUPS_H__
 
-// #include "platforms.h"
-// #include "sdl_wrapper.h"
-// #include "game_sprites.h"
-// #include "test_util.h"
 #include "scene.h"
 
 /**

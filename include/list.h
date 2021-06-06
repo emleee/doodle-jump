@@ -83,5 +83,12 @@ void list_add(list_t *list, void *value);
  */
 void list_resize(list_t *list);
 
+/**
+ * Gets the freer for the elements of the list.
+ *
+ * @param list list to get 
+ * @return the freer
+ */
 free_func_t get_freer(list_t *list);
+
 #endif // #ifndef __LIST_H__

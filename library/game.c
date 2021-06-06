@@ -234,9 +234,7 @@ scene_t *make_game_scene() {
     strcpy(doodle_info, "doodle");
     vector_t start = {.x = GAME_WIDTH/2, .y = GAME_START_VELOCITY.y/2 + GAME_DOODLE_HEIGHT/2};
 
-    body_t *doodle = make_doodle(start, GAME_DOODLE_COLOR, doodle_info);
-
-    sprite_t *right_jump = body_get_sprite(doodle);
+    sprite_t *right_jump = create_sprite("PNGs/Jump_Right.png", 117, 207);
     sprite_t *left_jump = create_sprite("PNGs/Jump_Left.png", 117, 207);
     scene_add_sprite(scene, right_jump);
     scene_add_sprite(scene, left_jump);
@@ -251,6 +249,7 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_magnet);
     scene_add_sprite(scene, left_magnet);
 
+    body_t *doodle = make_doodle(start, GAME_DOODLE_COLOR, doodle_info, right_jump);
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, GAME_G, doodle);
