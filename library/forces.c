@@ -10,7 +10,7 @@
 const double BOOST = -300;
 const double BOOST_POWERUP = 1000;
 const double DOODLE_HEIGHT2 = 148.0;
-const double SCREEN_HEIGHT = 960.0;
+const double SCREEN_HEIGHT2 = 960.0;
 
 void magnet(void *a) {
     force_aux_t *aux = (force_aux_t *)a;
@@ -20,8 +20,7 @@ void magnet(void *a) {
     body_t *body2 = list_get(bodies, 1);
     vector_t centroid1 = body_get_centroid(body1);
     vector_t centroid2 = body_get_centroid(body2);
-    // printf("%f %f %f\n", centroid2.y, centroid1.y, SCREEN_HEIGHT/2);
-    if (fabs(centroid2.y - centroid1.y) > SCREEN_HEIGHT/2) {
+    if (fabs(centroid2.y - centroid1.y) > SCREEN_HEIGHT2/2) {
         return;
     }
     vector_t between = vec_subtract(centroid2, centroid1);

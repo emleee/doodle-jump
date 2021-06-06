@@ -1,10 +1,7 @@
 #include "shop.h"
 #include "color.h"
 #include "preferences.h"
-
-// screen dimensions
-const double SHOP_WIDTH = 720.0;
-const double SHOP_HEIGHT = 960.0;
+#include "constants.h"
 
 // locations
 const vector_t BOOST_CENTER = {.x = 275, .y = 605};
@@ -29,15 +26,15 @@ const int IMMUNITY_PRICE = 50;
 const int MAGNET_PRICE = 80;
 
 // colors
-const rgb_color_t TEXT_COLOR = {.r = 0, .g = 0, .b = 0};
-const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
+// const rgb_color_t TEXT_COLOR = {.r = 0, .g = 0, .b = 0};
+// const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
 
 scene_t *make_shop_scene () {
     char *scene_info = malloc(5 * sizeof(char));
     strcpy(scene_info, "shop");
     scene_t *scene = scene_init_with_info(scene_info, free);
 
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_HEIGHT});
     scene_add_body(scene, background);
 
     display_star_count(scene);
@@ -56,7 +53,7 @@ void display_star_count(scene_t *scene) {
     scene_add_text(scene, star_count);
 
     // star body
-    vector_t star_pos = {.x = STAR_OFFSET, .y = SHOP_HEIGHT - STAR_OFFSET};
+    vector_t star_pos = {.x = STAR_OFFSET, .y = SCREEN_HEIGHT - STAR_OFFSET};
     star_t *star_frame = make_star(star_pos, STAR_NUM_POINTS, STAR_RADIUS);
     char *star_info = malloc(5 * sizeof(char));
     strcpy(star_info, "star");
@@ -77,7 +74,7 @@ scene_t *make_shop_exit_scene() {
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_HEIGHT});
     scene_add_body(scene, background);
     return scene;
 }
@@ -95,7 +92,7 @@ scene_t *make_failed_purchase_scene() {
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_HEIGHT});
     scene_add_body(scene, background);
     return scene;
 }
