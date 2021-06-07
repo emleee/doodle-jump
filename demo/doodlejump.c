@@ -157,7 +157,7 @@ int main() {
                 scene = make_game_scene();
                 use_inventory(scene);
                 doodle = scene_get_body(scene, 0);
-                // body_set_velocity(doodle, (vector_t){.x = 0, .y = 5000});
+                body_set_velocity(doodle, (vector_t){.x = 0, .y = 5000});
             }
             else if (strcmp(scene_get_next_info(scene), "start") == 0) {
                 center->x = WIDTH2/2;

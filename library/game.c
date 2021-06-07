@@ -690,7 +690,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             scene_tick(scene, dt);
         }
         free(buffer);
-        free(scoring);
     }
     sdl_render_scene(scene);
 }
