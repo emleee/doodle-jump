@@ -41,9 +41,11 @@ vector_t *platform_center(scene_t *scene) {
             return NULL;
         }
 
-        while (strcmp("normal platform", info) != 0) {
+        int counter2 = 0;
+        while (strcmp("normal platform", info) != 0 && counter2 < 30) {
             random = rand() % scene_bodies(scene);
             info = body_get_info(scene_get_body(scene, random));
+            counter2++;
         }
 
         // check if platform already has a star on it
