@@ -18,6 +18,7 @@ force_aux_t *force_aux_init(double constant) {
     force_aux_t *force_aux = malloc(sizeof(force_aux_t));
     assert(force_aux != NULL);
     force_aux->constant = constant;
+    force_aux->list = NULL;
     // force_aux->collided = false;
     return force_aux;
 }
@@ -27,6 +28,9 @@ void force_aux_add_body(force_aux_t *force_aux, body_t *body) {
 }
 
 void force_aux_set_bodies(force_aux_t *force_aux, list_t *bodies) {
+    if (force_aux->list != NULL) {
+        free(force_aux->list);
+    }
     force_aux->list = bodies;
 }
 

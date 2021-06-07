@@ -52,6 +52,7 @@
         "scene.h": "c",
         "sdl_mouse.h": "c",
         "test_util.h": "c",
-        "crtdbg.h": "c"
+        "crtdbg.h": "c",
+        "shop.h": "c"
     }
 }

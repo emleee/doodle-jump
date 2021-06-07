@@ -33,6 +33,7 @@ SDL_Rect *sprite_get_box(sprite_t *sprite) {
 }
 
 void sprite_free(sprite_t *sprite) {
+    printf("%s", "freed\n");
     SDL_DestroyTexture(sprite->texture);
     free(sprite->box);
     free(sprite);

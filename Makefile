@@ -65,7 +65,6 @@ out/%.o: demo/%.c # or "demo"
 # since it is building a full executable.
 bin/doodlejump: out/doodlejump.o out/sdl_wrapper.o $(STUDENT_OBJS)
 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
 # bin/gravity: out/gravity.o out/sdl_wrapper.o $(STUDENT_OBJS)
 # 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
 

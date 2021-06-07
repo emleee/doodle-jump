@@ -1,12 +1,12 @@
 // Different Screens
-#define _CRTDGB_MAP_ALLOC
-#define _DEBUG
+// #define _CRTDGB_MAP_ALLOC
+// #define _DEBUG
 #include <stdlib.h>
 #include "game.h"
 #include "restart.h"
 #include "start.h"
 #include "shop.h"
-#include <crtdbg.h>
+// #include <crtdbg.h>
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
@@ -99,8 +99,8 @@ void mouse_click(int key, int x, int y, void *scene) {
 }
 
 int main() {
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
+    // _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    // _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
     vector_t start_min = {.x = 0, .y = 0};
     vector_t start_max = {.x = WIDTH2, .y = HEIGHT2};
     sdl_init(start_min, start_max);
@@ -245,6 +245,6 @@ int main() {
     free(highscore);
     free(scoring);
     scene_free(scene);
-    _CrtDumpMemoryLeaks();
+    // _CrtDumpMemoryLeaks();
     return 0;
 }

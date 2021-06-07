@@ -214,6 +214,7 @@ text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *c
     textbox->h = surface->h;
 
     text_t *text = text_init(surface, texture, textbox);
+    // SDL_FreeSurface(surface);
     TTF_CloseFont(font);
     TTF_Quit();
     return text;

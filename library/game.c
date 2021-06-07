@@ -15,7 +15,7 @@ const int NUM_POINTS = 50;
 const double GAME_BUTTON_X_RADIUS = 125;
 const double GAME_BUTTON_Y_RADIUS = 75;
 
-const double MAX_PLATFORMS = 12;
+const double MAX_PLATFORMS = 14;
 const double PLATFORM_WIDTH2 = 146;
 const double PLATFORM_HEIGHT2 = 35;
 const vector_t PANEL_DIMENSTIONS = {.x = 500, .y = 500};
@@ -92,6 +92,22 @@ body_t *make_button(vector_t center) {
     return button;
 }
 
+void platform_overlap(body_t *body1, body_t *body2) {
+    if (body_is_removed(body1) || body_is_removed(body2)) {
+        return;
+    }
+    vector_t centroid1 = body_get_centroid(body1);
+    vector_t centroid2 = body_get_centroid(body2);
+    if (fabs(centroid1.y - centroid2.y) <= PLATFORM_HEIGHT2) {
+        if (strstr(body_get_second_info(body1), "nonessential") != NULL) {
+            body_remove(body1);
+        }
+        else {
+            body_remove(body2);
+        }
+    }
+}
+
 void more_platforms(scene_t *scene, vector_t center) {
     int num_platforms = 0;
     for (int i = 0; i < scene_bodies(scene); i++) {
@@ -100,7 +116,6 @@ void more_platforms(scene_t *scene, vector_t center) {
         if (strstr(info, "platform") == NULL) {
             continue;
         }
-
         num_platforms++;
         char *info2 = body_get_second_info(platform);
         if (strcmp("essential", info2) == 0) {
@@ -176,6 +191,18 @@ void more_platforms(scene_t *scene, vector_t center) {
         create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
         i++;
     }
+    for (int i = 3; i < scene_bodies(scene); i++) {
+        body_t *body1 = scene_get_body(scene, i);
+        if (strstr(body_get_info(body1), "platform") == NULL) {
+            continue;
+        }
+        for (int j = i + 1; j < scene_bodies(scene); j++) {
+            body_t *body2 = scene_get_body(scene, j);
+            if (strstr(body_get_info(body2), "platform") != NULL) {
+                platform_overlap(body1, body2);
+            }
+        }
+    }
 }
 
 void more_enemies(scene_t *scene, vector_t center) {
@@ -220,10 +247,10 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_wing);
     scene_add_sprite(scene, left_wing);
 
-    sprite_t *right_magnet = create_sprite("PNGs/Magnet.png", 748/21, 845/21);
-    sprite_t *left_magnet = create_sprite("PNGs/Magnet_Flipped.png", 748/21, 845/21);
-    scene_add_sprite(scene, right_magnet);
-    scene_add_sprite(scene, left_magnet);
+    // sprite_t *right_magnet = create_sprite("PNGs/Magnet.png", 748/21, 845/21);
+    // sprite_t *left_magnet = create_sprite("PNGs/Magnet_Flipped.png", 748/21, 845/21);
+    // scene_add_sprite(scene, right_magnet);
+    // scene_add_sprite(scene, left_magnet);
 
     body_t *doodle = make_doodle(start, GAME_DOODLE_COLOR, doodle_info, right_jump);
     body_set_velocity(doodle, GAME_START_VELOCITY);
@@ -263,6 +290,7 @@ bool in_screen(vector_t center, body_t *body) {
     list_t *points = body_get_shape(body);
     for (int i = 0; i < list_size(points); i++) {
         if (((vector_t *)list_get(points, i))->y > center.y - GAME_HEIGHT/2) {
+            // printf("%f , %f\n", ((vector_t *)list_get(points, i))->y, center.y - GAME_HEIGHT/2);
             return true;
         }
     }
@@ -589,12 +617,16 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 body_t *body = scene_get_body(scene, i);
                 if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
                     enemy_present = true;
+                    // continue;
                 }
                 if (!in_screen(*center, body)) {
+                    //printf("%s", "not in screen\n");
                     scene_remove_body(scene, i);
+                    // continue;
                 }
                 if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + GAME_HEIGHT/2) {
                     scene_remove_body(scene, i);
+                    // continue;
                 }
                 if (strcmp(body_get_info(body), "sliding platform") == 0) {
                     sliding_bounce(body);
@@ -640,9 +672,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                         body_set_sprite(doodle, scene_get_sprite(scene, 1));
                     }
             }
-            if (!enemy_present) {
-                more_enemies(scene, *center);
-            }
             // shifting the viewing window if the doodle goes higher than the center
             if (body_get_centroid(doodle).y > center->y) {
                 // generates more platforms
@@ -656,6 +685,9 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                         centroid.y += GAME_HEIGHT*2;
                         body_set_centroid(background, centroid);
                     }
+                }
+                if (!enemy_present) {
+                    more_enemies(scene, *center);
                 }
             }
             enemy_present = false;

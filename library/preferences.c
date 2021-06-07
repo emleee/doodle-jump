@@ -28,19 +28,19 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
     rgb_color_t color = {.r = 0, .g = 0, .b = 0};
 
     vector_t *title_point = malloc(sizeof(vector_t));
-    title_point->x = PREF_TITLE.x; // remove magic numbers
+    title_point->x = PREF_TITLE.x;
     title_point->y = PREF_TITLE.y;
     text_t *title_text = text_create("Settings", color, 28, title_point);
     scene_add_text(scene, title_text);
 
     vector_t *description_point = malloc(sizeof(vector_t));
-    description_point->x = PREF_DESCRIPTION.x; // remove magic numbers
+    description_point->x = PREF_DESCRIPTION.x;
     description_point->y = PREF_DESCRIPTION.y;
     text_t *description_text = text_create("Click ON or OFF to toggle settings.", color, 18, description_point);
     scene_add_text(scene, description_text);
 
     vector_t *point2 = malloc(sizeof(vector_t));
-    point2->x = PREF_HOME_BUTTON.x; // remove magic numbers
+    point2->x = PREF_HOME_BUTTON.x;
     point2->y = PREF_HOME_BUTTON.y;
     text_t *text2 = text_create("Back to Home", color, 22, point2);
     scene_add_text(scene, text2);
@@ -51,25 +51,25 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
     scene_add_body(scene, background2);
 
     vector_t *sound_point = malloc(sizeof(vector_t));
-    sound_point->x = SOUND.x; // remove magic numbers
+    sound_point->x = SOUND.x;
     sound_point->y = SOUND.y;
     text_t *sound_text = text_create("Sound Effects", color, 22, sound_point);
     scene_add_text(scene, sound_text);
 
     vector_t *score_point = malloc(sizeof(vector_t));
-    score_point->x = SCORE.x; // remove magic numbers
+    score_point->x = SCORE.x;
     score_point->y = SCORE.y;
     text_t *score_text = text_create("Score Markers", color, 22, score_point);
     scene_add_text(scene, score_text);
 
     vector_t *powerup_point = malloc(sizeof(vector_t));
-    powerup_point->x = POWERUP.x; // remove magic numbers
+    powerup_point->x = POWERUP.x;
     powerup_point->y = POWERUP.y;
     text_t *powerup_text = text_create("Powerup", color, 22, powerup_point);
     scene_add_text(scene, powerup_text);
 
     vector_t *sound_button_point = malloc(sizeof(vector_t));
-    sound_button_point->x = SOUND.x + PREF_BUTTON_OFFSET; // remove magic numbers
+    sound_button_point->x = SOUND.x + PREF_BUTTON_OFFSET;
     sound_button_point->y = SOUND.y;
     bool sound_pref = get_sound_preference();
     if (sound_pref) {
@@ -81,7 +81,7 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
         scene_add_text(scene, sound);
     }
     vector_t *score_button_point = malloc(sizeof(vector_t));
-    score_button_point->x = SCORE.x + PREF_BUTTON_OFFSET; // remove magic numbers
+    score_button_point->x = SCORE.x + PREF_BUTTON_OFFSET;
     score_button_point->y = SCORE.y;
     bool score_pref = get_score_preference();
     if (score_pref) {
@@ -93,7 +93,7 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
         scene_add_text(scene, score);
     }
     vector_t *powerup_button_point = malloc(sizeof(vector_t));
-    powerup_button_point->x = POWERUP.x + PREF_BUTTON_OFFSET; // remove magic numbers
+    powerup_button_point->x = POWERUP.x + PREF_BUTTON_OFFSET; 
     powerup_button_point->y = POWERUP.y;
     bool powerup_pref = get_powerup_preference();
     if (powerup_pref) {
@@ -174,7 +174,7 @@ void switch_powerup_preferences() {
 }
 
 void update_preferences() {
-    FILE *file = fopen("preferences.txt", "w"); // opening of file
+    FILE *file = fopen("preferences.txt", "w");
     if (!file) {
         return;
     }
@@ -221,7 +221,7 @@ void settings_mouse_click (scene_t *scene, int x, int y, double button_x_radius,
         scene_remove_text(scene, score);
         scene_remove_text(scene, powerup);
         vector_t *sound_point = malloc(sizeof(vector_t));
-        sound_point->x = SOUND.x + PREF_BUTTON_OFFSET; // remove magic numbers
+        sound_point->x = SOUND.x + PREF_BUTTON_OFFSET;
         sound_point->y = SOUND.y;
         bool sound_pref = get_sound_preference();
         if (sound_pref) {
@@ -231,7 +231,7 @@ void settings_mouse_click (scene_t *scene, int x, int y, double button_x_radius,
             sound = text_create("OFF", color, 22, sound_point);
         }
         vector_t *score_point = malloc(sizeof(vector_t));
-        score_point->x = SCORE.x + PREF_BUTTON_OFFSET; // remove magic numbers
+        score_point->x = SCORE.x + PREF_BUTTON_OFFSET;
         score_point->y = SCORE.y;
         bool score_pref = get_score_preference();
         if (score_pref) {
@@ -241,7 +241,7 @@ void settings_mouse_click (scene_t *scene, int x, int y, double button_x_radius,
             score = text_create("OFF", color, 22, score_point);
         }
         vector_t *powerup_point = malloc(sizeof(vector_t));
-        powerup_point->x = POWERUP.x + PREF_BUTTON_OFFSET; // remove magic numbers
+        powerup_point->x = POWERUP.x + PREF_BUTTON_OFFSET;
         powerup_point->y = POWERUP.y;
         bool powerup_pref = get_powerup_preference();
         if (powerup_pref) {

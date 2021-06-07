@@ -77,13 +77,13 @@ vector_t find_hand(scene_t *scene, body_t *body, body_t *powerup) {
     vector_t centroid = body_get_centroid(body);
     vector_t hand;
     if (body_get_direction(body) == 0) {
-        sprite_t *new_sprite = scene_get_sprite(scene, RIGHT_MAGNET_IDX);
-        body_set_sprite(powerup, new_sprite);
+        // sprite_t *new_sprite = scene_get_sprite(scene, RIGHT_MAGNET_IDX);
+        // body_set_sprite(powerup, new_sprite);
         hand = (vector_t){.x = centroid.x + HAND_OFFSET.x, .y = centroid.y - HAND_OFFSET.y};
     }
     else {
-        sprite_t *new_sprite = scene_get_sprite(scene, LEFT_MAGNET_IDX);
-        body_set_sprite(powerup, new_sprite);
+        // sprite_t *new_sprite = scene_get_sprite(scene, LEFT_MAGNET_IDX);
+        // body_set_sprite(powerup, new_sprite);
         hand = (vector_t){.x = centroid.x - HAND_OFFSET.x, .y = centroid.y - HAND_OFFSET.y};
     }
     return hand;
