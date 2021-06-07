@@ -386,11 +386,17 @@ void free_text(text_t *text) {
 
 void free_sounds() {
     //Quit SDL subsystems
-    Mix_FreeChunk(jump);
-    Mix_FreeChunk(shoot);
-    Mix_FreeChunk(cha_ching);
-    jump = NULL;
-    shoot = NULL;
-    cha_ching = NULL;
+    if (jump != NULL) {
+        Mix_FreeChunk(jump);
+        jump = NULL;
+    }
+    if (shoot != NULL) {
+        Mix_FreeChunk(shoot);
+        shoot = NULL;
+    }
+    if (cha_ching != NULL) {
+        Mix_FreeChunk(cha_ching);
+        cha_ching = NULL;
+    }
     Mix_Quit();
 }

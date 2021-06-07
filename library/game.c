@@ -124,6 +124,7 @@ void more_platforms(scene_t *scene, vector_t center) {
                 body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+                printf("new platforms\n");
             }
         }
     }
@@ -481,6 +482,7 @@ void star_updating(int star_score) {
     fputs(star_reading, star_file);
     free(star_reading);
     fclose(star_file);
+    // free(throwaway[0]);
     free(throwaway);
 }
 
@@ -591,6 +593,9 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             free(timer);
             free(powerup_timer);
             free(star_timer);
+            timer = NULL;
+            powerup_timer = NULL;
+            star_timer = NULL;
             char *restart_info = malloc(8*sizeof(char));
             strcpy(restart_info,
              "restart");

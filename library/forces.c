@@ -268,14 +268,12 @@ void boost_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *
     }
     vector_t collision_axis = {.x = 0, .y = 1};
     if (mass1 == INFINITY) {
-        // body_remove(body1);
         char *info = malloc(9*sizeof(char));
         strcpy(info, "equipped");
         body_set_second_info(body1, info);
         body_add_impulse(body2, vec_multiply(impulse + BOOST_POWERUP*mass2, collision_axis));
     }
     else if (mass2 == INFINITY) {
-        // body_remove(body2);
         char *info = malloc(9*sizeof(char));
         strcpy(info, "equipped");
         body_set_second_info(body2, info);
@@ -296,8 +294,6 @@ void create_boost_collision(scene_t *scene, double elasticity, body_t *body1, bo
 }
 
 void star_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
-    // double mass1 = body_get_mass(body1);
-    // double mass2 = body_get_mass(body2);
     char *info = malloc(10*sizeof(char));
     strcpy(info, "collected");
 

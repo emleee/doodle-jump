@@ -145,7 +145,6 @@ int main() {
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
-                scene_free(scene);
                 timer = malloc(sizeof(int));
                 *timer = 0;
                 powerup_timer = malloc(sizeof(int));
@@ -154,10 +153,11 @@ int main() {
                 *star_timer = 0;
                 score = malloc(100*sizeof(char));
                 reset_clock();
+                scene_free(scene);
                 scene = make_game_scene();
                 use_inventory(scene);
                 doodle = scene_get_body(scene, 0);
-                // body_set_velocity(doodle, (vector_t){.x = 0, .y = 5000});
+                body_set_velocity(doodle, (vector_t){.x = 0, .y = 5000});
             }
             else if (strcmp(scene_get_next_info(scene), "start") == 0) {
                 center->x = WIDTH2/2;
@@ -246,7 +246,20 @@ int main() {
     free(score);
     free(highscore);
     free(scoring);
+    free_sounds();
     scene_free(scene);
+    if (timer != NULL) {
+        free(timer);
+    }
+    if (star_timer != NULL) {
+        free(star_timer);
+    }
+    if (powerup_timer != NULL) {
+        free(powerup_timer);
+    }
     // _CrtDumpMemoryLeaks();
+    SDL_Renderer *renderer = get_renderer();
+    SDL_Quit();
+    SDL_DestroyRenderer(renderer);
     return 0;
 }
