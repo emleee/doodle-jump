@@ -1,5 +1,5 @@
 # List of demo programs
-DEMOS = doodlejump
+DEMOS = doodlejump test
 # List of C files in "libraries" that we provide
 STAFF_LIBS = test_util sdl_wrapper
 # List of C files in "libraries" that you will write.
@@ -18,7 +18,7 @@ CC = clang
 # -fno-omit-frame-pointer allows stack traces to be generated
 #   (take CS 24 for a full explanation)
 # -fsanitize=address enables asan
-CFLAGS = -Iinclude $(shell sdl2-config --cflags | sed -e "s/include\/SDL2/include/") -Wall -g -fno-omit-frame-pointer -fsanitize=address -fsanitize=leak -Wno-nullability-completeness
+CFLAGS = -Iinclude $(shell sdl2-config --cflags | sed -e "s/include\/SDL2/include/") -Wall -g -fno-omit-frame-pointer -fsanitize=address -Wno-nullability-completeness
 # Compiler flag that links the program with the math library
 LIB_MATH = -lm
 # Compiler flags that link the program with the math and SDL libraries.
@@ -65,7 +65,8 @@ out/%.o: demo/%.c # or "demo"
 # since it is building a full executable.
 bin/doodlejump: out/doodlejump.o out/sdl_wrapper.o $(STUDENT_OBJS)
 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
+bin/test: out/test.o out/sdl_wrapper.o $(STUDENT_OBJS)
+	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
 # bin/gravity: out/gravity.o out/sdl_wrapper.o $(STUDENT_OBJS)
 # 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
 

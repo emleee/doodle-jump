@@ -285,9 +285,9 @@ scene_t *make_game_scene() {
 
 bool in_screen(vector_t center, body_t *body) {
     list_t *points = body_get_shape(body);
-    // printf("%f\n", center.y);
     for (int i = 0; i < list_size(points); i++) {
         if (((vector_t *)list_get(points, i))->y > center.y - GAME_HEIGHT/2) {
+            // printf("%f , %f\n", ((vector_t *)list_get(points, i))->y, center.y - GAME_HEIGHT/2);
             return true;
         }
     }
@@ -615,15 +615,16 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 body_t *body = scene_get_body(scene, i);
                 if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
                     enemy_present = true;
-                    continue;
+                    // continue;
                 }
                 if (!in_screen(*center, body)) {
+                    printf("%s", "not in screen\n");
                     scene_remove_body(scene, i);
-                    continue;
+                    // continue;
                 }
                 if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + GAME_HEIGHT/2) {
                     scene_remove_body(scene, i);
-                    continue;
+                    // continue;
                 }
                 if (strcmp(body_get_info(body), "sliding platform") == 0) {
                     sliding_bounce(body);
