@@ -1,9 +1,7 @@
 #include "restart.h"
 #include "sdl_wrapper.h"
 #include "game_sprites.h"
-
-const double RESTART_HEIGHT = 960.0;
-const double RESTART_WIDTH = 720.0;
+#include "constants.h"
 
 const vector_t SCORE_CENTER = {.x = 360, .y = 125};
 const vector_t HIGHSCORE_CENTER = {.x = 360, .y = 240};
@@ -60,7 +58,7 @@ scene_t *make_restart_scene(char *score, char *highscore) {
     text_t *highscore_text = text_create(highscore, color, 22, highscore_point);
     scene_add_text(scene, highscore_text);
     
-    body_t *background = make_background_body("PNGs/Restart_Background.png",(vector_t){.x = 0, .y = RESTART_HEIGHT});
+    body_t *background = make_background_body("PNGs/Restart_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
     return scene;
 }

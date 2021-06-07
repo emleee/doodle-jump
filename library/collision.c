@@ -1,7 +1,5 @@
-// #include "vector.h"
 #include <math.h>
 #include <stdlib.h>
-// #include <stdio.h>
 #include "collision.h"
 
 vector_t get_perp_line(vector_t *pt1, vector_t *pt2) {

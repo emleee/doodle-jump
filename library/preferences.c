@@ -3,12 +3,12 @@
 #include "body.h"
 #include "sdl_wrapper.h"
 #include "game_sprites.h"
+#include "constants.h"
 
-const double PREF_WIDTH = 720.0;
-const double PREF_HEIGHT = 960.0;
 bool SOUND_EFFECTS = true;
 bool SCORE_MARKER = true;
 bool POWERUPS = true;
+
 const size_t SOUND_IDX = 6;
 const size_t SCORE_IDX = 7;
 const size_t POWERUP_IDX = 8;
@@ -45,8 +45,8 @@ scene_t *make_settings_scene() { // add something to keep track score vs high sc
     text_t *text2 = text_create("Back to Home", color, 22, point2);
     scene_add_text(scene, text2);
 
-    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = PREF_HEIGHT});
-    body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*PREF_HEIGHT});
+    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
+    body_t *background2 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = 2*SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 

@@ -1,13 +1,5 @@
 #include "start.h"
-
-const double START_HEIGHT = 960.0;
-const double START_DOODLE_HEIGHT = 148.0;
-const vector_t VELOCITY = {.x = 0, .y = 300};
-
-const rgb_color_t START_DOODLE_BODY_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
-const double START_MAX_JUMP = 295.0;
-
-const double START_G = -150.0;
+#include "constants.h"
 
 const vector_t START_BUTTON = {.x = 360, .y = 245};
 const vector_t SHOP_BUTTON = {.x = 360, .y = 425};
@@ -24,7 +16,7 @@ scene_t *make_start_scene() {
     strcpy(scene_info, "start");
     scene_t *scene = scene_init_with_info(scene_info, free);
 
-    body_t *background = make_background_body("PNGs/Start_Background_1.png", (vector_t){.x = 0, .y = START_HEIGHT});
+    body_t *background = make_background_body("PNGs/Start_Background_1.png", (vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
     sprite_t *background1 = body_get_sprite(background);
     sprite_t *background2 = create_sprite("PNGs/Start_Background_2.png", 720, 960);

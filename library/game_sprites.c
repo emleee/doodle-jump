@@ -1,6 +1,7 @@
 #include "polygon.h"
 #include "sdl_wrapper.h"
 #include "game_sprites.h"
+#include "constants.h"
 
 // direction change offsets
 const vector_t FACE_RIGHT = {.x = -21, .y = 0};
@@ -9,11 +10,6 @@ const vector_t FACE_LEFT = {.x = 21, .y = 0};
 // pellet color
 const rgb_color_t COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
 
-// doodle parameters
-const double DOODLE_WIDTH = 96.0;
-const double DOODLE_HEIGHT = 148.0;
-const double DOODLE_MASS = 10;
-
 // magnet stuff
 const int RIGHT_MAGNET_IDX = 4;
 const int LEFT_MAGNET_IDX = 5;
@@ -21,7 +17,6 @@ const vector_t HAND_OFFSET = {.x = 70, .y = 15};
 const vector_t MOUTH_OFFSET = {.x = 13, .y = 24};
 
 // background stuff
-const vector_t BACKGROUND_DIMENSIONS = {.x = 720, .y = 960};
 const vector_t BACKGROUND_CORNER = {.x = -1, .y = -1};
 const double BACKGROUND_BODY_LENGTH = 2;
 
@@ -44,7 +39,7 @@ body_t *make_background_body(char *file, vector_t center) {
     char *info = malloc(11 * sizeof(char));
     strcpy(info, "background");
 
-    sprite_t *sprite = create_sprite(file, BACKGROUND_DIMENSIONS.x, BACKGROUND_DIMENSIONS.y);
+    sprite_t *sprite = create_sprite(file, SCREEN_DIMENSIONS.x, SCREEN_DIMENSIONS.y);
     body_t *background = body_init_with_sprite(shape, 1, COLOR, info, free, sprite);
     body_set_centroid(background, center);
     
@@ -77,13 +72,9 @@ vector_t find_hand(scene_t *scene, body_t *body, body_t *powerup) {
     vector_t centroid = body_get_centroid(body);
     vector_t hand;
     if (body_get_direction(body) == 0) {
-        // sprite_t *new_sprite = scene_get_sprite(scene, RIGHT_MAGNET_IDX);
-        // body_set_sprite(powerup, new_sprite);
         hand = (vector_t){.x = centroid.x + HAND_OFFSET.x, .y = centroid.y - HAND_OFFSET.y};
     }
     else {
-        // sprite_t *new_sprite = scene_get_sprite(scene, LEFT_MAGNET_IDX);
-        // body_set_sprite(powerup, new_sprite);
         hand = (vector_t){.x = centroid.x - HAND_OFFSET.x, .y = centroid.y - HAND_OFFSET.y};
     }
     return hand;

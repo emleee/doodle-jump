@@ -8,40 +8,18 @@
 #include "forces.h"
 #include "constants.h"
 
-const double GAME_WIDTH = 720.0;
-const double GAME_HEIGHT = 960.0;
-const double GAME_DOODLE_WIDTH = 96.0;
-const double GAME_DOODLE_HEIGHT = 148.0;
-const int NUM_POINTS = 50;
-const double GAME_BUTTON_X_RADIUS = 125;
-const double GAME_BUTTON_Y_RADIUS = 75;
-
 const double MAX_PLATFORMS = 14;
 const double PLATFORM_WIDTH2 = 146;
 const double PLATFORM_HEIGHT2 = 35;
 const vector_t PANEL_DIMENSTIONS = {.x = 500, .y = 500};
 const int NUM_PANELS = 4;
 
-const vector_t GAME_START_VELOCITY = {.x = 0, .y = 300};
-// const double PLAYER_X_VELOCITY = 600;
-
 const double SCORE_FACTOR = 20;
-
-const rgb_color_t GAME_DOODLE_COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
-const rgb_color_t BUTTON_COLOR = {.r = 255.0/255, .g = 255.0/255, .b = 255.0/255};
-const double GAME_DOODLE_MASS = 5.0;
-const double BUTTON_MASS = INFINITY;
-const double GAME_MAX_JUMP = 295.0;
-
-const double GAME_G = -150.0;
-
-const int NUM_STAR_POINTS = 5;
-const int STAR_RADIUS = 17;
-const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
 
 const double BUTTON_OFFSET = 100;
 const vector_t PREVIOUS_BUTTON = {.x = 260.0, .y = 630.0};
 const vector_t NEXT_BUTTON = {.x = 450.0, .y = 630.0};
+const vector_t SCORE_MARKER_CENTER = {.x = 90, .y = 20};
 
 const double POWERUP_TIMER = 1200;
 
@@ -66,7 +44,7 @@ body_t *make_enemy(vector_t center) {
     }
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "enemy");
-    body_t *doodle = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+    body_t *doodle = body_init_with_info(shape, INFINITY, DOODLE_COLOR, info, free);
     body_set_sprite(doodle, sprite);
     body_set_centroid(doodle, center);
 
@@ -101,15 +79,15 @@ void more_platforms(scene_t *scene, vector_t center) {
         char *info2 = body_get_second_info(platform);
         if (strcmp("essential", info2) == 0) {
             // essential platforms are generated one jump height apart
-            double new_height = body_get_centroid(platform).y + GAME_MAX_JUMP;
+            double new_height = body_get_centroid(platform).y + MAX_JUMP;
             // only want to generate platforms that will be within one window height above the current window
-            if ((new_height > center.y + GAME_HEIGHT/2) && (new_height < center.y + GAME_HEIGHT/2 + GAME_HEIGHT)) {
+            if ((new_height > center.y + SCREEN_DIMENSIONS.y/2) && (new_height < center.y + SCREEN_DIMENSIONS.y/2 + SCREEN_DIMENSIONS.y)) {
                 strcat(info2, " done");
-                vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
+                vector_t platform_center = {.x = (double)rand()/RAND_MAX * (SCREEN_DIMENSIONS.x - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = new_height};
                 int random = rand()%40;
                 char *new_info1;
                 body_t *new_platform;
-                if (random <= center.y/GAME_HEIGHT && random <= 35) {
+                if (random <= center.y/SCREEN_DIMENSIONS.y && random <= 35) {
                     new_info1 = malloc(17*sizeof(char));
                     strcpy(new_info1, "sliding platform");
                     new_platform = sliding_platform(platform_center, new_info1);
@@ -125,19 +103,18 @@ void more_platforms(scene_t *scene, vector_t center) {
                 body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
-                // printf("new platforms\n");
             }
         }
     }
 
     int i = num_platforms;
     int difficulty = 0;
-    if (center.y == -1 * GAME_HEIGHT/2) {
+    if (center.y == -1 * SCREEN_DIMENSIONS.y/2) {
         i = (int)MAX_PLATFORMS/2 + 3;
     }
     else {
-        difficulty += abs((int)center.y)/(int)GAME_HEIGHT/2;
-        if (num_platforms == (int)(GAME_HEIGHT*2/GAME_MAX_JUMP)) {
+        difficulty += abs((int)center.y)/(int)SCREEN_DIMENSIONS.y/2;
+        if (num_platforms == (int)(SCREEN_DIMENSIONS.y*2/MAX_JUMP)) {
             i = MAX_PLATFORMS - difficulty - 1;
         }
     }
@@ -145,7 +122,7 @@ void more_platforms(scene_t *scene, vector_t center) {
         char *info2 = malloc(13*sizeof(char));
         strcpy(info2, "nonessential");
         int random = rand() % 8;
-        vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * GAME_HEIGHT + center.y + GAME_HEIGHT/2};
+        vector_t platform_center = {.x = (double)rand()/RAND_MAX * (SCREEN_DIMENSIONS.x - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = (double)rand()/RAND_MAX * SCREEN_DIMENSIONS.y + center.y + SCREEN_DIMENSIONS.y/2};
         char *info;
         body_t *new_platform;
         if (random == 0) {
@@ -189,7 +166,7 @@ void more_platforms(scene_t *scene, vector_t center) {
 
 void more_enemies(scene_t *scene, vector_t center) {
     int random = rand()%50000;
-    if (random < 15 && random <= center.y/GAME_HEIGHT) {
+    if (random < 15 && random <= center.y/SCREEN_DIMENSIONS.y) {
         int immunity_idx = -1;
         for (int i = 0; i < scene_bodies(scene); i++) {
             body_t *body = scene_get_body(scene, i);
@@ -199,7 +176,7 @@ void more_enemies(scene_t *scene, vector_t center) {
                 immunity_idx = i;
             }
         }
-        vector_t centroid = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - GAME_DOODLE_HEIGHT) + GAME_DOODLE_HEIGHT/2, .y = center.y + (double)rand()/RAND_MAX * GAME_HEIGHT + GAME_HEIGHT/2};
+        vector_t centroid = {.x = (double)rand()/RAND_MAX * (SCREEN_DIMENSIONS.x - DOODLE_HEIGHT) + DOODLE_HEIGHT/2, .y = center.y + (double)rand()/RAND_MAX * SCREEN_DIMENSIONS.y + SCREEN_DIMENSIONS.y/2};
         body_t *enemy = make_enemy(centroid);
         scene_add_body(scene, enemy);
         create_destructive_collision(scene, scene_get_body(scene, 0), enemy);
@@ -217,7 +194,7 @@ scene_t *make_game_scene() {
     // doodle
     char *doodle_info = malloc(7*sizeof(char));
     strcpy(doodle_info, "doodle");
-    vector_t start = {.x = GAME_WIDTH/2, .y = GAME_START_VELOCITY.y/2 + GAME_DOODLE_HEIGHT/2};
+    vector_t start = {.x = SCREEN_DIMENSIONS.x/2, .y = START_VELOCITY.y/2 + DOODLE_HEIGHT/2};
 
     sprite_t *right_jump = create_sprite("PNGs/Jump_Right.png", 117, 207);
     sprite_t *left_jump = create_sprite("PNGs/Jump_Left.png", 117, 207);
@@ -229,22 +206,17 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_wing);
     scene_add_sprite(scene, left_wing);
 
-    // sprite_t *right_magnet = create_sprite("PNGs/Magnet.png", 748/21, 845/21);
-    // sprite_t *left_magnet = create_sprite("PNGs/Magnet_Flipped.png", 748/21, 845/21);
-    // scene_add_sprite(scene, right_magnet);
-    // scene_add_sprite(scene, left_magnet);
-
-    body_t *doodle = make_doodle(start, GAME_DOODLE_COLOR, doodle_info, right_jump);
-    body_set_velocity(doodle, GAME_START_VELOCITY);
+    body_t *doodle = make_doodle(start, DOODLE_COLOR, doodle_info, right_jump);
+    body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
-    create_downward_gravity(scene, GAME_G, doodle);
+    create_downward_gravity(scene, G, doodle);
 
-    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = GAME_HEIGHT});
-    body_t *background2 = make_background_body("PNGs/Game_Background.png", (vector_t){.x = 0, .y = 2*GAME_HEIGHT});
+    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
+    body_t *background2 = make_background_body("PNGs/Game_Background.png", (vector_t){.x = 0, .y = 2*SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
 
-    vector_t platform_center = {.x = (double)rand()/RAND_MAX * (GAME_WIDTH - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = GAME_MAX_JUMP - GAME_DOODLE_HEIGHT/2 - PLATFORM_HEIGHT2/2};
+    vector_t platform_center = {.x = (double)rand()/RAND_MAX * (SCREEN_DIMENSIONS.x - PLATFORM_WIDTH2) + PLATFORM_WIDTH2/2, .y = MAX_JUMP - DOODLE_HEIGHT/2 - PLATFORM_HEIGHT2/2};
     char *info = malloc(16*sizeof(char));
     strcpy(info, "normal platform");
     char *info2 = malloc(15*sizeof(char));
@@ -253,7 +225,7 @@ scene_t *make_game_scene() {
     body_set_second_info(platform, info2);
     scene_add_body(scene, platform);
     create_platform_collision(scene, 0, doodle, platform);
-    vector_t safety_platform_center = {.x = GAME_WIDTH/2, .y = GAME_MAX_JUMP/2};
+    vector_t safety_platform_center = {.x = SCREEN_DIMENSIONS.x/2, .y = MAX_JUMP/2};
     char *other_info = malloc(16*sizeof(char));
     strcpy(other_info, "normal platform");
     char *other_info2 = malloc(13*sizeof(char));
@@ -263,7 +235,7 @@ scene_t *make_game_scene() {
     scene_add_body(scene, safety_platform);
     create_platform_collision(scene, 0, doodle, safety_platform);
 
-    vector_t center = {.x = GAME_WIDTH/2, .y = -1 * GAME_HEIGHT/2};
+    vector_t center = {.x = SCREEN_DIMENSIONS.x/2, .y = -1 * SCREEN_DIMENSIONS.y/2};
     more_platforms(scene, center);
     return scene;
 }
@@ -271,8 +243,7 @@ scene_t *make_game_scene() {
 bool in_screen(vector_t center, body_t *body) {
     list_t *points = body_get_shape(body);
     for (int i = 0; i < list_size(points); i++) {
-        if (((vector_t *)list_get(points, i))->y > center.y - GAME_HEIGHT/2) {
-            // printf("%f , %f\n", ((vector_t *)list_get(points, i))->y, center.y - GAME_HEIGHT/2);
+        if (((vector_t *)list_get(points, i))->y > center.y - SCREEN_DIMENSIONS.y/2) {
             list_free(points);
             return true;
         }
@@ -282,12 +253,12 @@ bool in_screen(vector_t center, body_t *body) {
 }
 
 void wrap(body_t *doodle) {
-    if (body_get_centroid(doodle).x >= GAME_WIDTH + GAME_DOODLE_WIDTH/2) {
+    if (body_get_centroid(doodle).x >= SCREEN_DIMENSIONS.x + DOODLE_WIDTH/2) {
         vector_t shift = {.x = 0, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
-    else if (body_get_centroid(doodle).x <= 0 - GAME_DOODLE_WIDTH/2) {
-        vector_t shift = {.x = GAME_WIDTH, .y = body_get_centroid(doodle).y};
+    else if (body_get_centroid(doodle).x <= 0 - DOODLE_WIDTH/2) {
+        vector_t shift = {.x = SCREEN_DIMENSIONS.x, .y = body_get_centroid(doodle).y};
         body_set_centroid(doodle, shift);
     }
 }
@@ -297,7 +268,7 @@ body_t *make_pellet (vector_t center) {
     char *info = malloc(7*sizeof(char));
     strcpy(info, "pellet");
     polygon_translate(points, center);
-    body_t *pellet = body_init_with_info(points, 5, GAME_DOODLE_COLOR, info, free);
+    body_t *pellet = body_init_with_info(points, 5, DOODLE_COLOR, info, free);
     return pellet;
 }
 
@@ -322,7 +293,7 @@ bool first_time_play () {
 }
 
 void set_first_time() {
-    FILE *file = fopen("first_time.txt", "w"); // opening of file
+    FILE *file = fopen("first_time.txt", "w");
     if (!file) {
         return;
     }
@@ -373,7 +344,7 @@ void create_star(scene_t *scene) {
 
     body_t *platform = scene_get_body(scene, random);
     vector_t center = body_get_centroid(platform);
-    center.y += 40; // magic number for offset
+    center.y += 40;
     if (center.y > body_get_centroid(scene_get_body(scene, 0)).y) {
         star_t *starframe = make_star(center, NUM_STAR_POINTS, STAR_RADIUS);
         char *star_info = malloc(5*sizeof(char));
@@ -430,7 +401,7 @@ int get_current_panel(scene_t *scene) {
 
 void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_radius, double button_y_radius) {
     body_t *panel = scene_get_body(scene, 0);
-    vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+    vector_t center = {.x = SCREEN_DIMENSIONS.x/2, .y = SCREEN_DIMENSIONS.y/2};
     if (x < (PREVIOUS_BUTTON.x + button_x_radius) && x > (PREVIOUS_BUTTON.x - button_x_radius)) {
         if (y < (PREVIOUS_BUTTON.y + button_y_radius) && y > (PREVIOUS_BUTTON.y - button_y_radius)) {
             int i = get_current_panel(scene);
@@ -486,7 +457,6 @@ void star_updating(int star_score) {
     fputs(star_reading, star_file);
     free(star_reading);
     fclose(star_file);
-    // free(throwaway[0]);
     free(throwaway);
 }
 
@@ -535,17 +505,17 @@ scene_t *make_instructions_scene() {
     scene_add_sprite(scene, third);
     sprite_t *ready = create_sprite("PNGs/Game_Instructions_4.png", PANEL_DIMENSTIONS.x, PANEL_DIMENSTIONS.y);
     scene_add_sprite(scene, ready);
-    vector_t center = {.x = GAME_WIDTH/2, .y = GAME_HEIGHT/2};
+    vector_t center = {.x = SCREEN_DIMENSIONS.x/2, .y = SCREEN_DIMENSIONS.y/2};
     list_t *shape = make_rectangle(center, PANEL_DIMENSTIONS.x, PANEL_DIMENSTIONS.y);
     char *info = malloc(sizeof(char)*6);
     strcpy(info, "panel");
-    body_t *panel = body_init_with_info(shape, INFINITY, GAME_DOODLE_COLOR, info, free);
+    body_t *panel = body_init_with_info(shape, INFINITY, DOODLE_COLOR, info, free);
     sprite_t *sprite = scene_get_sprite(scene, 0);
     body_set_sprite(panel, sprite);
     body_set_centroid(panel, center);
     scene_add_body(scene, panel);
-    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = GAME_HEIGHT});
-    body_t *background2 = make_background_body("PNGs/Game_Background.png", (vector_t){.x = 0, .y = 2*GAME_HEIGHT});
+    body_t *background1 = make_background_body("PNGs/Game_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
+    body_t *background2 = make_background_body("PNGs/Game_Background.png", (vector_t){.x = 0, .y = 2*SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background1);
     scene_add_body(scene, background2);
     return scene;
@@ -562,8 +532,8 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         bool enemy_present = false;
         vector_t *scoring = malloc(sizeof(vector_t));
-        scoring->x = 90; // magic numbers
-        scoring->y = 20;
+        scoring->x = SCORE_MARKER_CENTER.x;
+        scoring->y = SCORE_MARKER_CENTER.y;
         double curr = 0.0;
         char *buffer = malloc(100*sizeof(char));
         double dt = time_since_last_tick();
@@ -609,7 +579,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 if (!in_screen(*center, body)) {
                     scene_remove_body(scene, i);
                 }
-                if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + GAME_HEIGHT/2) {
+                if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + SCREEN_DIMENSIONS.y/2) {
                     scene_remove_body(scene, i);
                 }
                 if (strcmp(body_get_info(body), "sliding platform") == 0) {
@@ -665,8 +635,8 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 for (int i = 1; i < 3; i++) {
                     body_t *background = scene_get_body(scene, i);
                     vector_t centroid = body_get_centroid(background);
-                    if (centroid.y <= center->y - GAME_HEIGHT/2) {
-                        centroid.y += GAME_HEIGHT*2;
+                    if (centroid.y <= center->y - SCREEN_DIMENSIONS.y/2) {
+                        centroid.y += SCREEN_DIMENSIONS.y*2;
                         body_set_centroid(background, centroid);
                     }
                 }

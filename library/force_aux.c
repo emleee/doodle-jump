@@ -11,7 +11,6 @@ const int DEFAULT_BODIES = 2;
 typedef struct force_aux {
     list_t *list;
     double constant;
-    // bool collided;
 } force_aux_t;
 
 force_aux_t *force_aux_init(double constant) {
@@ -19,7 +18,6 @@ force_aux_t *force_aux_init(double constant) {
     assert(force_aux != NULL);
     force_aux->constant = constant;
     force_aux->list = NULL;
-    // force_aux->collided = false;
     return force_aux;
 }
 
@@ -55,11 +53,3 @@ void force_aux_free(force_aux_t *force_aux) {
     list_free(force_aux->list);
     free(force_aux);
 }
-
-// bool force_aux_get_collided(force_aux_t *force_aux) {
-//     return force_aux->collided;
-// }
-
-// void force_aux_set_collided(force_aux_t *force_aux, bool collided) {
-//     force_aux->collided = collided;
-// }

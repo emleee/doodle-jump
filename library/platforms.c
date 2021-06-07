@@ -1,11 +1,8 @@
 #include "polygon.h"
 #include "sdl_wrapper.h"
 #include "platforms.h"
+#include "constants.h"
 
-const double WINDOW_LENGTH = 720.0;
-
-// const double PLATFORM_WIDTH = 146;
-// const double PLATFORM_HEIGHT = 35;
 const double PLATFORM_MASS = INFINITY;
 const double TRICK_MASS = 0;
 
@@ -61,8 +58,8 @@ void sliding_bounce(body_t *sliding_platform) {
         adjust.x = -worst_pt->x;
         velocity.x *= -1;
     }
-    else if (worst_pt->x > WINDOW_LENGTH) {
-        adjust.x = WINDOW_LENGTH - worst_pt->x;
+    else if (worst_pt->x > SCREEN_DIMENSIONS.x) {
+        adjust.x = SCREEN_DIMENSIONS.x - worst_pt->x;
         velocity.x *= -1;
     }
 

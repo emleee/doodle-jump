@@ -4,7 +4,7 @@ DEMOS = doodlejump
 STAFF_LIBS = test_util sdl_wrapper
 # List of C files in "libraries" that you will write.
 # This also defines the order in which the tests are run.
-STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision text platforms sprite game_sprites test_util powerups preferences game restart start shop
+STUDENT_LIBS = vector star list polygon body scene forces force_aux force_package collision text platforms sprite game_sprites test_util powerups preferences game restart start shop constants
 
 # If we're not on Windows...
 ifneq ($(OS), Windows_NT)

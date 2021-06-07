@@ -1,8 +1,6 @@
 #include <assert.h>
 #include "force_aux.h"
 #include "force_package.h"
-// #include <stdlib.h>
-// #include <stdio.h>
 
 typedef struct force_package {
     force_creator_t forcer;

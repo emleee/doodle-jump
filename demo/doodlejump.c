@@ -5,8 +5,7 @@
 #include "start.h"
 #include "shop.h"
 
-const double WIDTH2 = 720.0;
-const double HEIGHT2 = 960.0;
+#include "constants.h"
 
 const double BUTTON_X_RADIUS = 125;
 const double BUTTON_Y_RADIUS = 75;
@@ -97,7 +96,7 @@ void mouse_click(int key, int x, int y, void *scene) {
 
 int main() {
     vector_t start_min = {.x = 0, .y = 0};
-    vector_t start_max = {.x = WIDTH2, .y = HEIGHT2};
+    vector_t start_max = {.x = SCREEN_DIMENSIONS.x, .y = SCREEN_DIMENSIONS.y};
     sdl_init(start_min, start_max);
     srand(time(0));
     
@@ -114,8 +113,8 @@ int main() {
     sdl_mouse(mouse_click);
     scene_t *scene = make_start_scene();
     vector_t *center = malloc(sizeof(vector_t));
-    center->x = WIDTH2/2;
-    center->y = HEIGHT2/2;
+    center->x = SCREEN_DIMENSIONS.x/2;
+    center->y = SCREEN_DIMENSIONS.y/2;
 
     vector_t *scoring = malloc(sizeof(vector_t));
     scoring->x = SCOREBOX_CENTER.x;
@@ -134,8 +133,8 @@ int main() {
         }
         if (strcmp(scene_get_info(scene), scene_get_next_info(scene)) != 0) {
             if (strcmp(scene_get_next_info(scene), "game") == 0) {
-                center->x = WIDTH2/2;
-                center->y = HEIGHT2/2;
+                center->x = SCREEN_DIMENSIONS.x/2;
+                center->y = SCREEN_DIMENSIONS.y/2;
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
                 score = malloc(100*sizeof(char));
@@ -144,27 +143,26 @@ int main() {
                 scene = make_game_scene();
                 use_inventory(scene);
                 doodle = scene_get_body(scene, 0);
-                // body_set_velocity(doodle, (vector_t){.x = 0, .y = 5000});
             }
             else if (strcmp(scene_get_next_info(scene), "start") == 0) {
-                center->x = WIDTH2/2;
-                center->y = HEIGHT2/2;
+                center->x = SCREEN_DIMENSIONS.x/2;
+                center->y = SCREEN_DIMENSIONS.y/2;
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_start_scene();
             }
             else if (strcmp(scene_get_next_info(scene), "restart") == 0) {
-                center->x = WIDTH2/2;
-                center->y = HEIGHT2/2;
+                center->x = SCREEN_DIMENSIONS.x/2;
+                center->y = SCREEN_DIMENSIONS.y/2;
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
                 scene_free(scene);
                 scene = make_restart_scene(score, highscore);
             }
             else if (strcmp(scene_get_next_info(scene), "shop") == 0) {
-                center->x = WIDTH2/2;
-                center->y = HEIGHT2/2;
+                center->x = SCREEN_DIMENSIONS.x/2;
+                center->y = SCREEN_DIMENSIONS.y/2;
                 sdl_set_center(*center);
                 scene_free(scene);
                 scene = make_shop_scene();
@@ -188,7 +186,6 @@ int main() {
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
-            // body_set_velocity(doodle, (vector_t){.x = 0, .y = 5000});
             game_main(scene, doodle, star_timer, powerup_timer, center, score);
         }
         if (strcmp(scene_get_info(scene), "instructions") == 0) {

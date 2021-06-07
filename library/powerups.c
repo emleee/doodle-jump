@@ -20,7 +20,6 @@ const int BOOST_IDX = 1;
 const int IMMUNITY_IDX = 2;
 const int MAGNET_IDX = 3;
 
-const int NEWTONIAN_GRAVITY = -150;
 const int MAGNET_GRAVITY = 5000000;
 
 bool is_powerup(body_t *body) {
@@ -103,9 +102,9 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
         else if (idx == IMMUNITY_IDX) {
             return make_immunity(scene, *center, false);
         }
-        // else if (idx == MAGNET_IDX) {
-        //     return make_magnet(scene, *center, false);
-        // }
+        else if (idx == MAGNET_IDX) {
+            return make_magnet(scene, *center, false);
+        }
         free(center);
     }
     return NULL;

@@ -6,10 +6,6 @@
 #include "start.h"
 #include "constants.h"
 
-// screen dimensions
-const double SHOP_WIDTH = 720;
-const double SHOP_HEIGHT = 960;
-
 // locations
 const vector_t BOOST_CENTER = {.x = 275, .y = 605};
 const vector_t IMMUNITY_CENTER = {.x = 425, .y = 605};
@@ -23,8 +19,6 @@ const vector_t BUY_BUTTON_SIZE = {.x = 50, .y = 15};
 const vector_t SHOP_HOME_BUTTON_SIZE = {.x = 85, .y = 20};
 
 // star parameters
-const double STAR_OFFSET = 40;
-const double STAR_NUM_POINTS = 5;
 const double SHOP_STAR_RADIUS = 25;
 
 // powerup prices
@@ -32,16 +26,12 @@ const int BOOST_PRICE = 100;
 const int IMMUNITY_PRICE = 50;
 const int MAGNET_PRICE = 80;
 
-// colors
-const rgb_color_t TEXT_COLOR = {.r = 0, .g = 0, .b = 0};
-const rgb_color_t SHOP_STAR_COLOR = {.r = 1, .g = 1, .b = 0};
-
 scene_t *make_shop_scene () {
     char *scene_info = malloc(5 * sizeof(char));
     strcpy(scene_info, "shop");
     scene_t *scene = scene_init_with_info(scene_info, free);
 
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
 
     display_star_count(scene);
@@ -60,11 +50,11 @@ void display_star_count(scene_t *scene) {
     scene_add_text(scene, star_count);
 
     // star body
-    vector_t star_pos = {.x = STAR_OFFSET, .y = SHOP_HEIGHT - STAR_OFFSET};
-    star_t *star_frame = make_star(star_pos, STAR_NUM_POINTS, SHOP_STAR_RADIUS);
+    vector_t star_pos = {.x = STAR_OFFSET, .y = SCREEN_DIMENSIONS.y - STAR_OFFSET};
+    star_t *star_frame = make_star(star_pos, NUM_STAR_POINTS, SHOP_STAR_RADIUS);
     char *star_info = malloc(5 * sizeof(char));
     strcpy(star_info, "star");
-    body_t *star = body_init_with_info(get_points(star_frame), 0.001, SHOP_STAR_COLOR, star_info, free);
+    body_t *star = body_init_with_info(get_points(star_frame), 0.001, STAR_COLOR, star_info, free);
     scene_add_body(scene, star);
 }
 
@@ -81,7 +71,7 @@ scene_t *make_shop_exit_scene() {
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
     return scene;
 }
@@ -99,7 +89,7 @@ scene_t *make_failed_purchase_scene() {
     body_set_sprite(thanks, sprite);
     body_set_centroid(thanks, center);
     scene_add_body(scene, thanks);
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
     return scene;
 }
