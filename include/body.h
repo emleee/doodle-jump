@@ -20,8 +20,6 @@ typedef struct body body_t;
  */
 body_t *body_init(list_t *shape, double mass, rgb_color_t color);
 
-void body_dont_free_sprite(body_t* body);
-
 /**
  * Allocates memory for a body with the given parameters.
  * The body is initially at rest.
@@ -74,6 +72,14 @@ void body_set_sprite(body_t *body, sprite_t *sprite);
  * @return the sprite being returned
  */
 sprite_t *body_get_sprite(body_t *body);
+
+/**
+ * Adjusts the boolean so that the sprite is not freed by body_free().
+ * Prevents double free errors because some sprites are shared by the scene.
+ * 
+ * @param body a pointer to a body returned from body_init()
+ */
+void body_dont_free_sprite(body_t* body);
 
 /**
  * Releases the memory allocated for a body.
@@ -246,6 +252,5 @@ void body_set_second_info(body_t *body, void *info);
  * @return whether body_remove() has been called on the body
  */
 bool body_is_removed(body_t *body);
-
 
 #endif // #ifndef __BODY_H__

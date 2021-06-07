@@ -22,4 +22,6 @@ const int STAR_OFFSET;
 
 const rgb_color_t TEXT_COLOR;
 
+extern const rgb_color_t SPRITE_COLOR;
+
 #endif // #ifndef __CONSTANTS_H__

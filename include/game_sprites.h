@@ -7,13 +7,12 @@
  * Creates a body representing Doodle with the specified parameters.
  *
  * @param center the vector representing where the body should be centered
- * @param color the color of the body, used to draw it on the screen
  * @param info additional information to associate with the body,
  *   e.g. its type if the scene has multiple types of bodies
  * @param sprite the sprite associated with Doodle
  * @return a pointer to the body for Doodle
  */
-body_t *make_doodle(vector_t center, rgb_color_t color, char *info, sprite_t *sprite);
+body_t *make_doodle(vector_t center, char *info, sprite_t *sprite);
 
 /**
  * Creates a body representing the background with the specified parameters.

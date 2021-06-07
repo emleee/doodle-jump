@@ -206,7 +206,7 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_wing);
     scene_add_sprite(scene, left_wing);
 
-    body_t *doodle = make_doodle(start, DOODLE_COLOR, doodle_info, right_jump);
+    body_t *doodle = make_doodle(start, doodle_info, right_jump);
     body_set_velocity(doodle, START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, G, doodle);
@@ -529,7 +529,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         scene_set_next_info(scene, game_info);
     }
     else {
-        rgb_color_t color = {.r = 0, .g = 0, .b = 0};
         bool enemy_present = false;
         vector_t *scoring = malloc(sizeof(vector_t));
         scoring->x = SCORE_MARKER_CENTER.x;
@@ -557,7 +556,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         sprintf(buffer, "%.1f", curr);
         strcat(score, buffer);
         if (get_score_preference()) {
-            text_t *scorebox = text_create(score, color, 30, scoring);
+            text_t *scorebox = text_create(score, TEXT_COLOR, 30, scoring);
             scene_add_text(scene, scorebox);
         }
 

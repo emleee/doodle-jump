@@ -19,3 +19,5 @@ const rgb_color_t STAR_COLOR = {.r = 1, .g = 1, .b = 0};
 const int STAR_OFFSET = 40;
 
 const rgb_color_t TEXT_COLOR = {.r = 0, .g = 0, .b = 0};
+
+const rgb_color_t SPRITE_COLOR = {.r = 1, .g = 1, .b = 1};

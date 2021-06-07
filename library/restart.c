@@ -44,18 +44,17 @@ scene_t *make_restart_scene(char *score, char *highscore) {
     strcpy(scene_info, "restart");
     scene_t *scene = scene_init_with_info(scene_info, free);
 
-    rgb_color_t color = {.r = 0, .g = 0, .b = 0};
     vector_t *score_point = malloc(sizeof(vector_t));
     score_point->x = SCORE_CENTER.x;
     score_point->y = SCORE_CENTER.y;
-    text_t *score_text = text_create(score, color, 22, score_point);
+    text_t *score_text = text_create(score, TEXT_COLOR, 22, score_point);
     scene_add_text(scene, score_text);
 
     vector_t *highscore_point = malloc(sizeof(vector_t));
     highscore_point->x = HIGHSCORE_CENTER.x;
     highscore_point->y = HIGHSCORE_CENTER.y;
     get_high_score(highscore);
-    text_t *highscore_text = text_create(highscore, color, 22, highscore_point);
+    text_t *highscore_text = text_create(highscore, TEXT_COLOR, 22, highscore_point);
     scene_add_text(scene, highscore_text);
     
     body_t *background = make_background_body("PNGs/Restart_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});

@@ -7,12 +7,11 @@
 const vector_t FACE_RIGHT = {.x = -21, .y = 0};
 const vector_t FACE_LEFT = {.x = 21, .y = 0};
 
-// pellet color
-const rgb_color_t COLOR = {.r = 176.0/255, .g = 128.0/255, .b = 124.0/255};
-
 // magnet stuff
 const int RIGHT_MAGNET_IDX = 4;
 const int LEFT_MAGNET_IDX = 5;
+
+// position stuff
 const vector_t HAND_OFFSET = {.x = 70, .y = 15};
 const vector_t MOUTH_OFFSET = {.x = 13, .y = 24};
 
@@ -20,13 +19,13 @@ const vector_t MOUTH_OFFSET = {.x = 13, .y = 24};
 const vector_t BACKGROUND_CORNER = {.x = -1, .y = -1};
 const double BACKGROUND_BODY_LENGTH = 2;
 
-body_t *make_doodle(vector_t center, rgb_color_t color, char *info, sprite_t *sprite) {
+body_t *make_doodle(vector_t center, char *info, sprite_t *sprite) {
     list_t *shape = make_rectangle(VEC_ZERO, DOODLE_WIDTH, DOODLE_HEIGHT);
 
     char *second_info = malloc(5 * sizeof(char));
     strcpy(second_info, "jump");
 
-    body_t *doodle = body_init_with_sprite(shape, DOODLE_MASS, color, info, free, sprite);
+    body_t *doodle = body_init_with_sprite(shape, DOODLE_MASS, SPRITE_COLOR, info, free, sprite);
     body_set_centroid(doodle, center);
     body_set_second_info(doodle, second_info);
 
@@ -40,7 +39,7 @@ body_t *make_background_body(char *file, vector_t center) {
     strcpy(info, "background");
 
     sprite_t *sprite = create_sprite(file, SCREEN_DIMENSIONS.x, SCREEN_DIMENSIONS.y);
-    body_t *background = body_init_with_sprite(shape, 1, COLOR, info, free, sprite);
+    body_t *background = body_init_with_sprite(shape, 1, SPRITE_COLOR, info, free, sprite);
     body_set_centroid(background, center);
     
     return background;
