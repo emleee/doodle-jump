@@ -26,7 +26,6 @@ typedef struct body {
 body_t *body_init(list_t *shape, double mass, rgb_color_t color) {
     body_t *body = malloc(sizeof(body_t));
     assert(body != NULL);
-    // body->shape = list_init(list_size(shape), get_freer(shape));
     body->shape = shape;
     body->mass = mass;
     body->color = color;

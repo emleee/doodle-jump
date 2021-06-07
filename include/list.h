@@ -29,11 +29,14 @@ typedef void (*free_func_t)(void *);
 list_t *list_init(size_t initial_size, free_func_t freer);
 
 /**
- * Releases the memory allocated for a list.
+ * Gets the element at a given index in a list.
+ * Asserts that the index is valid, given the list's current size.
  *
  * @param list a pointer to a list returned from list_init()
+ * @param index an index in the list (the first element is at 0)
+ * @return the element at the given index, as a void*
  */
-void list_free(list_t *list);
+void *list_get(list_t *list, size_t index);
 
 /**
  * Gets the size of a list (the number of occupied elements).
@@ -45,24 +48,12 @@ void list_free(list_t *list);
 size_t list_size(list_t *list);
 
 /**
- * Gets the element at a given index in a list.
- * Asserts that the index is valid, given the list's current size.
+ * Gets the freer for the elements of the list.
  *
- * @param list a pointer to a list returned from list_init()
- * @param index an index in the list (the first element is at 0)
- * @return the element at the given index, as a void*
+ * @param list list to get 
+ * @return the freer
  */
-void *list_get(list_t *list, size_t index);
-
-/**
- * Removes the element at a given index in a list and returns it,
- * moving all subsequent elements towards the start of the list.
- * Asserts that the index is valid, given the list's current size.
- *
- * @param list a pointer to a list returned from list_init()
- * @return the element at the given index in the list
- */
-void *list_remove(list_t *list, size_t index);
+free_func_t get_freer(list_t *list);
 
 /**
  * Appends an element to the end of a list.
@@ -76,6 +67,16 @@ void *list_remove(list_t *list, size_t index);
 void list_add(list_t *list, void *value);
 
 /**
+ * Removes the element at a given index in a list and returns it,
+ * moving all subsequent elements towards the start of the list.
+ * Asserts that the index is valid, given the list's current size.
+ *
+ * @param list a pointer to a list returned from list_init()
+ * @return the element at the given index in the list
+ */
+void *list_remove(list_t *list, size_t index);
+
+/**
  * Resizes list.
  *
  * @param list list to resize
@@ -84,11 +85,10 @@ void list_add(list_t *list, void *value);
 void list_resize(list_t *list);
 
 /**
- * Gets the freer for the elements of the list.
+ * Releases the memory allocated for a list.
  *
- * @param list list to get 
- * @return the freer
+ * @param list a pointer to a list returned from list_init()
  */
-free_func_t get_freer(list_t *list);
+void list_free(list_t *list);
 
 #endif // #ifndef __LIST_H__
