@@ -10,8 +10,6 @@ const rgb_color_t BOOST_COLOR = {.r = 106.0/255, .g = 77.0/255, .b = 255.0/255};
 const rgb_color_t IMMUNITY_COLOR = {.r = 0.54, .g = 0.54, .b = 0.54};
 const rgb_color_t MAGNET_COLOR = {.r = 1, .g = 1, .b = 0.2};
 
-
-
 const vector_t BOOST_DIMENSTIONS = {.x = 1075/13, .y = 843/13};
 const vector_t MAGNET_DIMENSIONS = {.x = 748/21, .y = 845/21};
 const double RADIUS = 87.5;

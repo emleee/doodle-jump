@@ -7,16 +7,16 @@
         // If you want to create a configuration for a specific binary,
         // it would look like these two, with the corresponding stuff in tasks
         {
-            "name": "(Windows) Debug bin/bounce",
+            "name": "(Windows) Debug bin/doodlejump",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/bounce.exe",
+            "program": "${workspaceFolder}/bin/doodlejump.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "newExternalWindow",
-            "preLaunchTask": "make bin/bounce",
+            // "preLaunchTask": "make all",
         },
         {
             "name": "(OS X / Linux) Debug bin/bounce",

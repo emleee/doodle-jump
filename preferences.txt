@@ -1,3 +1,3 @@
-Sound: OFF
-Score: OFF
+Sound: ON
+Score: ON
 Powerup: ON

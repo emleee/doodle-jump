@@ -580,7 +580,8 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             free(powerup_timer);
             free(star_timer);
             char *restart_info = malloc(8*sizeof(char));
-            strcpy(restart_info, "restart");
+            strcpy(restart_info,
+             "restart");
             scene_set_next_info(scene, restart_info);
         }
         else {

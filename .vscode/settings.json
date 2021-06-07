@@ -51,6 +51,7 @@
         "sdl_ttf.h": "c",
         "scene.h": "c",
         "sdl_mouse.h": "c",
-        "test_util.h": "c"
+        "test_util.h": "c",
+        "crtdbg.h": "c"
     }
 }
