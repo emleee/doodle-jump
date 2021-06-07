@@ -349,6 +349,9 @@ void create_star(scene_t *scene) {
             counter2++;
             return;
         }
+        if (counter2 >= 30) {
+            return;
+        }
 
         // check if platform already has a star on it
         body_t *body2 = scene_get_body(scene, random);
