@@ -53,6 +53,8 @@
         "sdl_mouse.h": "c",
         "test_util.h": "c",
         "crtdbg.h": "c",
-        "shop.h": "c"
+        "shop.h": "c",
+        "algorithm": "c",
+        "random": "c"
     }
 }

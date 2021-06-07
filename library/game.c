@@ -229,12 +229,7 @@ scene_t *make_game_scene() {
     scene_add_sprite(scene, right_wing);
     scene_add_sprite(scene, left_wing);
 
-    // sprite_t *right_magnet = create_sprite("PNGs/Magnet.png", 748/21, 845/21);
-    // sprite_t *left_magnet = create_sprite("PNGs/Magnet_Flipped.png", 748/21, 845/21);
-    // scene_add_sprite(scene, right_magnet);
-    // scene_add_sprite(scene, left_magnet);
-
-    body_t *doodle = make_doodle(start, GAME_DOODLE_COLOR, doodle_info, right_jump);
+    body_t *doodle = make_doodle(start, doodle_info, right_jump);
     body_set_velocity(doodle, GAME_START_VELOCITY);
     scene_add_body(scene, doodle);
     create_downward_gravity(scene, GAME_G, doodle);
