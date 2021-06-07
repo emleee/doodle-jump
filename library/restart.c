@@ -59,19 +59,7 @@ scene_t *make_restart_scene(char *score, char *highscore) {
     get_high_score(highscore);
     text_t *highscore_text = text_create(highscore, color, 22, highscore_point);
     scene_add_text(scene, highscore_text);
-
-    // vector_t *restart_point = malloc(sizeof(vector_t));
-    // restart_point->x = RESTART_BUTTON.x;
-    // restart_point->y = RESTART_BUTTON.y;
-    // text_t *restart_text = text_create("Restart", color, 22, restart_point);
-    // scene_add_text(scene, restart_text);
-
-    // vector_t *home_point = malloc(sizeof(vector_t));
-    // home_point->x = HOME_BUTTON.x;
-    // home_point->y = HOME_BUTTON.y;
-    // text_t *text2 = text_create("Home", color, 22, home_point);
-    // scene_add_text(scene, text2);
-
+    
     body_t *background = make_background_body("PNGs/Restart_Background.png",(vector_t){.x = 0, .y = RESTART_HEIGHT});
     scene_add_body(scene, background);
     return scene;

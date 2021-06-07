@@ -212,7 +212,8 @@ text_t *text_create(char *string, rgb_color_t fontColor, int ptsize, vector_t *c
     textbox->y = center->y - (surface->h / 2);
     textbox->w = surface->w;
     textbox->h = surface->h;
-
+    free(center);
+    
     text_t *text = text_init(surface, texture, textbox);
     // SDL_FreeSurface(surface);
     TTF_CloseFont(font);

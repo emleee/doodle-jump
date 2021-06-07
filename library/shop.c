@@ -146,8 +146,10 @@ int get_star_count() {
         star_reading[6] = '\0';
         num_stars = (int)strtod(star_reading, throwaway);
     }
-    return num_stars;
+    free(star_reading);
+    free(throwaway);
     fclose(star_file);
+    return num_stars;
 }
 
 void change_star_count(int new_count) {
@@ -159,6 +161,7 @@ void change_star_count(int new_count) {
     sprintf(star_reading, "%i", new_count);
     fseek(star_file, 0, SEEK_SET);
     fputs(star_reading, star_file);
+    free(star_reading);
     fclose(star_file);
 }
 

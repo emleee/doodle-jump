@@ -72,26 +72,6 @@ body_t *make_enemy(vector_t center) {
     return doodle;
 }
 
-body_t *make_button(vector_t center) {
-    // body shape
-    list_t *points = list_init(NUM_POINTS, free);
-    for (int i = 0; i < (NUM_POINTS); i++) {
-        vector_t *pt = malloc(sizeof(vector_t));
-        pt->x = GAME_BUTTON_X_RADIUS * cos(2 * M_PI * i / NUM_POINTS + M_PI / 2);
-        pt->y = GAME_BUTTON_Y_RADIUS * sin(2 * M_PI * i / NUM_POINTS + M_PI / 2);
-        list_add(points, pt);
-    }
-    polygon_translate(points, center);
-
-    // body info
-    char *info = malloc(7*sizeof(char));
-    info[0] = '\0';
-    strcat(info, "button");
-
-    body_t *button = body_init_with_info(points, BUTTON_MASS, BUTTON_COLOR, info, free);
-    return button;
-}
-
 void platform_overlap(body_t *body1, body_t *body2) {
     if (body_is_removed(body1) || body_is_removed(body2)) {
         return;
@@ -386,7 +366,7 @@ void create_star(scene_t *scene) {
     vector_t center = body_get_centroid(platform);
     center.y += 40; // magic number for offset
     if (center.y > body_get_centroid(scene_get_body(scene, 0)).y) {
-        star_t *starframe = make_star(center, NUM_STAR_POINTS, STAR_RADIUS); // magic number for num points, radius
+        star_t *starframe = make_star(center, NUM_STAR_POINTS, STAR_RADIUS);
         char *star_info = malloc(5*sizeof(char));
         strcpy(star_info, "star");
         body_t *star = body_init_with_info(get_points(starframe), 0.001, STAR_COLOR, star_info, free);
@@ -617,20 +597,12 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                 body_t *body = scene_get_body(scene, i);
                 if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
                     enemy_present = true;
-                    // continue;
                 }
                 if (!in_screen(*center, body)) {
-<<<<<<< HEAD
-                    //printf("%s", "not in screen\n");
-=======
-                    // printf("%s", "not in screen\n");
->>>>>>> 6f3e9cdcd0b56b105aee6a30f7ed413520c014b5
                     scene_remove_body(scene, i);
-                    // continue;
                 }
                 if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + GAME_HEIGHT/2) {
                     scene_remove_body(scene, i);
-                    // continue;
                 }
                 if (strcmp(body_get_info(body), "sliding platform") == 0) {
                     sliding_bounce(body);
@@ -715,8 +687,6 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             scene_tick(scene, dt);
         }
         free(buffer);
-        free(scoring);
-
     }
     sdl_render_scene(scene);
 }
