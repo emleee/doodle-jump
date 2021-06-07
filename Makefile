@@ -1,5 +1,5 @@
 # List of demo programs
-DEMOS = doodlejump test
+DEMOS = doodlejump
 # List of C files in "libraries" that we provide
 STAFF_LIBS = test_util sdl_wrapper
 # List of C files in "libraries" that you will write.
@@ -65,28 +65,6 @@ out/%.o: demo/%.c # or "demo"
 # since it is building a full executable.
 bin/doodlejump: out/doodlejump.o out/sdl_wrapper.o $(STUDENT_OBJS)
 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-bin/test: out/test.o out/sdl_wrapper.o $(STUDENT_OBJS)
-	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-# bin/gravity: out/gravity.o out/sdl_wrapper.o $(STUDENT_OBJS)
-# 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
-# bin/pacman: out/pacman.o out/sdl_wrapper.o $(STUDENT_OBJS)
-# 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
-# bin/nbodies: out/nbodies.o out/sdl_wrapper.o $(STUDENT_OBJS)
-# 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
-# bin/damping: out/damping.o out/sdl_wrapper.o $(STUDENT_OBJS)
-# 		$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
-# bin/spaceinvaders: out/spaceinvaders.o out/sdl_wrapper.o $(STUDENT_OBJS)
-# 		$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
-# bin/pegs: out/pegs.o out/sdl_wrapper.o $(STUDENT_OBJS)
-# 		$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
-# bin/breakout: out/breakout.o out/sdl_wrapper.o $(STUDENT_OBJS)
-# 		$(CC) $(CFLAGS) $(LIBS) $^ -o $@
 
 # Builds the test suite executables from the corresponding test .o file
 # and the library .o files. The only difference from the demo build command
