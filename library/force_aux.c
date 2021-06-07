@@ -29,7 +29,7 @@ void force_aux_add_body(force_aux_t *force_aux, body_t *body) {
 
 void force_aux_set_bodies(force_aux_t *force_aux, list_t *bodies) {
     if (force_aux->list != NULL) {
-        free(force_aux->list);
+        list_free(force_aux->list);
     }
     force_aux->list = bodies;
 }
