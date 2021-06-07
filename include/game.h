@@ -149,7 +149,7 @@ void instructions_mouse_click (scene_t *scene, int x, int y, double button_x_rad
  * @param center the center of the scene
  * @param score the player's score
  */
-void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score);
+void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, vector_t *center, char *score);
 
 
 #endif // #ifndef __GAME_H__

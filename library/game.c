@@ -551,7 +551,7 @@ scene_t *make_instructions_scene() {
     return scene;
 }
 
-void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, int *timer, vector_t *center, char *score) {
+void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, vector_t *center, char *score) {
     bool first_time = first_time_play();
     if (first_time) {
         char *game_info = malloc(13*sizeof(char));
@@ -594,15 +594,10 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
         if (!in_screen(*center, doodle)) {
             star_updating(scene_stars(scene));
             high_score_updating(score);
-            free(timer);
-            free(powerup_timer);
-            free(star_timer);
-            timer = NULL;
-            powerup_timer = NULL;
-            star_timer = NULL;
+            *powerup_timer = 0;
+            *star_timer = 0;
             char *restart_info = malloc(8*sizeof(char));
-            strcpy(restart_info,
-             "restart");
+            strcpy(restart_info, "restart");
             scene_set_next_info(scene, restart_info);
         }
         else {

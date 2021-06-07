@@ -1,12 +1,9 @@
 // Different Screens
-// #define _CRTDGB_MAP_ALLOC
-// #define _DEBUG
 #include <stdlib.h>
 #include "game.h"
 #include "restart.h"
 #include "start.h"
 #include "shop.h"
-// #include <crtdbg.h>
 
 const double WIDTH2 = 720.0;
 const double HEIGHT2 = 960.0;
@@ -99,15 +96,11 @@ void mouse_click(int key, int x, int y, void *scene) {
 }
 
 int main() {
-    // _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    // _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
     vector_t start_min = {.x = 0, .y = 0};
     vector_t start_max = {.x = WIDTH2, .y = HEIGHT2};
     sdl_init(start_min, start_max);
     srand(time(0));
-
-    int *timer = malloc(sizeof(int));
-    *timer = 0;
+    
     int *powerup_timer = malloc(sizeof(int));
     *powerup_timer = 0;
     int *star_timer = malloc(sizeof(int));
@@ -145,12 +138,6 @@ int main() {
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
-                timer = malloc(sizeof(int));
-                *timer = 0;
-                powerup_timer = malloc(sizeof(int));
-                *powerup_timer = 0;
-                star_timer = malloc(sizeof(int));
-                *star_timer = 0;
                 score = malloc(100*sizeof(char));
                 reset_clock();
                 scene_free(scene);
@@ -202,7 +189,7 @@ int main() {
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
             // body_set_velocity(doodle, (vector_t){.x = 0, .y = 5000});
-            game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
+            game_main(scene, doodle, star_timer, powerup_timer, center, score);
         }
         if (strcmp(scene_get_info(scene), "instructions") == 0) {
             sdl_render_scene(scene);
@@ -248,16 +235,8 @@ int main() {
     free(scoring);
     free_sounds();
     scene_free(scene);
-    if (timer != NULL) {
-        free(timer);
-    }
-    if (star_timer != NULL) {
-        free(star_timer);
-    }
-    if (powerup_timer != NULL) {
-        free(powerup_timer);
-    }
-    // _CrtDumpMemoryLeaks();
+    free(star_timer);
+    free(powerup_timer);
     SDL_Renderer *renderer = get_renderer();
     SDL_Quit();
     SDL_DestroyRenderer(renderer);
