@@ -54,9 +54,11 @@ void downward_gravity(void *a) {
 void create_downward_gravity(scene_t *scene, double G, body_t *body) {
     force_aux_t *aux = force_aux_init(G);
     list_t *bodies = list_init(1, NULL);
+    list_t *bodies2 = list_init(1, NULL);
     list_add(bodies, body);
+    list_add(bodies2, body);
     force_aux_set_bodies(aux, bodies);
-    scene_add_bodies_force_creator(scene, downward_gravity, aux, bodies, (free_func_t)force_aux_free);
+    scene_add_bodies_force_creator(scene, downward_gravity, aux, bodies2, (free_func_t)force_aux_free);
 }
 
 void free_collision_package(collision_package_t *package) {
@@ -191,11 +193,11 @@ void platform_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) 
 void create_platform_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
     force_aux_t *aux = force_aux_init(elasticity);
     list_t *bodies1 = list_init(2, NULL);
-    list_t *bodies2 = list_init(2, NULL);
+    // list_t *bodies2 = list_init(2, NULL);
     list_add(bodies1, body1);
     list_add(bodies1, body2);
-    list_add(bodies2, body1);
-    list_add(bodies2, body2);
+    // list_add(bodies2, body1);
+    // list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
     create_collision(scene, body1, body2, (collision_handler_t)platform_collision, aux, (free_func_t)force_aux_free, platform_collided);
 }
@@ -216,11 +218,11 @@ void powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *aux) {
 void create_powerup_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
     force_aux_t *aux = force_aux_init(elasticity);
     list_t *bodies1 = list_init(2, NULL);
-    list_t *bodies2 = list_init(2, NULL);
+    // list_t *bodies2 = list_init(2, NULL);
     list_add(bodies1, body1);
     list_add(bodies1, body2);
-    list_add(bodies2, body1);
-    list_add(bodies2, body2);
+    // list_add(bodies2, body1);
+    // list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
     create_collision(scene, body1, body2, (collision_handler_t)powerup_collision, aux, (free_func_t)force_aux_free, collided);
 }
@@ -237,11 +239,11 @@ void immunity_powerup_collision(body_t *body1, body_t *body2, vector_t axis, voi
 void create_immunity_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
     force_aux_t *aux = force_aux_init(elasticity);
     list_t *bodies1 = list_init(2, NULL);
-    list_t *bodies2 = list_init(2, NULL);
+    // list_t *bodies2 = list_init(2, NULL);
     list_add(bodies1, body1);
     list_add(bodies1, body2);
-    list_add(bodies2, body1);
-    list_add(bodies2, body2);
+    // list_add(bodies2, body1);
+    // list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
     create_collision(scene, body1, body2, (collision_handler_t)immunity_powerup_collision, aux, (free_func_t)force_aux_free, collided);
 }
@@ -284,11 +286,11 @@ void boost_powerup_collision(body_t *body1, body_t *body2, vector_t axis, void *
 void create_boost_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
     force_aux_t *aux = force_aux_init(elasticity);
     list_t *bodies1 = list_init(2, NULL);
-    list_t *bodies2 = list_init(2, NULL);
+    // list_t *bodies2 = list_init(2, NULL);
     list_add(bodies1, body1);
     list_add(bodies1, body2);
-    list_add(bodies2, body1);
-    list_add(bodies2, body2);
+    // list_add(bodies2, body1);
+    // list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
     create_collision(scene, body1, body2, (collision_handler_t)boost_powerup_collision, aux, (free_func_t)force_aux_free, collided);
 }
@@ -325,11 +327,11 @@ void star_collided(void *a) {
 void create_star_collision(scene_t *scene, double elasticity, body_t *body1, body_t *body2) {
     force_aux_t *aux = force_aux_init(elasticity);
     list_t *bodies1 = list_init(2, NULL);
-    list_t *bodies2 = list_init(2, NULL);
+    // list_t *bodies2 = list_init(2, NULL);
     list_add(bodies1, body1);
     list_add(bodies1, body2);
-    list_add(bodies2, body1);
-    list_add(bodies2, body2);
+    // list_add(bodies2, body1);
+    // list_add(bodies2, body2);
     force_aux_set_bodies(aux, bodies1);
     create_collision(scene, body1, body2, (collision_handler_t)star_collision, aux, (free_func_t)force_aux_free, star_collided);
 }
