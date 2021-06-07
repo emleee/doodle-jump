@@ -52,7 +52,7 @@ double force_aux_get_constant(force_aux_t *force_aux) {
 }
 
 void force_aux_free(force_aux_t *force_aux) {
-    free(force_aux->list);
+    list_free(force_aux->list);
     free(force_aux);
 }
 

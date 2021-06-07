@@ -5,7 +5,7 @@
 // #include "star.h"
 #include "list.h"
 
-size_t i = 0;
+// size_t i = 0;
 
 typedef struct list {
     void **data;
@@ -15,8 +15,8 @@ typedef struct list {
 } list_t;
 
 list_t *list_init(size_t initial_size, free_func_t freer) {
-    i++;
-    assert(i<100);
+    // i++;
+    // assert(i<100);
     list_t *list = malloc(sizeof(list_t));
     assert(list != NULL);
     list->capacity = initial_size;
@@ -28,7 +28,9 @@ list_t *list_init(size_t initial_size, free_func_t freer) {
 
 void list_free(list_t *list) {
     for (size_t i = 0; i < list->size; i++) {
-        list->freer(list->data[i]);
+        if (list->freer != NULL) {
+            list->freer(list->data[i]);
+        }
     }
     free(list->data);
     free(list);

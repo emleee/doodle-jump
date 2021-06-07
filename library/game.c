@@ -271,9 +271,11 @@ bool in_screen(vector_t center, body_t *body) {
     for (int i = 0; i < list_size(points); i++) {
         if (((vector_t *)list_get(points, i))->y > center.y - GAME_HEIGHT/2) {
             // printf("%f , %f\n", ((vector_t *)list_get(points, i))->y, center.y - GAME_HEIGHT/2);
+            list_free(points);
             return true;
         }
     }
+    list_free(points);
     return false;
 }
 

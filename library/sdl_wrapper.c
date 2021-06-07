@@ -297,6 +297,7 @@ void sdl_draw_polygon(list_t *points, rgb_color_t color) {
     );
     free(x_points);
     free(y_points);
+    list_free(points);
 }
 
 void sdl_show(scene_t *scene) {

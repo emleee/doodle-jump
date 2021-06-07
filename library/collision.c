@@ -15,7 +15,7 @@ vector_t get_perp_line(vector_t *pt1, vector_t *pt2) {
 }
 
 list_t *polygon_projection(list_t *shape, vector_t perp_line) {
-    list_t *projections = list_init(2, (free_func_t)list_free);
+    list_t *projections = list_init(2, (free_func_t)free);
     double min = INFINITY;
     double max = -INFINITY;
 
@@ -82,6 +82,8 @@ collision_info_t find_collision(list_t *shape1, list_t *shape2) {
                 axis = perp_line;
             }
         }
+        list_free(proj1);
+        list_free(proj2);
     }
     for (int i = 0; i < list_size(shape2) - 1; i++) {
         vector_t perp_line = get_perp_line(list_get(shape2, i), list_get(shape2, (i+1) % list_size(shape2)));
@@ -96,9 +98,11 @@ collision_info_t find_collision(list_t *shape1, list_t *shape2) {
                 axis = perp_line;
             }
         }
+        list_free(proj1);
+        list_free(proj2);
     }
-    
-
+    list_free(shape1);
+    list_free(shape2);
     collision_info_t collision_info = {.collided = collided, .axis = axis};
     return collision_info;
 }

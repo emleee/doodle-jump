@@ -134,6 +134,8 @@ void platform_collided(void *a) {
         if (get_sound_preference()) {
             play_jump();
         }
+        list_free(points1);
+        list_free(points2);
     }
     else {
         ((collision_package_t *)a)->collided = false;
