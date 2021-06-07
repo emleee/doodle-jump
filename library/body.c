@@ -2,6 +2,7 @@
 #include "polygon.h"
 #include "sdl_wrapper.h"
 #include "body.h"
+#include "constants.h"
 
 const vector_t RIGHT_OFFSET = {.x = 10.5, .y = 29.5};
 const vector_t LEFT_OFFSET = {.x = -10.5, .y = 29.5};
@@ -136,7 +137,7 @@ void body_set_centroid(body_t *body, vector_t x) {
             }
         }
         else if (strcmp(body->info, "background") == 0) {
-            vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), (vector_t){.x = 360, .y = 480});
+            vector_t sprite_pos = vec_add(get_window_position(x, get_window_center()), (vector_t){.x = SCREEN_DIMENSIONS.x/2, .y = SCREEN_DIMENSIONS.y/2});
             sprite_set_center(body->sprite, sprite_pos);
         }
         else {
