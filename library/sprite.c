@@ -9,10 +9,12 @@ typedef struct sprite {
 sprite_t *sprite_init(SDL_Texture *texture, int width, int height) {
     sprite_t *sprite = malloc(sizeof(sprite_t));
     sprite->texture = texture;
+
     sprite->box = malloc(sizeof(SDL_Rect));
     *(sprite->box) = (SDL_Rect) {.x = -width/2, .y = -height/2, .h = height, .w = width};
     sprite->box->w = width;
     sprite->box->h = height;
+    
     sprite->center = VEC_ZERO;
     return sprite;
 }
@@ -33,7 +35,6 @@ SDL_Rect *sprite_get_box(sprite_t *sprite) {
 }
 
 void sprite_free(sprite_t *sprite) {
-    // printf("%s", "freed\n");
     SDL_DestroyTexture(sprite->texture);
     free(sprite->box);
     free(sprite);

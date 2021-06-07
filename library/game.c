@@ -6,6 +6,7 @@
 #include "test_util.h"
 #include "polygon.h"
 #include "forces.h"
+#include "constants.h"
 
 const double GAME_WIDTH = 720.0;
 const double GAME_HEIGHT = 960.0;

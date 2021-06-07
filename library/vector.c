@@ -1,6 +1,5 @@
 #include <math.h>
 #include "vector.h"
-// #include "test_util.h"
 
 const vector_t VEC_ZERO = {.x = 0, .y = 0};
 

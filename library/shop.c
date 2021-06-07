@@ -4,6 +4,7 @@
 #include "game.h"
 #include "restart.h"
 #include "start.h"
+#include "constants.h"
 
 // screen dimensions
 const double SHOP_WIDTH = 720;
