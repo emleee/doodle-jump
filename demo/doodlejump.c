@@ -138,10 +138,6 @@ int main() {
                 center->y = HEIGHT2/2;
                 sdl_set_center(*center);
                 star_score += scene_stars(scene);
-                powerup_timer = malloc(sizeof(int));
-                *powerup_timer = 0;
-                star_timer = malloc(sizeof(int));
-                *star_timer = 0;
                 score = malloc(100*sizeof(char));
                 reset_clock();
                 scene_free(scene);
