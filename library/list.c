@@ -13,6 +13,7 @@ typedef struct list {
 } list_t;
 
 list_t *list_init(size_t initial_size, free_func_t freer) {
+    printf("list init\n");
     list_t *list = malloc(sizeof(list_t));
     assert(list != NULL);
     list->capacity = initial_size;

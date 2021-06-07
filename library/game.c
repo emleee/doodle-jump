@@ -124,6 +124,7 @@ void more_platforms(scene_t *scene, vector_t center) {
                 body_set_second_info(new_platform, new_info2);
                 scene_add_body(scene, new_platform);
                 create_platform_collision(scene, 0, scene_get_body(scene, 0), new_platform);
+                printf("new platforms\n");
             }
         }
     }

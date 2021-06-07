@@ -200,6 +200,7 @@ int main() {
             }
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
+            printf("scene tick\n");
             game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
         }
         if (strcmp(scene_get_info(scene), "instructions") == 0) {
