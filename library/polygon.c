@@ -1,9 +1,5 @@
-// #include <stddef.h>
 #include <math.h>
-// #include <assert.h>
 #include <stdlib.h>
-// #include "vector.h"
-// #include "list.h"
 #include "polygon.h"
 
 const double CIRCLE_POINTS = 20;
@@ -11,15 +7,14 @@ const double CIRCLE_POINTS = 20;
 double polygon_area(list_t *polygon) {
     size_t num_sides = list_size(polygon);
     double area = 0.0;
-    for (size_t i = 0; i < (num_sides-1); i++) {
-        vector_t *pti = list_get(polygon, i);
-        vector_t *pti2 = list_get(polygon, i+1);
-        area += vec_cross(*pti, *pti2);
+
+    for (size_t i = 0; i < num_sides; i++) {
+        vector_t *pt1 = list_get(polygon, i % num_sides);
+        vector_t *pt2 = list_get(polygon, (i+1) % num_sides);
+        area += vec_cross(*pt1, *pt2);
     }
-    vector_t *pt1 = list_get(polygon, 0);
-    vector_t *ptn = list_get(polygon, num_sides-1);
-    area += vec_cross(*ptn, *pt1);
     area = sqrt(pow(area, 2.0)) / 2;
+
     return area;
 }
 
@@ -30,19 +25,13 @@ vector_t polygon_centroid(list_t *polygon) {
     double cy = 0.0;
 
     // perform Shoelace formula
-    for (size_t i = 0; i < (num_sides-1); i++) {
-        vector_t *pti = list_get(polygon, i);
-        vector_t *pti2 = list_get(polygon, i+1);
-        cx += (pti->x + pti2->x) * vec_cross(*pti, *pti2);
-        cy += (pti->y + pti2->y) * vec_cross(*pti, *pti2);
-        area += vec_cross(*pti, *pti2);
+    for (size_t i = 0; i < num_sides; i++) {
+        vector_t *pt1 = list_get(polygon, i % num_sides);
+        vector_t *pt2 = list_get(polygon, (i+1) % num_sides);
+        cx += (pt1->x + pt2->x) * vec_cross(*pt1, *pt2);
+        cy += (pt1->y + pt2->y) * vec_cross(*pt1, *pt2);
+        area += vec_cross(*pt1, *pt2);
     }
-    vector_t *pt1 = list_get(polygon, 0);
-    vector_t *ptn = list_get(polygon, (num_sides - 1));
-    cx += (ptn->x + pt1->x) * vec_cross(*ptn, *pt1);
-    cy += (ptn->y + pt1->y) * vec_cross(*ptn, *pt1);
-    area += vec_cross(*ptn, *pt1);
-
     area /= 2;
     cx /= 6 * area;
     cy /= 6 * area;
@@ -50,6 +39,7 @@ vector_t polygon_centroid(list_t *polygon) {
     vector_t centroid;
     centroid.x = cx;
     centroid.y = cy;
+    
     return centroid;
 }
 

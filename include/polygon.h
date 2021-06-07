@@ -6,7 +6,6 @@
 
 /**
  * Computes the area of a polygon.
- * See https://en.wikipedia.org/wiki/Shoelace_formula#Statement.
  *
  * @param polygon the list of vertices that make up the polygon,
  * listed in a counterclockwise direction. There is an edge between
@@ -17,7 +16,6 @@ double polygon_area(list_t *polygon);
 
 /**
  * Computes the center of mass of a polygon.
- * See https://en.wikipedia.org/wiki/Centroid#Of_a_polygon.
  *
  * @param polygon the list of vertices that make up the polygon,
  * listed in a counterclockwise direction. There is an edge between

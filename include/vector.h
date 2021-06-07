@@ -59,7 +59,6 @@ vector_t vec_multiply(double scalar, vector_t v);
 
 /**
  * Computes the dot product of two vectors.
- * See https://en.wikipedia.org/wiki/Dot_product#Algebraic_definition.
  *
  * @param v1 the first vector
  * @param v2 the second vector
@@ -68,9 +67,7 @@ vector_t vec_multiply(double scalar, vector_t v);
 double vec_dot(vector_t v1, vector_t v2);
 
 /**
- * Computes the cross product of two vectors,
- * which lies along the z-axis.
- * See https://en.wikipedia.org/wiki/Cross_product#Computing_the_cross_product.
+ * Computes the cross product of two vectors, which lies along the z-axis.
  *
  * @param v1 the first vector
  * @param v2 the second vector
@@ -82,32 +79,11 @@ double vec_cross(vector_t v1, vector_t v2);
  * Rotates a vector by an angle around (0, 0).
  * The angle is given in radians.
  * Positive angles are counterclockwise, according to the right hand rule.
- * See https://en.wikipedia.org/wiki/Rotation_matrix.
- * (You can derive this matrix by noticing that rotation by a fixed angle
- * is linear and then computing what it does to (1, 0) and (0, 1).)
  *
  * @param v the vector to rotate
  * @param angle the angle to rotate the vector
  * @return v rotated by the given angle
  */
 vector_t vec_rotate(vector_t v, double angle);
-
-/**
- * Checks if two vectors are close.
- *
- * @param v1 first vector
- * @param v2 second vector
- * @return close or not
- */
-// bool vec_is_close(vector_t v1, vector_t v2);
-
-/**
- * Checks if two values are close.
- *
- * @param d1 first double
- * @param d2 second double
- * @return close or not
- */
-// bool is_close(double d1, double d2);
 
 #endif // #ifndef __VECTOR_H__
