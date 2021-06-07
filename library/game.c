@@ -272,9 +272,11 @@ bool in_screen(vector_t center, body_t *body) {
     for (int i = 0; i < list_size(points); i++) {
         if (((vector_t *)list_get(points, i))->y > center.y - GAME_HEIGHT/2) {
             // printf("%f , %f\n", ((vector_t *)list_get(points, i))->y, center.y - GAME_HEIGHT/2);
+            list_free(points);
             return true;
         }
     }
+    list_free(points);
     return false;
 }
 
@@ -478,6 +480,7 @@ void star_updating(int star_score) {
     fputs(star_reading, star_file);
     free(star_reading);
     fclose(star_file);
+    // free(throwaway[0]);
     free(throwaway);
 }
 
@@ -588,6 +591,9 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             free(timer);
             free(powerup_timer);
             free(star_timer);
+            timer = NULL;
+            powerup_timer = NULL;
+            star_timer = NULL;
             char *restart_info = malloc(8*sizeof(char));
             strcpy(restart_info,
              "restart");

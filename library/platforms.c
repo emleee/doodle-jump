@@ -68,6 +68,7 @@ void sliding_bounce(body_t *sliding_platform) {
 
     body_set_centroid(sliding_platform, vec_add(body_get_centroid(sliding_platform), adjust));
     body_set_velocity(sliding_platform, velocity);
+    list_free(shape);
 }
 
 body_t *disappearing_platform(vector_t center, char *info) {

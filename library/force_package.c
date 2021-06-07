@@ -56,6 +56,6 @@ void force_package_free(force_package_t *force_package) {
     if (force_package->freer != NULL) {
         force_package->freer(force_package->aux);
     }
-    // list_free(force_package->bodies);
+    list_free(force_package->bodies);
     free(force_package);
 }
