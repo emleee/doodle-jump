@@ -108,7 +108,7 @@ void more_platforms(scene_t *scene, vector_t center) {
                 int random = rand()%40;
                 char *new_info1;
                 body_t *new_platform;
-                if (random <= center.y/GAME_HEIGHT) {
+                if (random <= center.y/GAME_HEIGHT && random <= 35) {
                     new_info1 = malloc(17*sizeof(char));
                     strcpy(new_info1, "sliding platform");
                     new_platform = sliding_platform(platform_center, new_info1);
@@ -347,6 +347,7 @@ void create_star(scene_t *scene) {
             random = rand() % scene_bodies(scene);
             info = body_get_info(scene_get_body(scene, random));
             counter2++;
+            return;
         }
 
         // check if platform already has a star on it
