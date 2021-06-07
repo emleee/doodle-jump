@@ -17,6 +17,7 @@ text_t *text_init(SDL_Surface *surface, SDL_Texture *texture, SDL_Rect *textbox)
 void text_free(text_t *text) {
     SDL_FreeSurface(text->surface);
     SDL_DestroyTexture(text->texture);
+    free(text->textbox);
     free(text);
 }
 

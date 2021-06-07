@@ -18,7 +18,7 @@ CC = clang
 # -fno-omit-frame-pointer allows stack traces to be generated
 #   (take CS 24 for a full explanation)
 # -fsanitize=address enables asan
-CFLAGS = -Iinclude $(shell sdl2-config --cflags | sed -e "s/include\/SDL2/include/") -Wall -g -fno-omit-frame-pointer -fsanitize=address -Wno-nullability-completeness
+CFLAGS = -Iinclude $(shell sdl2-config --cflags | sed -e "s/include\/SDL2/include/") -Wall -g -fno-omit-frame-pointer -fsanitize=address -fsanitize=leak -Wno-nullability-completeness
 # Compiler flag that links the program with the math library
 LIB_MATH = -lm
 # Compiler flags that link the program with the math and SDL libraries.
