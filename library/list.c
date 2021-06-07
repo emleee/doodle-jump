@@ -5,6 +5,8 @@
 // #include "star.h"
 #include "list.h"
 
+size_t i = 0;
+
 typedef struct list {
     void **data;
     size_t size;
@@ -13,6 +15,8 @@ typedef struct list {
 } list_t;
 
 list_t *list_init(size_t initial_size, free_func_t freer) {
+    i++;
+    assert(i<100);
     list_t *list = malloc(sizeof(list_t));
     assert(list != NULL);
     list->capacity = initial_size;

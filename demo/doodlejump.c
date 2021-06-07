@@ -157,6 +157,7 @@ int main() {
                 scene = make_game_scene();
                 use_inventory(scene);
                 doodle = scene_get_body(scene, 0);
+                // body_set_velocity(doodle, (vector_t){.x = 0, .y = 900});
             }
             else if (strcmp(scene_get_next_info(scene), "start") == 0) {
                 center->x = WIDTH2/2;
@@ -201,6 +202,7 @@ int main() {
         }
         if (strcmp(scene_get_info(scene), "game") == 0) {
             game_main(scene, doodle, star_timer, powerup_timer, timer, center, score);
+            // body_set_velocity(doodle, (vector_t){.x = 0, .y = 1000});
         }
         if (strcmp(scene_get_info(scene), "instructions") == 0) {
             sdl_render_scene(scene);
