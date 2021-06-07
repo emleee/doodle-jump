@@ -44,9 +44,13 @@ scene_t *scene_init_with_info(void *info, free_func_t info_freer) {
 }
 
 void scene_free(scene_t *scene) {
-    // for (int i = 0; i < scene_bodies(scene); i++) {
-    //     body_set_sprite(scene_get_body(scene, i), NULL);
-    // }
+    for (int i = 0; i < scene_bodies(scene); i++) {
+        for (int j = 0; j < list_size(scene->sprites); j++) {
+            if (body_get_sprite(scene_get_body(scene, i)) == list_get(scene->sprites, j)) {
+                body_dont_free_sprite(scene_get_body(scene, i));
+            }
+        }
+    }
     list_free(scene->sprites);
     list_free(scene->bodies);
     list_free(scene->text);
