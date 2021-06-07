@@ -620,7 +620,11 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
                     // continue;
                 }
                 if (!in_screen(*center, body)) {
+<<<<<<< HEAD
                     //printf("%s", "not in screen\n");
+=======
+                    // printf("%s", "not in screen\n");
+>>>>>>> 6f3e9cdcd0b56b105aee6a30f7ed413520c014b5
                     scene_remove_body(scene, i);
                     // continue;
                 }

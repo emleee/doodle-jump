@@ -98,9 +98,9 @@ body_t *make_powerup(scene_t *scene, bool enemy_present) {
         else if (idx == IMMUNITY_IDX) {
             return make_immunity(scene, *center, false);
         }
-        else if (idx == MAGNET_IDX) {
-            return make_magnet(scene, *center, false);
-        }
+        // else if (idx == MAGNET_IDX) {
+        //     return make_magnet(scene, *center, false);
+        // }
         free(center);
     }
     return NULL;

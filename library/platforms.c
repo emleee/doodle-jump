@@ -30,13 +30,13 @@ body_t *make_platform(vector_t center, rgb_color_t color, char *info, int width,
 }
 
 body_t *normal_platform(vector_t center, char *info) {
-    sprite_t *sprite = create_sprite("PNGs/Grass_Platform.png", 146, 35);
+    sprite_t *sprite = create_sprite("PNGs/Grass_Platform.png", NORMAL_DIMENSIONS.x, NORMAL_DIMENSIONS.y);
     body_t *platform = make_platform(center, NORMAL_COLOR, info, NORMAL_DIMENSIONS.x, NORMAL_DIMENSIONS.y, sprite);
     return platform;
 }
 
 body_t *sliding_platform(vector_t center, char *info) {
-    sprite_t *sprite = create_sprite("PNGs/Flower_Platform.png", 146, 35);
+    sprite_t *sprite = create_sprite("PNGs/Flower_Platform.png", SLIDING_DIMENSIONS.x, SLIDING_DIMENSIONS.y);
     body_t *sliding_platform = make_platform(center, SLIDING_COLOR, info, SLIDING_DIMENSIONS.x, SLIDING_DIMENSIONS.y, sprite);
     body_set_velocity(sliding_platform, PLATFORM_VELOCITY);
     return sliding_platform;
