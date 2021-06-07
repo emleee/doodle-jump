@@ -6,10 +6,6 @@
 #include "start.h"
 #include "constants.h"
 
-// screen dimensions
-const double SHOP_WIDTH = 720;
-const double SHOP_HEIGHT = 960;
-
 // locations
 const vector_t BOOST_CENTER = {.x = 275, .y = 605};
 const vector_t IMMUNITY_CENTER = {.x = 425, .y = 605};
@@ -21,6 +17,7 @@ const vector_t SIGN_LOCATION = {.x = 425, .y = 590};
 // button dimenstions
 const vector_t BUY_BUTTON_SIZE = {.x = 50, .y = 15};
 const vector_t SHOP_HOME_BUTTON_SIZE = {.x = 85, .y = 20};
+const vector_t SIGN_DIMENSIONS = {.x = 390, 150};
 
 // star parameters
 const double STAR_OFFSET = 40;
@@ -41,7 +38,7 @@ scene_t *make_shop_scene () {
     strcpy(scene_info, "shop");
     scene_t *scene = scene_init_with_info(scene_info, free);
 
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
 
     display_star_count(scene);
@@ -60,7 +57,7 @@ void display_star_count(scene_t *scene) {
     scene_add_text(scene, star_count);
 
     // star body
-    vector_t star_pos = {.x = STAR_OFFSET, .y = SHOP_HEIGHT - STAR_OFFSET};
+    vector_t star_pos = {.x = STAR_OFFSET, .y = SCREEN_DIMENSIONS.y - STAR_OFFSET};
     star_t *star_frame = make_star(star_pos, STAR_NUM_POINTS, SHOP_STAR_RADIUS);
     char *star_info = malloc(5 * sizeof(char));
     strcpy(star_info, "star");
@@ -72,16 +69,15 @@ scene_t *make_shop_exit_scene() {
     char *scene_info = malloc(10 * sizeof(char));
     strcpy(scene_info, "shop exit");
     scene_t *scene = scene_init_with_info(scene_info, free);
-    vector_t center = {.x = 424, .y = 590};
-    list_t *shape = make_rectangle(center, 390, 150);
+    list_t *shape = make_rectangle(SIGN_LOCATION, SIGN_DIMENSIONS.x, SIGN_DIMENSIONS.y);
     char *info = malloc(sizeof(char)*5);
     strcpy(info, "exit");
     body_t *thanks = body_init_with_info(shape, INFINITY, TEXT_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Thank_You_Sign.png", 361, 152);
+    sprite_t *sprite = create_sprite("PNGs/Thank_You_Sign.png", SIGN_DIMENSIONS.x, SIGN_DIMENSIONS.y);
     body_set_sprite(thanks, sprite);
-    body_set_centroid(thanks, center);
+    body_set_centroid(thanks, SIGN_LOCATION);
     scene_add_body(scene, thanks);
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
     return scene;
 }
@@ -90,16 +86,15 @@ scene_t *make_failed_purchase_scene() {
     char *scene_info = malloc(10 * sizeof(char));
     strcpy(scene_info, "shop fail");
     scene_t *scene = scene_init_with_info(scene_info, free);
-    vector_t center = {.x = 424, .y = 590};
-    list_t *shape = make_rectangle(center, 390, 150);
-    char *info = malloc(sizeof(char)*5);
+    list_t *shape = make_rectangle(SIGN_LOCATION, SIGN_DIMENSIONS.x, SIGN_DIMENSIONS.y);
+    char *info = malloc(sizeof(char) * 5);
     strcpy(info, "exit");
     body_t *thanks = body_init_with_info(shape, INFINITY, TEXT_COLOR, info, free);
-    sprite_t *sprite = create_sprite("PNGs/Sorry_Sign.png", 361, 152);
+    sprite_t *sprite = create_sprite("PNGs/Sorry_Sign.png", SIGN_DIMENSIONS.x, SIGN_DIMENSIONS.y);
     body_set_sprite(thanks, sprite);
-    body_set_centroid(thanks, center);
+    body_set_centroid(thanks, SIGN_LOCATION);
     scene_add_body(scene, thanks);
-    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SHOP_HEIGHT});
+    body_t *background = make_background_body("PNGs/Shop_Background.png",(vector_t){.x = 0, .y = SCREEN_DIMENSIONS.y});
     scene_add_body(scene, background);
     return scene;
 }
@@ -122,7 +117,7 @@ void shop_mouse_click(scene_t *scene, int x, int y) {
     }
     if (x < (SHOP_HOME_CENTER.x + SHOP_HOME_BUTTON_SIZE.x) && x > (SHOP_HOME_CENTER.x - SHOP_HOME_BUTTON_SIZE.x)) {
         if (y < (SHOP_HOME_CENTER.y + SHOP_HOME_BUTTON_SIZE.y) && y > (SHOP_HOME_CENTER.y - SHOP_HOME_BUTTON_SIZE.y)) {
-            char *start_info = malloc(6*sizeof(char));
+            char *start_info = malloc(6 * sizeof(char));
             strcpy(start_info, "start");
             scene_set_next_info(scene, start_info);
         }
@@ -135,7 +130,7 @@ int get_star_count() {
         printf("NULL file.\n");
         return 1;
     }
-    char *star_reading = malloc(10*sizeof(char));
+    char *star_reading = malloc(10 * sizeof(char));
     char **throwaway = malloc(sizeof(char *));
     *throwaway = malloc(10*sizeof(char));
     int num_stars;
@@ -178,7 +173,7 @@ void write_powerup(char *powerup) {
 void buy_immunity(scene_t *scene) {
     int num_stars = get_star_count();
     if (num_stars < IMMUNITY_PRICE) {
-        char *fail_info = malloc(10*sizeof(char));
+        char *fail_info = malloc(10 * sizeof(char));
         strcpy(fail_info, "shop fail");
         scene_set_next_info(scene, fail_info);
     }
@@ -188,10 +183,10 @@ void buy_immunity(scene_t *scene) {
         }
         num_stars -= IMMUNITY_PRICE;
         change_star_count(num_stars);
-        char *immunity = malloc(9*sizeof(char));
+        char *immunity = malloc(9 * sizeof(char));
         immunity = "immunity";
         write_powerup(immunity);
-        char *exit_info = malloc(10*sizeof(char));
+        char *exit_info = malloc(10 * sizeof(char));
         strcpy(exit_info, "shop exit");
         scene_set_next_info(scene, exit_info);
     }
@@ -200,7 +195,7 @@ void buy_immunity(scene_t *scene) {
 void buy_magnet(scene_t *scene){
     int num_stars = get_star_count();
     if (num_stars < MAGNET_PRICE) {
-        char *fail_info = malloc(10*sizeof(char));
+        char *fail_info = malloc(10 * sizeof(char));
         strcpy(fail_info, "shop fail");
         scene_set_next_info(scene, fail_info);
     }
@@ -210,10 +205,10 @@ void buy_magnet(scene_t *scene){
         }
         num_stars -= MAGNET_PRICE;
         change_star_count(num_stars);
-        char *magnet = malloc(7*sizeof(char));
+        char *magnet = malloc(7 * sizeof(char));
         magnet = "magnet";
         write_powerup(magnet);
-        char *exit_info = malloc(10*sizeof(char));
+        char *exit_info = malloc(10 * sizeof(char));
         strcpy(exit_info, "shop exit");
         scene_set_next_info(scene, exit_info);
     }
@@ -222,7 +217,7 @@ void buy_magnet(scene_t *scene){
 void buy_boost(scene_t *scene){
     int num_stars = get_star_count();
     if (num_stars < BOOST_PRICE) {
-        char *fail_info = malloc(10*sizeof(char));
+        char *fail_info = malloc(10 * sizeof(char));
         strcpy(fail_info, "shop fail");
         scene_set_next_info(scene, fail_info);
     }
@@ -235,7 +230,7 @@ void buy_boost(scene_t *scene){
         char *boost = malloc(6*sizeof(char));
         boost = "boost";
         write_powerup(boost);
-        char *exit_info = malloc(10*sizeof(char));
+        char *exit_info = malloc(10 * sizeof(char));
         strcpy(exit_info, "shop exit");
         scene_set_next_info(scene, exit_info);
     }
