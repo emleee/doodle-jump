@@ -479,6 +479,7 @@ void star_updating(int star_score) {
     fputs(star_reading, star_file);
     free(star_reading);
     fclose(star_file);
+    // free(throwaway[0]);
     free(throwaway);
 }
 
@@ -689,6 +690,7 @@ void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_ti
             scene_tick(scene, dt);
         }
         free(buffer);
+        free(scoring);
     }
     sdl_render_scene(scene);
 }

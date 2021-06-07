@@ -165,7 +165,9 @@ void body_set_mass(body_t *body, double mass) {
 }
 
 void body_set_second_info(body_t *body, void *info) {
-    body->info_freer(body->info2);
+    if (body->info_freer != NULL && body->info2 != NULL) {
+        body->info_freer(body->info2);
+    }
     body->info2 = info;
 }
 
