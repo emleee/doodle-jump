@@ -347,7 +347,6 @@ void create_star(scene_t *scene) {
             random = rand() % scene_bodies(scene);
             info = body_get_info(scene_get_body(scene, random));
             counter2++;
-            return;
         }
         if (counter2 >= 30) {
             return;
