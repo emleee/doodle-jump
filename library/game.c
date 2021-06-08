@@ -522,148 +522,283 @@ scene_t *make_instructions_scene() {
 }
 
 void game_main (scene_t *scene, body_t *doodle, int *star_timer, int *powerup_timer, vector_t *center, char *score) {
-    bool first_time = first_time_play();
-    if (first_time) {
-        char *game_info = malloc(13*sizeof(char));
-        strcpy(game_info, "instructions");
-        scene_set_next_info(scene, game_info);
+    bool enemy_present = false;
+    vector_t *scoring = malloc(sizeof(vector_t));
+    scoring->x = SCORE_MARKER_CENTER.x;
+    scoring->y = SCORE_MARKER_CENTER.y;
+    double curr = 0.0;
+    char *buffer = malloc(100*sizeof(char));
+    double dt = time_since_last_tick();
+    // generate a star once in a while
+    if (*star_timer == 200) {
+        create_star(scene);
+        *star_timer = 0;
+    }
+    (*star_timer)++;
+    star_score(scene);
+
+    // calculate and display score
+    if (scene_textboxes(scene) >= 1) {
+        for (size_t i = 0; i < scene_textboxes(scene); i++) {
+            scene_remove_text(scene, scene_get_text(scene, i));
+        }
+    }
+    strcpy(score, "Score: ");
+    curr = calculate_score(*center);
+
+    sprintf(buffer, "%.1f", curr);
+    strcat(score, buffer);
+    if (get_score_preference()) {
+        text_t *scorebox = text_create(score, TEXT_COLOR, 30, scoring);
+        scene_add_text(scene, scorebox);
+    }
+
+    if (!in_screen(*center, doodle)) {
+        star_updating(scene_stars(scene));
+        high_score_updating(score);
+        *powerup_timer = 0;
+        *star_timer = 0;
+        char *restart_info = malloc(8*sizeof(char));
+        strcpy(restart_info, "restart");
+        scene_set_next_info(scene, restart_info);
     }
     else {
-        bool enemy_present = false;
-        vector_t *scoring = malloc(sizeof(vector_t));
-        scoring->x = SCORE_MARKER_CENTER.x;
-        scoring->y = SCORE_MARKER_CENTER.y;
-        double curr = 0.0;
-        char *buffer = malloc(100*sizeof(char));
-        double dt = time_since_last_tick();
-        // generate a star once in a while
-        if (*star_timer == 200) {
-            create_star(scene);
-            *star_timer = 0;
-        }
-        (*star_timer)++;
-        star_score(scene);
-
-        // calculate and display score
-        if (scene_textboxes(scene) >= 1) {
-            for (size_t i = 0; i < scene_textboxes(scene); i++) {
-                scene_remove_text(scene, scene_get_text(scene, i));
+        for(int i = 3; i < scene_bodies(scene); i++) {
+            body_t *body = scene_get_body(scene, i);
+            if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
+                enemy_present = true;
+            }
+            if (!in_screen(*center, body)) {
+                scene_remove_body(scene, i);
+            }
+            if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + SCREEN_DIMENSIONS.y/2) {
+                scene_remove_body(scene, i);
+            }
+            if (strcmp(body_get_info(body), "sliding platform") == 0) {
+                sliding_bounce(body);
             }
         }
-        strcpy(score, "Score: ");
-        curr = calculate_score(*center);
 
-        sprintf(buffer, "%.1f", curr);
-        strcat(score, buffer);
-        if (get_score_preference()) {
-            text_t *scorebox = text_create(score, TEXT_COLOR, 30, scoring);
-            scene_add_text(scene, scorebox);
-        }
-
-        if (!in_screen(*center, doodle)) {
-            star_updating(scene_stars(scene));
-            high_score_updating(score);
+        magnet_powerup(scene, powerup_timer);
+        immunity_powerup(scene, powerup_timer);
+        if (*powerup_timer == POWERUP_TIMER) {
+            bool powerup_pref = get_powerup_preference();
+            if (powerup_pref) {
+                make_powerup(scene, enemy_present);
+            }
             *powerup_timer = 0;
-            *star_timer = 0;
-            char *restart_info = malloc(8*sizeof(char));
-            strcpy(restart_info, "restart");
-            scene_set_next_info(scene, restart_info);
         }
-        else {
-            for(int i = 3; i < scene_bodies(scene); i++) {
-                body_t *body = scene_get_body(scene, i);
-                if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
-                    enemy_present = true;
-                }
-                if (!in_screen(*center, body)) {
-                    scene_remove_body(scene, i);
-                }
-                if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + SCREEN_DIMENSIONS.y/2) {
-                    scene_remove_body(scene, i);
-                }
-                if (strcmp(body_get_info(body), "sliding platform") == 0) {
-                    sliding_bounce(body);
-                }
-            }
+        (*powerup_timer)++;
 
-            magnet_powerup(scene, powerup_timer);
-            immunity_powerup(scene, powerup_timer);
-            if (*powerup_timer == POWERUP_TIMER) {
-                bool powerup_pref = get_powerup_preference();
-                if (powerup_pref) {
-                    make_powerup(scene, enemy_present);
-                }
-                *powerup_timer = 0;
-            }
-            (*powerup_timer)++;
-
-            for (int i = 0; i < scene_bodies(scene); i++) {
-                body_t *body = scene_get_body(scene, i);
-                body_t *doodle = scene_get_body(scene, 0);
-                if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
-                    scene_remove_body(scene, i);
-                    char *new_info = malloc(sizeof(char) * 7);
-                    strcpy(new_info, "winged");
-                    body_set_second_info(doodle, new_info);
-                    if (body_get_direction(doodle) == 0) {
-                        body_set_sprite(doodle, scene_get_sprite(scene, 2));
-                    }
-                    else {
-                        body_set_sprite(doodle, scene_get_sprite(scene, 3));
-                    }
-                }
-            }
-
-            if (body_get_second_info(doodle) != NULL && strcmp(body_get_second_info(doodle), "winged") == 0 && within(1, body_get_velocity(doodle).y, 0)) {
-                char *new_info = malloc(sizeof(char) * 5);
-                strcpy(new_info, "jump");
+        for (int i = 0; i < scene_bodies(scene); i++) {
+            body_t *body = scene_get_body(scene, i);
+            body_t *doodle = scene_get_body(scene, 0);
+            if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+                scene_remove_body(scene, i);
+                char *new_info = malloc(sizeof(char) * 7);
+                strcpy(new_info, "winged");
                 body_set_second_info(doodle, new_info);
                 if (body_get_direction(doodle) == 0) {
-                        body_set_sprite(doodle, scene_get_sprite(scene, 0));
-                    }
-                    else {
-                        body_set_sprite(doodle, scene_get_sprite(scene, 1));
-                    }
-            }
-            // shifting the viewing window if the doodle goes higher than the center
-            if (body_get_centroid(doodle).y > center->y) {
-                // generates more platforms
-                more_platforms(scene, *center);
-                center->y = body_get_centroid(doodle).y;
-                sdl_set_center(*center);
-                for (int i = 1; i < 3; i++) {
-                    body_t *background = scene_get_body(scene, i);
-                    vector_t centroid = body_get_centroid(background);
-                    if (centroid.y <= center->y - SCREEN_DIMENSIONS.y/2) {
-                        centroid.y += SCREEN_DIMENSIONS.y*2;
-                        body_set_centroid(background, centroid);
-                    }
+                    body_set_sprite(doodle, scene_get_sprite(scene, 2));
                 }
-                if (!enemy_present) {
-                    more_enemies(scene, *center);
+                else {
+                    body_set_sprite(doodle, scene_get_sprite(scene, 3));
                 }
             }
-            enemy_present = false;
-
-            if (*powerup_timer == POWERUP_TIMER) {
-                for (int i = 0; i < scene_bodies(scene); i++) {
-                    body_t *body = scene_get_body(scene, i);
-                    if (strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0) {
-                        body_set_velocity(body, VEC_ZERO);
-                    }
-                    if (strcmp(body_get_info(body), "magnet") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
-                        body_set_sprite(body, NULL);
-                        scene_remove_body(scene, i);
-                    }
-                    if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
-                        scene_remove_body(scene, i);
-                    }
-                }
-            }
-            wrap(doodle);
-            scene_tick(scene, dt);
         }
-        free(buffer);
+
+        if (body_get_second_info(doodle) != NULL && strcmp(body_get_second_info(doodle), "winged") == 0 && within(1, body_get_velocity(doodle).y, 0)) {
+            char *new_info = malloc(sizeof(char) * 5);
+            strcpy(new_info, "jump");
+            body_set_second_info(doodle, new_info);
+            if (body_get_direction(doodle) == 0) {
+                    body_set_sprite(doodle, scene_get_sprite(scene, 0));
+                }
+                else {
+                    body_set_sprite(doodle, scene_get_sprite(scene, 1));
+                }
+        }
+        // shifting the viewing window if the doodle goes higher than the center
+        if (body_get_centroid(doodle).y > center->y) {
+            // generates more platforms
+            more_platforms(scene, *center);
+            center->y = body_get_centroid(doodle).y;
+            sdl_set_center(*center);
+            for (int i = 1; i < 3; i++) {
+                body_t *background = scene_get_body(scene, i);
+                vector_t centroid = body_get_centroid(background);
+                if (centroid.y <= center->y - SCREEN_DIMENSIONS.y/2) {
+                    centroid.y += SCREEN_DIMENSIONS.y*2;
+                    body_set_centroid(background, centroid);
+                }
+            }
+            if (!enemy_present) {
+                more_enemies(scene, *center);
+            }
+        }
+        enemy_present = false;
+
+        if (*powerup_timer == POWERUP_TIMER) {
+            for (int i = 0; i < scene_bodies(scene); i++) {
+                body_t *body = scene_get_body(scene, i);
+                if (strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0) {
+                    body_set_velocity(body, VEC_ZERO);
+                }
+                if (strcmp(body_get_info(body), "magnet") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+                    body_set_sprite(body, NULL);
+                    scene_remove_body(scene, i);
+                }
+                if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+                    scene_remove_body(scene, i);
+                }
+            }
+        }
+        wrap(doodle);
+        scene_tick(scene, dt);
     }
+    free(buffer);
+    // bool first_time = first_time_play();
+    // if (first_time) {
+        // char *game_info = malloc(13*sizeof(char));
+        // strcpy(game_info, "instructions");
+        // scene_set_next_info(scene, game_info);
+    // }
+    // else {
+    //     bool enemy_present = false;
+    //     vector_t *scoring = malloc(sizeof(vector_t));
+    //     scoring->x = SCORE_MARKER_CENTER.x;
+    //     scoring->y = SCORE_MARKER_CENTER.y;
+    //     double curr = 0.0;
+    //     char *buffer = malloc(100*sizeof(char));
+    //     double dt = time_since_last_tick();
+    //     // generate a star once in a while
+    //     if (*star_timer == 200) {
+    //         create_star(scene);
+    //         *star_timer = 0;
+    //     }
+    //     (*star_timer)++;
+    //     star_score(scene);
+
+    //     // calculate and display score
+    //     if (scene_textboxes(scene) >= 1) {
+    //         for (size_t i = 0; i < scene_textboxes(scene); i++) {
+    //             scene_remove_text(scene, scene_get_text(scene, i));
+    //         }
+    //     }
+    //     strcpy(score, "Score: ");
+    //     curr = calculate_score(*center);
+
+    //     sprintf(buffer, "%.1f", curr);
+    //     strcat(score, buffer);
+    //     if (get_score_preference()) {
+    //         text_t *scorebox = text_create(score, TEXT_COLOR, 30, scoring);
+    //         scene_add_text(scene, scorebox);
+    //     }
+
+    //     if (!in_screen(*center, doodle)) {
+    //         star_updating(scene_stars(scene));
+    //         high_score_updating(score);
+    //         *powerup_timer = 0;
+    //         *star_timer = 0;
+    //         char *restart_info = malloc(8*sizeof(char));
+    //         strcpy(restart_info, "restart");
+    //         scene_set_next_info(scene, restart_info);
+    //     }
+    //     else {
+    //         for(int i = 3; i < scene_bodies(scene); i++) {
+    //             body_t *body = scene_get_body(scene, i);
+    //             if (!enemy_present && (strcmp(body_get_info(body), "enemy") == 0 || strcmp(body_get_info(body), "boost") == 0)) {
+    //                 enemy_present = true;
+    //             }
+    //             if (!in_screen(*center, body)) {
+    //                 scene_remove_body(scene, i);
+    //             }
+    //             if (strcmp(body_get_info(body), "pellet") == 0 && body_get_centroid(body).y > center->y + SCREEN_DIMENSIONS.y/2) {
+    //                 scene_remove_body(scene, i);
+    //             }
+    //             if (strcmp(body_get_info(body), "sliding platform") == 0) {
+    //                 sliding_bounce(body);
+    //             }
+    //         }
+
+    //         magnet_powerup(scene, powerup_timer);
+    //         immunity_powerup(scene, powerup_timer);
+    //         if (*powerup_timer == POWERUP_TIMER) {
+    //             bool powerup_pref = get_powerup_preference();
+    //             if (powerup_pref) {
+    //                 make_powerup(scene, enemy_present);
+    //             }
+    //             *powerup_timer = 0;
+    //         }
+    //         (*powerup_timer)++;
+
+    //         for (int i = 0; i < scene_bodies(scene); i++) {
+    //             body_t *body = scene_get_body(scene, i);
+    //             body_t *doodle = scene_get_body(scene, 0);
+    //             if (strcmp(body_get_info(body), "boost") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+    //                 scene_remove_body(scene, i);
+    //                 char *new_info = malloc(sizeof(char) * 7);
+    //                 strcpy(new_info, "winged");
+    //                 body_set_second_info(doodle, new_info);
+    //                 if (body_get_direction(doodle) == 0) {
+    //                     body_set_sprite(doodle, scene_get_sprite(scene, 2));
+    //                 }
+    //                 else {
+    //                     body_set_sprite(doodle, scene_get_sprite(scene, 3));
+    //                 }
+    //             }
+    //         }
+
+    //         if (body_get_second_info(doodle) != NULL && strcmp(body_get_second_info(doodle), "winged") == 0 && within(1, body_get_velocity(doodle).y, 0)) {
+    //             char *new_info = malloc(sizeof(char) * 5);
+    //             strcpy(new_info, "jump");
+    //             body_set_second_info(doodle, new_info);
+    //             if (body_get_direction(doodle) == 0) {
+    //                     body_set_sprite(doodle, scene_get_sprite(scene, 0));
+    //                 }
+    //                 else {
+    //                     body_set_sprite(doodle, scene_get_sprite(scene, 1));
+    //                 }
+    //         }
+    //         // shifting the viewing window if the doodle goes higher than the center
+    //         if (body_get_centroid(doodle).y > center->y) {
+    //             // generates more platforms
+    //             more_platforms(scene, *center);
+    //             center->y = body_get_centroid(doodle).y;
+    //             sdl_set_center(*center);
+    //             for (int i = 1; i < 3; i++) {
+    //                 body_t *background = scene_get_body(scene, i);
+    //                 vector_t centroid = body_get_centroid(background);
+    //                 if (centroid.y <= center->y - SCREEN_DIMENSIONS.y/2) {
+    //                     centroid.y += SCREEN_DIMENSIONS.y*2;
+    //                     body_set_centroid(background, centroid);
+    //                 }
+    //             }
+    //             if (!enemy_present) {
+    //                 more_enemies(scene, *center);
+    //             }
+    //         }
+    //         enemy_present = false;
+
+    //         if (*powerup_timer == POWERUP_TIMER) {
+    //             for (int i = 0; i < scene_bodies(scene); i++) {
+    //                 body_t *body = scene_get_body(scene, i);
+    //                 if (strcmp(body_get_info(scene_get_body(scene, i)), "star") == 0) {
+    //                     body_set_velocity(body, VEC_ZERO);
+    //                 }
+    //                 if (strcmp(body_get_info(body), "magnet") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+    //                     body_set_sprite(body, NULL);
+    //                     scene_remove_body(scene, i);
+    //                 }
+    //                 if (strcmp(body_get_info(body), "immunity") == 0 && body_get_second_info(body) != NULL && strcmp(body_get_second_info(body), "equipped") == 0) {
+    //                     scene_remove_body(scene, i);
+    //                 }
+    //             }
+    //         }
+    //         wrap(doodle);
+    //         scene_tick(scene, dt);
+    //     }
+    //     free(buffer);
+    // }
     sdl_render_scene(scene);
 }

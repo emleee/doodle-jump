@@ -22,6 +22,7 @@
 #include "preferences.h"
 #include "powerups.h"
 #include "star.h"
+#include "game.h"
 
 /**
  * Creates the start screen, with options for starting the game and going to settings and the shop.

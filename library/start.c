@@ -33,9 +33,16 @@ scene_t *make_start_scene() {
 void start_mouse_click(scene_t *scene, int x, int y, double button_x_radius, double button_y_radius){
     if (x < (START_BUTTON.x + button_x_radius) && x > (START_BUTTON.x - button_x_radius)) {
         if (y < (START_BUTTON.y + button_y_radius) && y > (START_BUTTON.y - button_y_radius)) {
-            char *game_info = malloc(5*sizeof(char));
-            strcpy(game_info, "game");
-            scene_set_next_info(scene, game_info);
+            if (first_time_play()) {
+                char *game_info = malloc(13*sizeof(char));
+                strcpy(game_info, "instructions");
+                scene_set_next_info(scene, game_info);
+            }
+            else {
+                char *game_info = malloc(5*sizeof(char));
+                strcpy(game_info, "game");
+                scene_set_next_info(scene, game_info);
+            }
         }
     }
     if (x < (SETTINGS_BUTTON.x + button_x_radius) && x > (SETTINGS_BUTTON.x - button_x_radius)) {
